@@ -135,7 +135,7 @@ class VaccineAttributes(IntEnum):
     @classmethod
     def get_test_structure(cls , params):
         """
-        Method that builds the dictionary containing the whole structure Vaccinehe vaccine document
+        Method that builds the dictionary containing the whole structure of the vaccine document
         :param params: is a list containing all the params
         :return: the complete dictionary
         """
@@ -184,6 +184,60 @@ class VaccineAttributes(IntEnum):
         return dictionary
 
 
+class IssuerAttributes(IntEnum):
+    """
+    Enum class to retrieve index of a given attribute for a vaccine sample.
+    """
+    # Names corresponding to a key in the dictionary
+    NAME = 0
+    TYPE = 1
+    GPS_COORDINATES = 2
+    OPENING_HOURS = 3
+    ADDRESS = 4
+    CITY = 5
+    COUNTRY = 6
+    ZIP = 7
+
+    # Name just for the pleasure of my eyes
+    LOCATION_DETAILS = -1
+
+    @classmethod
+    def number_of_attribute(cls):
+        """
+        Method used to get the number of useful parameters for the creation of the array
+        :return: the number of useful parameters
+        """
+        numAttribute = 0
+        for name in IssuerAttributes:
+            if name.value >= 0:
+                numAttribute += 1
+        return numAttribute
+
+    @classmethod
+    def get_test_structure(cls , params):
+        """
+        Method that builds the dictionary containing the whole structure of the vaccine document
+        :param params: is a list containing all the params
+        :return: the complete dictionary
+        """
+        locationDetailsDictionary = {
+            IssuerAttributes.ADDRESS.name : params[IssuerAttributes.ADDRESS.value],
+            IssuerAttributes.CITY.name: params[IssuerAttributes.CITY.value],
+            IssuerAttributes.ZIP.name: params[IssuerAttributes.ZIP.value],
+            IssuerAttributes.COUNTRY.name: params[IssuerAttributes.COUNTRY.value]
+        }
+
+        dictionary = {
+            IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+            IssuerAttributes.TYPE.name : params[IssuerAttributes.TYPE.value] ,
+            IssuerAttributes.GPS_COORDINATES.name : params[IssuerAttributes.GPS_COORDINATES.value] ,
+            IssuerAttributes.OPENING_HOURS.name : params[IssuerAttributes.OPENING_HOURS.value] ,
+            IssuerAttributes.LOCATION_DETAILS : locationDetailsDictionary
+        }
+
+        return dictionary
+
+
 if __name__ == '__main__':
 
     testDict = TestAttributes.get_test_structure(["0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,
@@ -191,7 +245,11 @@ if __name__ == '__main__':
 
     vaccineDict = VaccineAttributes.get_test_structure(["0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" ,
                                                         "10" , "11" , "12" , "13" , "14" , "15" , "16" , "17" , "18"])
+
+    issuerDict = IssuerAttributes.get_test_structure(["0" , "1" , "2" , "3" , "4" , "5" , "6" , "7"])
     print(testDict)
     print(vaccineDict)
+    print(issuerDict)
     print("Size of TestAttribute is: " , TestAttributes.number_of_attribute())
     print("Size of VaccineAttribute is: ", VaccineAttributes.number_of_attribute())
+    print("Size of IssuerAttribute is: ", IssuerAttributes.number_of_attribute())
