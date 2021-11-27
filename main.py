@@ -27,6 +27,7 @@ class Test_Attributes(IntEnum):
     DOCTOR = 5
     NURSE = 6
 
+
 class Embedded_Doctor_Attributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for a doctor embedded in a document
@@ -35,12 +36,32 @@ class Embedded_Doctor_Attributes(IntEnum):
     D_SURNAME = 1
     D_MAIL = 2
 
+    @classmethod
+    def create_embedded_doctor(cls, name, surname):
+        """
+        Method that creates a dictionary representing an embedded doctor
+        """
+        doctor = {Embedded_Doctor_Attributes.D_NAME.name: name,
+                  Embedded_Doctor_Attributes.D_SURNAME.name: surname,
+                  Embedded_Doctor_Attributes.D_MAIL.name: name + '.' + surname + "@polipass.it"}
+        return doctor
+
+
 class Embedded_Issuer_Attributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an issuer embedded in a document
     """
     ISSUER_NAME = 0
     ISSUER_ADDRESS = 1
+
+    @classmethod
+    def create_embedded_issuer(cls, name, address):
+        """
+        Method that creates a dictionary representing an embedded issuer
+        """
+        issuer = {Embedded_Issuer_Attributes.ISSUER_NAME.name: name,
+                  Embedded_Issuer_Attributes.ISSUER_ADDRESS.name: address}
+        return issuer
 
 class Embedded_Person_Attributes(IntEnum):
     """
@@ -50,6 +71,36 @@ class Embedded_Person_Attributes(IntEnum):
     P_SURNAME = 1
     BIRTHDATE = 2
     FISCAL_CODE = 3
+
+    @classmethod
+    def create_embedded_person(cls, name, surname, birthdate, fiscal_code):
+        """
+        Method that creates a dictionary representing an embedded person
+        """
+        person = {Embedded_Person_Attributes.P_NAME.name: name,
+                  Embedded_Person_Attributes.P_SURNAME.name: surname,
+                  Embedded_Person_Attributes.BIRTHDATE.name: birthdate,
+                  Embedded_Person_Attributes.FISCAL_CODE.name: fiscal_code}
+        return person
+
+
+
+class Vaccine_Attributes(IntEnum):
+    """
+    Enum class to retrieve the index of a given attribute in a vaccine document
+    """
+    DATE = 0
+    TYPE = 1
+    NAME = 2
+    PRODUCER = 3
+    LOT = 4
+    PRODUCTION_DATE = 5
+    DOSE = 6
+    PERSON = 7
+    ISSUER = 8
+    DOCTOR = 9
+    NURSE = 10
+
 
 
 def read_names():
@@ -97,59 +148,12 @@ def create_index_function(collection_name):
     collection_name.create_index([('vaccine name', 'text')])
 
 
-def create_embedded_issuer(name, address):
-    """
-    Method that creates a dictionary representing an embedded issuer
-    """
-    issuer = {Embedded_Issuer_Attributes.ISSUER_NAME.name: name,
-              Embedded_Issuer_Attributes.ISSUER_ADDRESS.name: address}
-    return issuer
-
-
-def create_embedded_person(name, surname, birthdate, fiscal_code):
-    """
-    Method that creates a dictionary representing an embedded person
-    """
-    person = {Embedded_Person_Attributes.P_NAME.name: name,
-              Embedded_Person_Attributes.P_SURNAME.name: surname,
-              Embedded_Person_Attributes.BIRTHDATE.name: birthdate,
-              Embedded_Person_Attributes.FISCAL_CODE.name: fiscal_code}
-    return person
-
-
-def create_embedded_doctor(name, surname):
-    """
-    Method that creates a dictionary representing an embedded doctor
-    """
-    doctor = {Embedded_Doctor_Attributes.D_NAME.name: name,
-              Embedded_Doctor_Attributes.D_SURNAME.name: surname,
-              Embedded_Doctor_Attributes.D_MAIL.name: name + '.' + surname + "@polipass.it"}
-    return doctor
-
-
-def insert_test(collection, issuer, person, doctor, nurse):
+def insert_test(collection, test):
     """
     Method to insert a test document inside the collection.
     :param collection
     """
-    positivity = random.random()
-    if positivity >= 0.5:
-        result = "positive"
-    else: result = "negative"
-    collection.insert_one({Test_Attributes.ISSUER.name: create_embedded_issuer
-                                                            (issuer[int(Embedded_Issuer_Attributes.ISSUER_NAME)],
-                                                            issuer[int(Embedded_Issuer_Attributes.ISSUER_ADDRESS)]),
-                           Test_Attributes.DATE.name: build_date(),
-                           Test_Attributes.RESULT.name: result,
-                           Test_Attributes.PERSON.name: create_embedded_person(person[int(Embedded_Person_Attributes.P_NAME)],
-                                                            person[int(Embedded_Person_Attributes.P_SURNAME)],
-                                                            person[int(Embedded_Person_Attributes.BIRTHDATE)],
-                                                            person[int(Embedded_Person_Attributes.FISCAL_CODE)]
-                                                            ),
-                           Test_Attributes.TYPE.name: "PCR",
-                           Test_Attributes.DOCTOR.name: create_embedded_doctor(doctor[int(Embedded_Doctor_Attributes.D_NAME)], doctor[int(Embedded_Doctor_Attributes.D_SURNAME)]),
-                           Test_Attributes.NURSE.name: create_embedded_doctor(nurse[int(Embedded_Doctor_Attributes.D_NAME)], nurse[int(Embedded_Doctor_Attributes.D_SURNAME)])
-                           })
+    collection.insert_one(test)
 
 
 def build_person():
@@ -190,6 +194,37 @@ def build_issuer():
     return ["Hospital", "Via Niguarda 25, 20154, Milano, MI"]
 
 
+def create_test_document(issuer, person, doctor, nurse):
+    """
+    Method to create a test document
+    """
+    positivity = random.random()
+    if positivity >= 0.5:
+        result = "positive"
+    else:
+        result = "negative"
+    test = {Test_Attributes.ISSUER.name: Embedded_Issuer_Attributes.create_embedded_issuer
+                        (issuer[int(Embedded_Issuer_Attributes.ISSUER_NAME)],
+                         issuer[int(Embedded_Issuer_Attributes.ISSUER_ADDRESS)]),
+            Test_Attributes.DATE.name: build_date(),
+            Test_Attributes.RESULT.name: result,
+            Test_Attributes.PERSON.name: Embedded_Person_Attributes.create_embedded_person(
+                                                                       person[int(Embedded_Person_Attributes.P_NAME)],
+                                                                       person[int(Embedded_Person_Attributes.P_SURNAME)],
+                                                                       person[int(Embedded_Person_Attributes.BIRTHDATE)],
+                                                                       person[int(Embedded_Person_Attributes.FISCAL_CODE)]
+                                                                       ),
+            Test_Attributes.TYPE.name: "PCR",
+            Test_Attributes.DOCTOR.name: Embedded_Doctor_Attributes.create_embedded_doctor(
+                                            doctor[int(Embedded_Doctor_Attributes.D_NAME)],
+                                            doctor[int(Embedded_Doctor_Attributes.D_SURNAME)]),
+            Test_Attributes.NURSE.name: Embedded_Doctor_Attributes.create_embedded_doctor(
+                                           nurse[int(Embedded_Doctor_Attributes.D_NAME)],
+                                           nurse[int(Embedded_Doctor_Attributes.D_SURNAME)])
+            }
+    return test
+
+
 if __name__ == '__main__':
     cluster = pym.MongoClient(CONNECTION_STRING)
     db = cluster['my_database']
@@ -198,7 +233,11 @@ if __name__ == '__main__':
     read_names()
     read_surnames()
     read_addresses()
-    insert_test(collection, build_issuer(), build_detailed_person(), build_person(), build_person())
+
+    test = create_test_document(build_issuer(), build_detailed_person(), build_person(), build_person())
+    insert_test(collection, test)
+
+    pprint.pp(collection.find_one())
 
 
 
