@@ -1,0 +1,5 @@
+Hospital
+Pharmacy
+Drive-in
+Doctor's office
+Private clinic

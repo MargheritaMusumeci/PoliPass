@@ -45,7 +45,7 @@ class TestAttributes(IntEnum):
         return numAttribute
 
     @classmethod
-    def get_test_structure(cls , params):
+    def get_test_structure(cls, params):
         """
         Method that builds the dictionary containing the whole structure of the test document
         :param params: is a list containing all the params
@@ -53,7 +53,7 @@ class TestAttributes(IntEnum):
         """
         issuerDictionary = {
             TestAttributes.ISSUER_NAME.name : params[TestAttributes.ISSUER_NAME.value] ,
-            TestAttributes.ISSUER_ADDRESS.name : params[TestAttributes.ISSUER_ADDRESS]
+            TestAttributes.ISSUER_ADDRESS.name : params[TestAttributes.ISSUER_ADDRESS.value]
         }
 
         personDictionary = {
@@ -135,7 +135,7 @@ class VaccineAttributes(IntEnum):
     @classmethod
     def get_test_structure(cls , params):
         """
-        Method that builds the dictionary containing the whole structure Vaccinehe vaccine document
+        Method that builds the dictionary containing the whole structure vaccine document
         :param params: is a list containing all the params
         :return: the complete dictionary
         """
