@@ -15,7 +15,8 @@ NAMES = []
 SURNAMES = []
 ADDRESSES = []
 
-class Test_Attributes(IntEnum):
+
+class TestAttributes(IntEnum):
     """
     Enum class to retrieve index of a given attribute for a test document.
     """
@@ -28,7 +29,7 @@ class Test_Attributes(IntEnum):
     NURSE = 6
 
 
-class Embedded_Doctor_Attributes(IntEnum):
+class EmbeddedDoctorAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for a doctor embedded in a document
     """
@@ -41,13 +42,13 @@ class Embedded_Doctor_Attributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded doctor
         """
-        doctor = {Embedded_Doctor_Attributes.D_NAME.name: name,
-                  Embedded_Doctor_Attributes.D_SURNAME.name: surname,
-                  Embedded_Doctor_Attributes.D_MAIL.name: name + '.' + surname + "@polipass.it"}
+        doctor = {EmbeddedDoctorAttributes.D_NAME.name: name,
+                  EmbeddedDoctorAttributes.D_SURNAME.name: surname,
+                  EmbeddedDoctorAttributes.D_MAIL.name: name + '.' + surname + "@polipass.it"}
         return doctor
 
 
-class Embedded_Issuer_Attributes(IntEnum):
+class EmbeddedIssuerAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an issuer embedded in a document
     """
@@ -59,11 +60,11 @@ class Embedded_Issuer_Attributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded issuer
         """
-        issuer = {Embedded_Issuer_Attributes.ISSUER_NAME.name: name,
-                  Embedded_Issuer_Attributes.ISSUER_ADDRESS.name: address}
+        issuer = {EmbeddedIssuerAttributes.ISSUER_NAME.name: name,
+                  EmbeddedIssuerAttributes.ISSUER_ADDRESS.name: address}
         return issuer
 
-class Embedded_Person_Attributes(IntEnum):
+class EmbeddedPersonAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an embedded person
     """
@@ -77,10 +78,10 @@ class Embedded_Person_Attributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded person
         """
-        person = {Embedded_Person_Attributes.P_NAME.name: name,
-                  Embedded_Person_Attributes.P_SURNAME.name: surname,
-                  Embedded_Person_Attributes.BIRTHDATE.name: birthdate,
-                  Embedded_Person_Attributes.FISCAL_CODE.name: fiscal_code}
+        person = {EmbeddedPersonAttributes.P_NAME.name: name,
+                  EmbeddedPersonAttributes.P_SURNAME.name: surname,
+                  EmbeddedPersonAttributes.BIRTHDATE.name: birthdate,
+                  EmbeddedPersonAttributes.FISCAL_CODE.name: fiscal_code}
         return person
 
 
@@ -173,17 +174,19 @@ def build_detailed_person():
     #TODO change the fiscal code field
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
-    birthdate = build_date()
+    birthdate = build_date("1950-01-01", days_ahead=12775)
     fiscal_code = "RNDPRI99P30G942C"
     return [NAMES[name_index], SURNAMES[surname_index], birthdate, fiscal_code]
 
 
-def build_date():
+def build_date(start_date, days_ahead):
     """
-    Method that provides a datetime structure with hours and minutes set to 0 to comply with Date type in MongoDB
+    Method that provides a datetime structure
+    :param start_date the starting date to which we add the number of days
+    :param days_ahead the maximum number of days we can add
     """
-    start_date = datetime.datetime.strptime("2020-06-01", "%Y-%m-%d")
-    result_date = start_date + datetime.timedelta(random.randint(0, 365))
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    result_date = start_date + datetime.timedelta(days=random.randint(0, days_ahead))
     return result_date
 
 
@@ -203,24 +206,24 @@ def create_test_document(issuer, person, doctor, nurse):
         result = "positive"
     else:
         result = "negative"
-    test = {Test_Attributes.ISSUER.name: Embedded_Issuer_Attributes.create_embedded_issuer
-                        (issuer[int(Embedded_Issuer_Attributes.ISSUER_NAME)],
-                         issuer[int(Embedded_Issuer_Attributes.ISSUER_ADDRESS)]),
-            Test_Attributes.DATE.name: build_date(),
-            Test_Attributes.RESULT.name: result,
-            Test_Attributes.PERSON.name: Embedded_Person_Attributes.create_embedded_person(
-                                                                       person[int(Embedded_Person_Attributes.P_NAME)],
-                                                                       person[int(Embedded_Person_Attributes.P_SURNAME)],
-                                                                       person[int(Embedded_Person_Attributes.BIRTHDATE)],
-                                                                       person[int(Embedded_Person_Attributes.FISCAL_CODE)]
+    test = {TestAttributes.ISSUER.name: EmbeddedIssuerAttributes.create_embedded_issuer
+                        (issuer[int(EmbeddedIssuerAttributes.ISSUER_NAME)],
+                         issuer[int(EmbeddedIssuerAttributes.ISSUER_ADDRESS)]),
+            TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
+            TestAttributes.RESULT.name: result,
+            TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(
+                                                                       person[int(EmbeddedPersonAttributes.P_NAME)],
+                                                                       person[int(EmbeddedPersonAttributes.P_SURNAME)],
+                                                                       person[int(EmbeddedPersonAttributes.BIRTHDATE)],
+                                                                       person[int(EmbeddedPersonAttributes.FISCAL_CODE)]
                                                                        ),
-            Test_Attributes.TYPE.name: "PCR",
-            Test_Attributes.DOCTOR.name: Embedded_Doctor_Attributes.create_embedded_doctor(
-                                            doctor[int(Embedded_Doctor_Attributes.D_NAME)],
-                                            doctor[int(Embedded_Doctor_Attributes.D_SURNAME)]),
-            Test_Attributes.NURSE.name: Embedded_Doctor_Attributes.create_embedded_doctor(
-                                           nurse[int(Embedded_Doctor_Attributes.D_NAME)],
-                                           nurse[int(Embedded_Doctor_Attributes.D_SURNAME)])
+            TestAttributes.TYPE.name: "PCR",
+            TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(
+                                            doctor[int(EmbeddedDoctorAttributes.D_NAME)],
+                                            doctor[int(EmbeddedDoctorAttributes.D_SURNAME)]),
+            TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(
+                                           nurse[int(EmbeddedDoctorAttributes.D_NAME)],
+                                           nurse[int(EmbeddedDoctorAttributes.D_SURNAME)])
             }
     return test
 
