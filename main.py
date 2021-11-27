@@ -29,22 +29,83 @@ class TestAttributes(IntEnum):
     NURSE = 6
 
 
+class VaccineAttributes(IntEnum):
+    """
+    Enum class to retrieve the index of a given attribute in a vaccine document
+    """
+    DATE = 0
+    VACCINE = 1
+    DOSE = 2
+    PERSON = 3
+    ISSUER = 4
+    DOCTOR = 5
+    NURSE = 6
+
+
+class IssuerAttributes(IntEnum):
+    TYPE = 0
+    NAME = 1
+    LOCATION_DETAILS = 2
+
+
+class EmbeddedLocationDetails(IntEnum):
+    GPS_COORDINATES = 0
+    ADDRESS = 1
+    CITY = 2
+    COUNTRY = 3
+    ZIP = 4
+
+    @classmethod
+    def create_embedded_location_details(cls, location_details):
+        """
+        Method to create a complete address for a location.
+        :param location_details is the list containing all the attributes
+        """
+        embedded_location = {EmbeddedLocationDetails.GPS_COORDINATES.name: location_details[EmbeddedLocationDetails.GPS_COORDINATES.value],
+                             EmbeddedLocationDetails.ADDRESS.name: location_details[EmbeddedLocationDetails.ADDRESS.value],
+                             EmbeddedLocationDetails.CITY.name: location_details[EmbeddedLocationDetails.CITY.value],
+                             EmbeddedLocationDetails.COUNTRY.name: location_details[EmbeddedLocationDetails.COUNTRY.value],
+                             EmbeddedLocationDetails.ZIP.name: location_details[EmbeddedLocationDetails.ZIP.value]}
+        return embedded_location
+
+
+class EmbeddedVaccineAttributes(IntEnum):
+    """
+    Enum class containing all the attributes for an embedded vaccine
+    """
+    NAME = 0
+    PRODUCER = 1
+    TYPE = 2
+    BATCH = 3
+    PRODUCTION_DATE = 4
+
+    #TODO change the way the number of the batch and the type are chosen
+    @classmethod
+    def create_embedded_vaccine(cls, name, producer):
+        vaccine = {EmbeddedVaccineAttributes.NAME.name: name,
+                   EmbeddedVaccineAttributes.PRODUCER.name: producer,
+                   EmbeddedVaccineAttributes.TYPE.name: "mRNA",
+                   EmbeddedVaccineAttributes.BATCH.name: 1234,
+                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: build_date("2021-04-01", days_ahead=210)}
+        return vaccine
+
+
 class EmbeddedDoctorAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for a doctor embedded in a document
     """
-    D_NAME = 0
-    D_SURNAME = 1
-    D_MAIL = 2
+    NAME = 0
+    SURNAME = 1
+    MAIL = 2
 
     @classmethod
     def create_embedded_doctor(cls, name, surname):
         """
         Method that creates a dictionary representing an embedded doctor
         """
-        doctor = {EmbeddedDoctorAttributes.D_NAME.name: name,
-                  EmbeddedDoctorAttributes.D_SURNAME.name: surname,
-                  EmbeddedDoctorAttributes.D_MAIL.name: name + '.' + surname + "@polipass.it"}
+        doctor = {EmbeddedDoctorAttributes.NAME.name: name,
+                  EmbeddedDoctorAttributes.SURNAME.name: surname,
+                  EmbeddedDoctorAttributes.MAIL.name: (name + '.' + surname + "@polipass.it").lower()}
         return doctor
 
 
@@ -52,17 +113,18 @@ class EmbeddedIssuerAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an issuer embedded in a document
     """
-    ISSUER_NAME = 0
-    ISSUER_ADDRESS = 1
+    NAME = 0
+    ADDRESS = 1
 
     @classmethod
     def create_embedded_issuer(cls, name, address):
         """
         Method that creates a dictionary representing an embedded issuer
         """
-        issuer = {EmbeddedIssuerAttributes.ISSUER_NAME.name: name,
-                  EmbeddedIssuerAttributes.ISSUER_ADDRESS.name: address}
+        issuer = {EmbeddedIssuerAttributes.NAME.name: name,
+                  EmbeddedIssuerAttributes.ADDRESS.name: address}
         return issuer
+
 
 class EmbeddedPersonAttributes(IntEnum):
     """
@@ -83,25 +145,6 @@ class EmbeddedPersonAttributes(IntEnum):
                   EmbeddedPersonAttributes.BIRTHDATE.name: birthdate,
                   EmbeddedPersonAttributes.FISCAL_CODE.name: fiscal_code}
         return person
-
-
-
-class Vaccine_Attributes(IntEnum):
-    """
-    Enum class to retrieve the index of a given attribute in a vaccine document
-    """
-    DATE = 0
-    TYPE = 1
-    NAME = 2
-    PRODUCER = 3
-    LOT = 4
-    PRODUCTION_DATE = 5
-    DOSE = 6
-    PERSON = 7
-    ISSUER = 8
-    DOCTOR = 9
-    NURSE = 10
-
 
 
 def read_names():
@@ -199,7 +242,11 @@ def build_issuer():
 
 def create_test_document(issuer, person, doctor, nurse):
     """
-    Method to create a test document
+    Method to create a test document.
+    :param issuer list containing all attributes for an issuer
+    :param person list containing all attributes for a person
+    :param doctor list containing all attributes for a doctor
+    :param nurse list containing all attributes for a nurse
     """
     positivity = random.random()
     if positivity >= 0.5:
@@ -207,8 +254,8 @@ def create_test_document(issuer, person, doctor, nurse):
     else:
         result = "negative"
     test = {TestAttributes.ISSUER.name: EmbeddedIssuerAttributes.create_embedded_issuer
-                        (issuer[int(EmbeddedIssuerAttributes.ISSUER_NAME)],
-                         issuer[int(EmbeddedIssuerAttributes.ISSUER_ADDRESS)]),
+                        (issuer[int(EmbeddedIssuerAttributes.NAME)],
+                         issuer[int(EmbeddedIssuerAttributes.ADDRESS)]),
             TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
             TestAttributes.RESULT.name: result,
             TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(
@@ -219,11 +266,11 @@ def create_test_document(issuer, person, doctor, nurse):
                                                                        ),
             TestAttributes.TYPE.name: "PCR",
             TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(
-                                            doctor[int(EmbeddedDoctorAttributes.D_NAME)],
-                                            doctor[int(EmbeddedDoctorAttributes.D_SURNAME)]),
+                                            doctor[int(EmbeddedDoctorAttributes.NAME)],
+                                            doctor[int(EmbeddedDoctorAttributes.SURNAME)]),
             TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(
-                                           nurse[int(EmbeddedDoctorAttributes.D_NAME)],
-                                           nurse[int(EmbeddedDoctorAttributes.D_SURNAME)])
+                                           nurse[int(EmbeddedDoctorAttributes.NAME)],
+                                           nurse[int(EmbeddedDoctorAttributes.SURNAME)])
             }
     return test
 
