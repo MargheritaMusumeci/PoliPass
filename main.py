@@ -3,16 +3,18 @@ import pprint
 import random
 
 import isodate
+import json
 import pymongo as pym
 from bson import ObjectId
 from enum import IntEnum
+from codicefiscale import codicefiscale
 
 
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                   "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
 NAMES = []
 SURNAMES = []
+MUNICIPALITIES = []
 ADDRESSES = []
 
 
@@ -171,6 +173,17 @@ def read_surnames():
     f.close()
 
 
+def read_municipalities():
+    """
+    Method to read all italian municipalities from the file comuni.json and store them in the global variable
+    """
+    f = open("files/comuni.json")
+    data = json.load(f)
+    for i in range(len(data)):
+        MUNICIPALITIES.append(data[i]["nome"])
+    f.close()
+
+
 def read_addresses():
     """
     Method to read all the addresses from the file house_addresses.txt and store them in the global variable
@@ -218,7 +231,7 @@ def build_detailed_person():
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
     birthdate = build_date("1950-01-01", days_ahead=12775)
-    fiscal_code = "RNDPRI99P30G942C"
+    fiscal_code = codicefiscale.encode(SURNAMES[surname_index], NAMES[name_index], 'M', str(birthdate), random.choice(MUNICIPALITIES))
     return [NAMES[name_index], SURNAMES[surname_index], birthdate, fiscal_code]
 
 
@@ -277,20 +290,15 @@ def create_test_document(issuer, person, doctor, nurse):
 
 if __name__ == '__main__':
     cluster = pym.MongoClient(CONNECTION_STRING)
-    db = cluster['my_database']
-    db.drop_collection('my_collection')
-    collection = db['my_collection']
+    db = cluster['polipass']
+    db.drop_collection('covid_certificates')
+    collection = db['covid_certificates']
     read_names()
     read_surnames()
+    read_municipalities()
     read_addresses()
 
     test = create_test_document(build_issuer(), build_detailed_person(), build_person(), build_person())
     insert_test(collection, test)
 
     pprint.pp(collection.find_one())
-
-
-
-
-
-
