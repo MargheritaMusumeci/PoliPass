@@ -1,5 +1,4 @@
 import datetime
-import pprint
 import random
 
 import json
@@ -43,11 +42,12 @@ class TestAttributes(IntEnum):
             result = "positive"
         else:
             result = "negative"
-        test = {TestAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+        test = {TestAttributes.ISSUER.name: IssuerAttributes.
+            create_embedded_issuer(retrieve_issuer(), add_location_details=False),
                 TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
                 TestAttributes.RESULT.name: result,
                 TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
-                #TODO add further types of test
+                # TODO add further types of test
                 TestAttributes.TYPE.name: "PCR",
                 TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
                 TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
@@ -85,7 +85,8 @@ class VaccinationAttributes(IntEnum):
             # TODO change how the number of dose is computed
             VaccinationAttributes.DOSE.name: 1,
             VaccinationAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
-            VaccinationAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+            VaccinationAttributes.ISSUER.name: IssuerAttributes.
+                create_embedded_issuer(retrieve_issuer(), add_location_details=False),
             VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
             VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse),
         }
@@ -96,6 +97,28 @@ class IssuerAttributes(IntEnum):
     TYPE = 0
     NAME = 1
     LOCATION_DETAILS = 2
+
+    @classmethod
+    def create_embedded_issuer(cls, params, add_location_details):
+        """
+        Method to create an issuer given a list of attributes.
+        :param params list with all fields mapped according to IssuerAttributes enum
+        :param add_location_details is a boolean variable to assess if the details about the issuer position are required.
+        """
+        if not add_location_details:
+            issuer = {
+                IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+                IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+            }
+        else:
+            issuer = {
+                IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+                IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+                IssuerAttributes.LOCATION_DETAILS.name:
+                    EmbeddedPositionDetails.create_embedded_location_details(
+                        params[IssuerAttributes.LOCATION_DETAILS.value:])
+            }
+        return issuer
 
 
 class EmbeddedPositionDetails(IntEnum):
@@ -319,34 +342,12 @@ def retrieve_vaccine():
     return VACCINES[vaccine_index]
 
 
-def create_embedded_issuer(params, add_location_details):
-    """
-    Method to create an issuer given a list of attributes.
-    :param params list with all fields mapped according to IssuerAttributes enum
-    :param add_location_details is a boolean variable to assess if the details about the issuer position are required.
-    """
-    if not add_location_details:
-        issuer = {
-            IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
-            IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
-        }
-    else:
-        issuer = {
-            IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
-            IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
-            IssuerAttributes.LOCATION_DETAILS.name:
-                EmbeddedPositionDetails.create_embedded_location_details(
-                    params[IssuerAttributes.LOCATION_DETAILS.value:])
-        }
-    return issuer
-
-
-def insert(collection, test):
+def insert_document(collection, document):
     """
     Method to insert a test document inside the collection.
     :param collection
     """
-    collection.insert_one(test)
+    collection.insert_one(document)
 
 
 if __name__ == '__main__':
@@ -354,15 +355,14 @@ if __name__ == '__main__':
     db = cluster['polipass']
     db.drop_collection('covid_certificates')
     collection = db['covid_certificates']
-    #Initialization of all the global variables
+    # Initialization of all the global variables
     read_names()
     read_surnames()
     read_municipalities()
     read_addresses()
     read_issuers()
     read_vaccines()
-
-    #creation of the documents
+    # creation of the documents
     vaccination = VaccinationAttributes.create_vaccination_document(retrieve_vaccine(),
                                                                     retrieve_detailed_person(),
                                                                     retrieve_person(),
@@ -370,5 +370,5 @@ if __name__ == '__main__':
 
     test = TestAttributes.create_test_document(retrieve_detailed_person(), retrieve_person(), retrieve_person())
 
-    insert(collection, vaccination)
-    insert(collection, test)
+    insert_document(collection, vaccination)
+    insert_document(collection, test)
