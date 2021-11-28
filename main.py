@@ -2,20 +2,20 @@ import datetime
 import pprint
 import random
 
-import isodate
 import json
 import pymongo as pym
-from bson import ObjectId
 from enum import IntEnum
 from codicefiscale import codicefiscale
 
 
-CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true"\
+                   "&tlsAllowInvalidCertificates=true"
 
 NAMES = []
 SURNAMES = []
 MUNICIPALITIES = []
 ADDRESSES = []
+ISSUERS = []
 
 
 class TestAttributes(IntEnum):
@@ -50,12 +50,16 @@ class IssuerAttributes(IntEnum):
     LOCATION_DETAILS = 2
 
 
-class EmbeddedLocationDetails(IntEnum):
-    GPS_COORDINATES = 0
-    ADDRESS = 1
-    CITY = 2
-    COUNTRY = 3
-    ZIP = 4
+class EmbeddedPositionDetails(IntEnum):
+    """
+    Enum class to map attribute for embedded location to their index.
+    """
+    LATITUDE = 0
+    LONGITUDE = 1
+    ADDRESS = 2
+    CITY = 3
+    PROVINCE = 4
+    ZIP = 5
 
     @classmethod
     def create_embedded_location_details(cls, location_details):
@@ -63,11 +67,12 @@ class EmbeddedLocationDetails(IntEnum):
         Method to create a complete address for a location.
         :param location_details is the list containing all the attributes
         """
-        embedded_location = {EmbeddedLocationDetails.GPS_COORDINATES.name: location_details[EmbeddedLocationDetails.GPS_COORDINATES.value],
-                             EmbeddedLocationDetails.ADDRESS.name: location_details[EmbeddedLocationDetails.ADDRESS.value],
-                             EmbeddedLocationDetails.CITY.name: location_details[EmbeddedLocationDetails.CITY.value],
-                             EmbeddedLocationDetails.COUNTRY.name: location_details[EmbeddedLocationDetails.COUNTRY.value],
-                             EmbeddedLocationDetails.ZIP.name: location_details[EmbeddedLocationDetails.ZIP.value]}
+        embedded_location = {EmbeddedPositionDetails.LATITUDE.name: location_details[EmbeddedPositionDetails.LATITUDE.value],
+                             EmbeddedPositionDetails.LONGITUDE.name: location_details[EmbeddedPositionDetails.LONGITUDE.value],
+                             EmbeddedPositionDetails.ADDRESS.name: location_details[EmbeddedPositionDetails.ADDRESS.value],
+                             EmbeddedPositionDetails.CITY.name: location_details[EmbeddedPositionDetails.CITY.value],
+                             EmbeddedPositionDetails.PROVINCE.name: location_details[EmbeddedPositionDetails.PROVINCE.value],
+                             EmbeddedPositionDetails.ZIP.name: location_details[EmbeddedPositionDetails.ZIP.value]}
         return embedded_location
 
 
@@ -111,29 +116,12 @@ class EmbeddedDoctorAttributes(IntEnum):
         return doctor
 
 
-class EmbeddedIssuerAttributes(IntEnum):
-    """
-    Enum class to retrieve the index of a given attribute for an issuer embedded in a document
-    """
-    NAME = 0
-    ADDRESS = 1
-
-    @classmethod
-    def create_embedded_issuer(cls, name, address):
-        """
-        Method that creates a dictionary representing an embedded issuer
-        """
-        issuer = {EmbeddedIssuerAttributes.NAME.name: name,
-                  EmbeddedIssuerAttributes.ADDRESS.name: address}
-        return issuer
-
-
 class EmbeddedPersonAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an embedded person
     """
-    P_NAME = 0
-    P_SURNAME = 1
+    NAME = 0
+    SURNAME = 1
     BIRTHDATE = 2
     FISCAL_CODE = 3
 
@@ -142,8 +130,8 @@ class EmbeddedPersonAttributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded person
         """
-        person = {EmbeddedPersonAttributes.P_NAME.name: name,
-                  EmbeddedPersonAttributes.P_SURNAME.name: surname,
+        person = {EmbeddedPersonAttributes.NAME.name: name,
+                  EmbeddedPersonAttributes.SURNAME.name: surname,
                   EmbeddedPersonAttributes.BIRTHDATE.name: birthdate,
                   EmbeddedPersonAttributes.FISCAL_CODE.name: fiscal_code}
         return person
@@ -196,6 +184,18 @@ def read_addresses():
     f.close()
 
 
+def read_issuers():
+    """
+    Method to read all the issuers from the file issuers.txt.
+    """
+    with open("files/locations.txt", 'r', encoding='utf8') as file:
+        for line in file:
+            if line == "\n":
+                continue
+            location_details = line.rstrip('\n').rstrip().lstrip().split(',')
+            ISSUERS.append(location_details)
+
+
 def create_index_function(collection_name):
     """
     Method that creates a textual index inside a MongoDB collection.
@@ -203,14 +203,6 @@ def create_index_function(collection_name):
     :return:
     """
     collection_name.create_index([('vaccine name', 'text')])
-
-
-def insert_test(collection, test):
-    """
-    Method to insert a test document inside the collection.
-    :param collection
-    """
-    collection.insert_one(test)
 
 
 def build_person():
@@ -246,17 +238,38 @@ def build_date(start_date, days_ahead):
     return result_date
 
 
-def build_issuer():
+def retrieve_issuer():
     """
-    Method to build an issuer given
+    Method to randomly retrieve a list containing all the attributes for an issuer.
     """
-    return ["Hospital", "Via Niguarda 25, 20154, Milano, MI"]
+    issuer_index = random.randint(0, len(ISSUERS) - 1)
+    return ISSUERS[issuer_index]
 
 
-def create_test_document(issuer, person, doctor, nurse):
+def create_embedded_issuer(params, add_location_details):
+    """
+    Method to create an issuer given a list of attributes.
+    :param params list with all fields mapped according to IssuerAttributes enum
+    :param add_location_details is a boolean variable to assess if the details about the issuer position are required.
+    """
+    if not add_location_details:
+        issuer = {
+            IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+            IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+        }
+    else:
+        issuer = {
+            IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+            IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+            IssuerAttributes.LOCATION_DETAILS.name:
+                EmbeddedPositionDetails.create_embedded_location_details(params[IssuerAttributes.LOCATION_DETAILS.value:])
+        }
+    return issuer
+
+
+def create_test_document(person, doctor, nurse):
     """
     Method to create a test document.
-    :param issuer list containing all attributes for an issuer
     :param person list containing all attributes for a person
     :param doctor list containing all attributes for a doctor
     :param nurse list containing all attributes for a nurse
@@ -266,14 +279,12 @@ def create_test_document(issuer, person, doctor, nurse):
         result = "positive"
     else:
         result = "negative"
-    test = {TestAttributes.ISSUER.name: EmbeddedIssuerAttributes.create_embedded_issuer
-                        (issuer[int(EmbeddedIssuerAttributes.NAME)],
-                         issuer[int(EmbeddedIssuerAttributes.ADDRESS)]),
+    test = {TestAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
             TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
             TestAttributes.RESULT.name: result,
             TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(
-                                                                       person[int(EmbeddedPersonAttributes.P_NAME)],
-                                                                       person[int(EmbeddedPersonAttributes.P_SURNAME)],
+                                                                       person[int(EmbeddedPersonAttributes.NAME)],
+                                                                       person[int(EmbeddedPersonAttributes.SURNAME)],
                                                                        person[int(EmbeddedPersonAttributes.BIRTHDATE)],
                                                                        person[int(EmbeddedPersonAttributes.FISCAL_CODE)]
                                                                        ),
@@ -288,7 +299,16 @@ def create_test_document(issuer, person, doctor, nurse):
     return test
 
 
+def insert_test(collection, test):
+    """
+    Method to insert a test document inside the collection.
+    :param collection
+    """
+    collection.insert_one(test)
+
+
 if __name__ == '__main__':
+
     cluster = pym.MongoClient(CONNECTION_STRING)
     db = cluster['polipass']
     db.drop_collection('covid_certificates')
@@ -297,8 +317,9 @@ if __name__ == '__main__':
     read_surnames()
     read_municipalities()
     read_addresses()
+    read_issuers()
 
-    test = create_test_document(build_issuer(), build_detailed_person(), build_person(), build_person())
+    test = create_test_document(build_detailed_person(), build_person(), build_person())
     insert_test(collection, test)
 
     pprint.pp(collection.find_one())

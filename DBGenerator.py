@@ -34,7 +34,7 @@ class TestAttributes(IntEnum):
         Method used to get the number of useful parameters for the creation of the array
         Example of usage:
             test = [None] * TestAttribute.number_of_attribute()
-            test[TestAttribute.P_NAME] = name
+            test[TestAttribute.NAME] = name
             ...
         :return: the number of useful parameters
         """
