@@ -1,0 +1,20 @@
+Hospital,San Raffaele,45.50615495998359,9.265518665472529,Street Olgettina 60,Segrate,MI,20132
+Hospital,Galamarini,45.72222493421725,8.900299056227746,Square A. Zanaboni 1,Tradate,VA,21049
+Hospital,San Salvatore,43.907624136524284,12.908059995080508,Square Carlo Cinelli 1,Pesaro,PU,61121
+Hospital,Annunziata,39.293826991988865,16.248474227077857,Street Fiume 1,Cosenza,CS,87100
+Hospital,Lazzaro Spallanzani,41.865755348894076,12.4563589388255,Street Portuense 292,Roma,RM,00149
+Private clinic,Santagostino Loreto,45.48386708640959,9.213697155692714,Street Saverio Mercadante 16,Milano,MI,20124
+Private clinic,Villa Mafalda,41.932673381151105,12.510271741566433,Street Monte delle Gioie 5,Roma,RM,00199
+Private clinic,ICS Maugeri,45.719693402175075,8.911228867010195,Street Crotto Roncaccio 16,Tradate,VA,21049
+Private clinic,Niguarda,45.509675682579584,9.187408135461936,Square of Greater Hospital 3,Milano,MI,20162
+Pharmacy,Assisi,45.75494197327556,8.87388705095256,Street Papa Celestino IV 4/Bis,Castiglione Olona,VA,21043
+Pharmacy,Fior di Loto,45.705428894695494,8.913972844224272,Boulevard Guglielmo Marconi 58,Tradate,VA,21049
+Pharmacy,Sanitas,45.47383679016939,9.1833098009608,Avenue Garibaldi 49,Milano,MI,20121
+Pharmacy,Aiello,39.31288387863299,16.253781625419823,Boulevard Giacomo Mancini 158,Cosenza,CS,87100
+Pharmacy,Zongo,43.903808368171966,12.908846385286795,Street Vincenzo Rossi 17,Pesaro,PU,61122
+Covid center,ASST Settelaghi,45.80278112031525,8.784718751990036,Square Roma 1,Schiranna,VA,21100
+Covid center,La fabbrica del vapore,45.484148183398325,9.175392313803119,Street Giulio Cesare Procaccini 4,Milano,MI,20154
+Covid center,Malpensa fiere,45.63528027725216,8.852840451984244,Street XI Settembre 16,Busto Arsizio,VA,21052
+Covid center,Iper Rossini,43.90529937629807,12.868620591702111,Street Y. A. Gagarin,Pesaro,PU,61122
+Covid center,Pala Brillia,39.648512388678256,16.51342270761001,Street Brillia,Corigliano Calabro,CS,87064
+Covid center,Villa Tiberia,41.94570358744394,12.557744070342295,Street Emilio Praga 26,Roma,RM,00137
