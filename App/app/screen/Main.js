@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(29,161,242,1)",
     borderRadius: 100,
     justifyContent: "center",
-    marginTop: 20
+    marginTop: 50 
   },
   button_text: {
     color: "rgba(255,255,255,1)",
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
 
   textColumn: {
-    marginTop: 67,
+    marginTop: 50,
     marginLeft: 28,
     marginRight: 34
   },
