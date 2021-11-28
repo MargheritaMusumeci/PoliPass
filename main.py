@@ -7,15 +7,15 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 
-
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true"\
-                   "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    "&tlsAllowInvalidCertificates=true"
 
 NAMES = []
 SURNAMES = []
 MUNICIPALITIES = []
 ADDRESSES = []
 ISSUERS = []
+VACCINES = []
 
 
 class TestAttributes(IntEnum):
@@ -30,18 +30,66 @@ class TestAttributes(IntEnum):
     DOCTOR = 5
     NURSE = 6
 
+    @classmethod
+    def create_test_document(cls, person, doctor, nurse):
+        """
+        Method to create a test document.
+        :param person list containing all attributes for a person
+        :param doctor list containing all attributes for a doctor
+        :param nurse list containing all attributes for a nurse
+        """
+        positivity = random.random()
+        if positivity >= 0.5:
+            result = "positive"
+        else:
+            result = "negative"
+        test = {TestAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+                TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
+                TestAttributes.RESULT.name: result,
+                TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
+                #TODO add further types of test
+                TestAttributes.TYPE.name: "PCR",
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
+                }
+        return test
 
-class VaccineAttributes(IntEnum):
+
+class VaccinationAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute in a vaccine document
     """
-    DATE = 0
-    VACCINE = 1
+    VACCINE = 0
+    DATE = 1
     DOSE = 2
     PERSON = 3
     ISSUER = 4
     DOCTOR = 5
     NURSE = 6
+
+    @classmethod
+    def create_vaccination_document(cls, vaccine, person, doctor, nurse):
+        """
+        Method to create a covid vaccination, given details about the issued vaccine.
+        It ensures that the vaccine is issued after its production
+        """
+        vaccine_issued = EmbeddedVaccineAttributes.create_embedded_vaccine(vaccine)
+        production_date = vaccine_issued['PRODUCTION_DATE']
+        days = random.randint(0, 30)
+        hours = random.randint(0, 24)
+        minutes = random.randint(0, 60)
+        injection_date = production_date + datetime.timedelta(days=days, hours=hours, minutes=minutes)
+        vaccination = {
+            VaccinationAttributes.VACCINE.name: vaccine_issued,
+            VaccinationAttributes.DATE.name: injection_date,
+            # TODO change how the number of dose is computed
+            VaccinationAttributes.DOSE.name: 1,
+            VaccinationAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
+            VaccinationAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse),
+        }
+        return vaccination
 
 
 class IssuerAttributes(IntEnum):
@@ -67,12 +115,13 @@ class EmbeddedPositionDetails(IntEnum):
         Method to create a complete address for a location.
         :param location_details is the list containing all the attributes
         """
-        embedded_location = {EmbeddedPositionDetails.LATITUDE.name: location_details[EmbeddedPositionDetails.LATITUDE.value],
-                             EmbeddedPositionDetails.LONGITUDE.name: location_details[EmbeddedPositionDetails.LONGITUDE.value],
-                             EmbeddedPositionDetails.ADDRESS.name: location_details[EmbeddedPositionDetails.ADDRESS.value],
-                             EmbeddedPositionDetails.CITY.name: location_details[EmbeddedPositionDetails.CITY.value],
-                             EmbeddedPositionDetails.PROVINCE.name: location_details[EmbeddedPositionDetails.PROVINCE.value],
-                             EmbeddedPositionDetails.ZIP.name: location_details[EmbeddedPositionDetails.ZIP.value]}
+        embedded_location = {
+            EmbeddedPositionDetails.LATITUDE.name: location_details[EmbeddedPositionDetails.LATITUDE.value],
+            EmbeddedPositionDetails.LONGITUDE.name: location_details[EmbeddedPositionDetails.LONGITUDE.value],
+            EmbeddedPositionDetails.ADDRESS.name: location_details[EmbeddedPositionDetails.ADDRESS.value],
+            EmbeddedPositionDetails.CITY.name: location_details[EmbeddedPositionDetails.CITY.value],
+            EmbeddedPositionDetails.PROVINCE.name: location_details[EmbeddedPositionDetails.PROVINCE.value],
+            EmbeddedPositionDetails.ZIP.name: location_details[EmbeddedPositionDetails.ZIP.value]}
         return embedded_location
 
 
@@ -86,14 +135,15 @@ class EmbeddedVaccineAttributes(IntEnum):
     BATCH = 3
     PRODUCTION_DATE = 4
 
-    #TODO change the way the number of the batch and the type are chosen
     @classmethod
-    def create_embedded_vaccine(cls, name, producer):
-        vaccine = {EmbeddedVaccineAttributes.NAME.name: name,
-                   EmbeddedVaccineAttributes.PRODUCER.name: producer,
-                   EmbeddedVaccineAttributes.TYPE.name: "mRNA",
-                   EmbeddedVaccineAttributes.BATCH.name: 1234,
-                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: build_date("2021-04-01", days_ahead=210)}
+    def create_embedded_vaccine(cls, vaccine_details):
+        batch = random.randint(0, 10000)
+        starting_possible_date = "2021-04-01"
+        vaccine = {EmbeddedVaccineAttributes.NAME.name: vaccine_details[EmbeddedVaccineAttributes.NAME.value],
+                   EmbeddedVaccineAttributes.PRODUCER.name: vaccine_details[EmbeddedVaccineAttributes.PRODUCER.value],
+                   EmbeddedVaccineAttributes.TYPE.name: vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
+                   EmbeddedVaccineAttributes.BATCH.name: batch,
+                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: build_date(starting_possible_date, days_ahead=210)}
         return vaccine
 
 
@@ -106,10 +156,12 @@ class EmbeddedDoctorAttributes(IntEnum):
     MAIL = 2
 
     @classmethod
-    def create_embedded_doctor(cls, name, surname):
+    def create_embedded_doctor(cls, doctor_details):
         """
         Method that creates a dictionary representing an embedded doctor
         """
+        name = doctor_details[EmbeddedDoctorAttributes.NAME.value]
+        surname = doctor_details[EmbeddedDoctorAttributes.SURNAME.value]
         doctor = {EmbeddedDoctorAttributes.NAME.name: name,
                   EmbeddedDoctorAttributes.SURNAME.name: surname,
                   EmbeddedDoctorAttributes.MAIL.name: (name + '.' + surname + "@polipass.it").lower()}
@@ -126,14 +178,14 @@ class EmbeddedPersonAttributes(IntEnum):
     FISCAL_CODE = 3
 
     @classmethod
-    def create_embedded_person(cls, name, surname, birthdate, fiscal_code):
+    def create_embedded_person(cls, person_details):
         """
         Method that creates a dictionary representing an embedded person
         """
-        person = {EmbeddedPersonAttributes.NAME.name: name,
-                  EmbeddedPersonAttributes.SURNAME.name: surname,
-                  EmbeddedPersonAttributes.BIRTHDATE.name: birthdate,
-                  EmbeddedPersonAttributes.FISCAL_CODE.name: fiscal_code}
+        person = {EmbeddedPersonAttributes.NAME.name: person_details[EmbeddedPersonAttributes.NAME.value],
+                  EmbeddedPersonAttributes.SURNAME.name: person_details[EmbeddedPersonAttributes.SURNAME.value],
+                  EmbeddedPersonAttributes.BIRTHDATE.name: person_details[EmbeddedPersonAttributes.BIRTHDATE.value],
+                  EmbeddedPersonAttributes.FISCAL_CODE.name: person_details[EmbeddedPersonAttributes.FISCAL_CODE.value]}
         return person
 
 
@@ -196,6 +248,18 @@ def read_issuers():
             ISSUERS.append(location_details)
 
 
+def read_vaccines():
+    """
+    Method to read all the issuers from the file issuers.txt.
+    """
+    with open("files/vaccines.txt", 'r', encoding='utf8') as file:
+        for line in file:
+            if line == "\n":
+                continue
+            vaccine = line.rstrip('\n').rstrip().lstrip().split(',')
+            VACCINES.append(vaccine)
+
+
 def create_index_function(collection_name):
     """
     Method that creates a textual index inside a MongoDB collection.
@@ -205,25 +269,26 @@ def create_index_function(collection_name):
     collection_name.create_index([('vaccine name', 'text')])
 
 
-def build_person():
+def retrieve_person():
     """
     Method that initializes a list containing all the attributes for a generic person (only name and surname so far)
     """
-    name_index = random.randint(0, len(NAMES)-1)
-    surname_index = random.randint(0, len(SURNAMES)-1)
+    name_index = random.randint(0, len(NAMES) - 1)
+    surname_index = random.randint(0, len(SURNAMES) - 1)
     return [NAMES[name_index], SURNAMES[surname_index]]
 
 
-def build_detailed_person():
+def retrieve_detailed_person():
     """
     Method that initializes a list containing all the attributes for a generic person
     """
 
-    #TODO change the fiscal code field
+    # TODO change the fiscal code field
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
     birthdate = build_date("1950-01-01", days_ahead=12775)
-    fiscal_code = codicefiscale.encode(SURNAMES[surname_index], NAMES[name_index], 'M', str(birthdate), random.choice(MUNICIPALITIES))
+    fiscal_code = codicefiscale.encode(SURNAMES[surname_index], NAMES[name_index], 'M', str(birthdate),
+                                       random.choice(MUNICIPALITIES))
     return [NAMES[name_index], SURNAMES[surname_index], birthdate, fiscal_code]
 
 
@@ -246,6 +311,14 @@ def retrieve_issuer():
     return ISSUERS[issuer_index]
 
 
+def retrieve_vaccine():
+    """
+    Method to randomly retrieve a list containing all the attributes for an issuer.
+    """
+    vaccine_index = random.randint(0, len(VACCINES) - 1)
+    return VACCINES[vaccine_index]
+
+
 def create_embedded_issuer(params, add_location_details):
     """
     Method to create an issuer given a list of attributes.
@@ -262,44 +335,13 @@ def create_embedded_issuer(params, add_location_details):
             IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
             IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
             IssuerAttributes.LOCATION_DETAILS.name:
-                EmbeddedPositionDetails.create_embedded_location_details(params[IssuerAttributes.LOCATION_DETAILS.value:])
+                EmbeddedPositionDetails.create_embedded_location_details(
+                    params[IssuerAttributes.LOCATION_DETAILS.value:])
         }
     return issuer
 
 
-def create_test_document(person, doctor, nurse):
-    """
-    Method to create a test document.
-    :param person list containing all attributes for a person
-    :param doctor list containing all attributes for a doctor
-    :param nurse list containing all attributes for a nurse
-    """
-    positivity = random.random()
-    if positivity >= 0.5:
-        result = "positive"
-    else:
-        result = "negative"
-    test = {TestAttributes.ISSUER.name: create_embedded_issuer(retrieve_issuer(), add_location_details=False),
-            TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
-            TestAttributes.RESULT.name: result,
-            TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(
-                                                                       person[int(EmbeddedPersonAttributes.NAME)],
-                                                                       person[int(EmbeddedPersonAttributes.SURNAME)],
-                                                                       person[int(EmbeddedPersonAttributes.BIRTHDATE)],
-                                                                       person[int(EmbeddedPersonAttributes.FISCAL_CODE)]
-                                                                       ),
-            TestAttributes.TYPE.name: "PCR",
-            TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(
-                                            doctor[int(EmbeddedDoctorAttributes.NAME)],
-                                            doctor[int(EmbeddedDoctorAttributes.SURNAME)]),
-            TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(
-                                           nurse[int(EmbeddedDoctorAttributes.NAME)],
-                                           nurse[int(EmbeddedDoctorAttributes.SURNAME)])
-            }
-    return test
-
-
-def insert_test(collection, test):
+def insert(collection, test):
     """
     Method to insert a test document inside the collection.
     :param collection
@@ -308,18 +350,25 @@ def insert_test(collection, test):
 
 
 if __name__ == '__main__':
-
     cluster = pym.MongoClient(CONNECTION_STRING)
     db = cluster['polipass']
     db.drop_collection('covid_certificates')
     collection = db['covid_certificates']
+    #Initialization of all the global variables
     read_names()
     read_surnames()
     read_municipalities()
     read_addresses()
     read_issuers()
+    read_vaccines()
 
-    test = create_test_document(build_detailed_person(), build_person(), build_person())
-    insert_test(collection, test)
+    #creation of the documents
+    vaccination = VaccinationAttributes.create_vaccination_document(retrieve_vaccine(),
+                                                                    retrieve_detailed_person(),
+                                                                    retrieve_person(),
+                                                                    retrieve_person())
 
-    pprint.pp(collection.find_one())
+    test = TestAttributes.create_test_document(retrieve_detailed_person(), retrieve_person(), retrieve_person())
+
+    insert(collection, vaccination)
+    insert(collection, test)

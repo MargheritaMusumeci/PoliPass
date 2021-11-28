@@ -1,0 +1,4 @@
+Comirnaty,Pfizer-BioNTech,mRNA
+COVID-19 Vaccine Moderna,Moderna,mRNA
+Vaxzevria,AstraZeneca,viral vector
+COVID-19 Vaccine Janssen,Johnson & Johnson,viral vector
