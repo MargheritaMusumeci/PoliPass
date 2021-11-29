@@ -6,8 +6,10 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+#CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+#                    "&tlsAllowInvalidCertificates=true"
+
 
 NAMES = []
 SURNAMES = []
@@ -15,6 +17,7 @@ MUNICIPALITIES = []
 ADDRESSES = []
 ISSUERS = []
 VACCINES = []
+TESTS = []
 
 
 class TestAttributes(IntEnum):
@@ -30,9 +33,10 @@ class TestAttributes(IntEnum):
     NURSE = 6
 
     @classmethod
-    def create_test_document(cls, person, doctor, nurse):
+    def create_test_document(cls, test_type, person, doctor, nurse):
         """
         Method to create a test document.
+        :param test_type the type of the test
         :param person list containing all attributes for a person
         :param doctor list containing all attributes for a doctor
         :param nurse list containing all attributes for a nurse
@@ -47,8 +51,7 @@ class TestAttributes(IntEnum):
                 TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
                 TestAttributes.RESULT.name: result,
                 TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
-                # TODO add further types of test
-                TestAttributes.TYPE.name: "PCR",
+                TestAttributes.TYPE.name: test_type,
                 TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
                 TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
                 }
@@ -273,7 +276,7 @@ def read_issuers():
 
 def read_vaccines():
     """
-    Method to read all the issuers from the file issuers.txt.
+    Method to read all the vaccines from the file vaccines.txt.
     """
     with open("files/vaccines.txt", 'r', encoding='utf8') as file:
         for line in file:
@@ -281,6 +284,17 @@ def read_vaccines():
                 continue
             vaccine = line.rstrip('\n').rstrip().lstrip().split(',')
             VACCINES.append(vaccine)
+
+
+def read_tests():
+    """
+    Method to read all the tests from the file tests.txt.
+    """
+    with open("files/tests.txt", 'r', encoding='utf8') as file:
+        for line in file:
+            if line == "\n":
+                continue
+            TESTS.append((line.rstrip('\n').rstrip().lstrip()))
 
 
 def create_index_function(collection_name):
@@ -336,10 +350,18 @@ def retrieve_issuer():
 
 def retrieve_vaccine():
     """
-    Method to randomly retrieve a list containing all the attributes for an issuer.
+    Method to randomly retrieve a list containing all the attributes for a vaccine.
     """
     vaccine_index = random.randint(0, len(VACCINES) - 1)
     return VACCINES[vaccine_index]
+
+
+def retrieve_test():
+    """
+    Method to randomly retrieve a test.
+    """
+    test_index = random.randint(0, len(TESTS) - 1)
+    return TESTS[test_index]
 
 
 def insert_document(collection, document):
@@ -355,6 +377,7 @@ if __name__ == '__main__':
     db = cluster['polipass']
     db.drop_collection('covid_certificates')
     collection = db['covid_certificates']
+
     # Initialization of all the global variables
     read_names()
     read_surnames()
@@ -362,13 +385,17 @@ if __name__ == '__main__':
     read_addresses()
     read_issuers()
     read_vaccines()
+    read_tests()
+
     # creation of the documents
     vaccination = VaccinationAttributes.create_vaccination_document(retrieve_vaccine(),
                                                                     retrieve_detailed_person(),
                                                                     retrieve_person(),
                                                                     retrieve_person())
 
-    test = TestAttributes.create_test_document(retrieve_detailed_person(), retrieve_person(), retrieve_person())
+    test = TestAttributes.create_test_document(retrieve_test(), retrieve_detailed_person(), retrieve_person(),
+                                               retrieve_person())
 
     insert_document(collection, vaccination)
     insert_document(collection, test)
+    cluster.close()
