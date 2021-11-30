@@ -79,7 +79,7 @@ class VaccinationAttributes(IntEnum):
     NURSE = 5
 
     @classmethod
-    def create_vaccination_document(cls, vaccine, person, doctor, nurse):
+    def create_vaccination_document(cls, vaccine, doctor, nurse):
         """
         Method to create a covid vaccination, given details about the issued vaccine.
         It ensures that the vaccine is issued after its production
@@ -95,8 +95,6 @@ class VaccinationAttributes(IntEnum):
             VaccinationAttributes.DATE.name: injection_date,
             # TODO change how the number of dose is computed
             VaccinationAttributes.DOSE.name: 1,
-            # VaccinationAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
-            # TODO change by adding reference to the issuer
             VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
             VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
             VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse),
@@ -202,7 +200,7 @@ class EmbeddedDoctorAttributes(IntEnum):
         return doctor
 
 
-class EmbeddedPersonAttributes(IntEnum):
+class PersonAttributes(IntEnum):
     """
     Enum class to retrieve the index of a given attribute for an embedded person
     """
@@ -218,12 +216,12 @@ class EmbeddedPersonAttributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded person
         """
-        person = {EmbeddedPersonAttributes.NAME.name: person_details[EmbeddedPersonAttributes.NAME.value],
-                  EmbeddedPersonAttributes.SURNAME.name: person_details[EmbeddedPersonAttributes.SURNAME.value],
-                  EmbeddedPersonAttributes.BIRTHDATE.name: person_details[EmbeddedPersonAttributes.BIRTHDATE.value],
-                  EmbeddedPersonAttributes.FISCAL_CODE.name: person_details[EmbeddedPersonAttributes.FISCAL_CODE.value],
-                  EmbeddedPersonAttributes.TESTS.name: [],
-                  EmbeddedPersonAttributes.VACCINATIONS.name: []
+        person = {PersonAttributes.NAME.name: person_details[PersonAttributes.NAME.value],
+                  PersonAttributes.SURNAME.name: person_details[PersonAttributes.SURNAME.value],
+                  PersonAttributes.BIRTHDATE.name: person_details[PersonAttributes.BIRTHDATE.value],
+                  PersonAttributes.FISCAL_CODE.name: person_details[PersonAttributes.FISCAL_CODE.value],
+                  PersonAttributes.TESTS.name: [],
+                  PersonAttributes.VACCINATIONS.name: []
                   }
         return person
 
@@ -397,19 +395,21 @@ def create_and_insert_all_issuer_doc(collection):
         print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
               + retrieve_issuer(i)[IssuerAttributes.NAME.value])
         insert_document(collection, issuer_document)
-        ISSUERS_TABLE.update({i: collection.find_one({'NAME': retrieve_issuer(i)[IssuerAttributes.NAME.value]},
-                                                     {'ObjectId': 1})})
+        identifier = collection.find_one({'NAME': retrieve_issuer(i)[IssuerAttributes.NAME.value]},
+                                 {'ObjectId': 1})['_id']
+        ISSUERS_TABLE.update({i: identifier})
 
 
 def create_and_insert_people_doc(collection):
     for index in range(NUMBER_OF_PEOPLE):
         person_details = retrieve_detailed_person()
-        person_document = EmbeddedPersonAttributes.create_embedded_person(person_details)
-        print("Inserting the person: "+ person_details[EmbeddedPersonAttributes.NAME.value] +
-              ' '+ person_details[EmbeddedPersonAttributes.SURNAME.value])
+        person_document = PersonAttributes.create_embedded_person(person_details)
+        print("Inserting the person: " + person_details[PersonAttributes.NAME.value] +
+              ' ' + person_details[PersonAttributes.SURNAME.value])
         insert_document(collection, person_document)
-        PEOPLE_TABLE.update({index: collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
-                                                        {'ObjectId': 1})})
+        identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
+                                                        {'ObjectId': 1})
+        PEOPLE_TABLE.update({index: identifier['_id']})
 
 
 if __name__ == '__main__':
@@ -428,7 +428,15 @@ if __name__ == '__main__':
     read_issuers()
     read_vaccines()
     read_tests()
-    #Insertion of the documents
+
+    # Insertion of the documents
     create_and_insert_people_doc(covid_certificates_collection)
     create_and_insert_all_issuer_doc(issuers_collection)
+    print(PEOPLE_TABLE[0])
+    covid_certificates_collection.find_one_and_update({'_id': PEOPLE_TABLE[0]},
+                                                      {'$push': {'VACCINATIONS':
+                                                                     VaccinationAttributes.
+                                                      create_vaccination_document
+                                                                     (retrieve_vaccine(), retrieve_person(),
+                                                                      retrieve_person())}})
     cluster.close()
