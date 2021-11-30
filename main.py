@@ -2,14 +2,16 @@ import datetime
 import random
 
 import json
+
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 
-CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-#CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-#                    "&tlsAllowInvalidCertificates=true"
+# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    "&tlsAllowInvalidCertificates=true"
 
+NUMBER_OF_PEOPLE = 10
 
 NAMES = []
 SURNAMES = []
@@ -18,6 +20,16 @@ ADDRESSES = []
 ISSUERS = []
 VACCINES = []
 TESTS = []
+"""
+Dictionary used to bind each issuer with its ObjectId inside MongoDB
+It is updated after the creation of each issuer inside the function create_and_insert_all_issuer_doc
+"""
+ISSUERS_TABLE = {}
+"""
+Dictionary used to bind each person with its ObjectId inside MongoDB
+Is is updated after the creation of each person inside the function create_and_insert_people_doc
+"""
+PEOPLE_TABLE = {}
 
 
 class TestAttributes(IntEnum):
@@ -27,10 +39,9 @@ class TestAttributes(IntEnum):
     ISSUER = 0
     DATE = 1
     RESULT = 2
-    PERSON = 3
-    TYPE = 4
-    DOCTOR = 5
-    NURSE = 6
+    TYPE = 3
+    DOCTOR = 4
+    NURSE = 5
 
     @classmethod
     def create_test_document(cls, test_type, person, doctor, nurse):
@@ -46,12 +57,10 @@ class TestAttributes(IntEnum):
             result = "positive"
         else:
             result = "negative"
-        test = {TestAttributes.ISSUER.name: IssuerAttributes.
-            create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
                 TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
-                TestAttributes.RESULT.name: result,
-                TestAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
                 TestAttributes.TYPE.name: test_type,
+                TestAttributes.RESULT.name: result,
                 TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
                 TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
                 }
@@ -65,10 +74,9 @@ class VaccinationAttributes(IntEnum):
     VACCINE = 0
     DATE = 1
     DOSE = 2
-    PERSON = 3
-    ISSUER = 4
-    DOCTOR = 5
-    NURSE = 6
+    ISSUER = 3
+    DOCTOR = 4
+    NURSE = 5
 
     @classmethod
     def create_vaccination_document(cls, vaccine, person, doctor, nurse):
@@ -87,9 +95,9 @@ class VaccinationAttributes(IntEnum):
             VaccinationAttributes.DATE.name: injection_date,
             # TODO change how the number of dose is computed
             VaccinationAttributes.DOSE.name: 1,
-            VaccinationAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
-            VaccinationAttributes.ISSUER.name: IssuerAttributes.
-                create_embedded_issuer(retrieve_issuer(), add_location_details=False),
+            # VaccinationAttributes.PERSON.name: EmbeddedPersonAttributes.create_embedded_person(person),
+            # TODO change by adding reference to the issuer
+            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
             VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
             VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse),
         }
@@ -202,6 +210,8 @@ class EmbeddedPersonAttributes(IntEnum):
     SURNAME = 1
     BIRTHDATE = 2
     FISCAL_CODE = 3
+    TESTS = 4
+    VACCINATIONS = 5
 
     @classmethod
     def create_embedded_person(cls, person_details):
@@ -211,7 +221,10 @@ class EmbeddedPersonAttributes(IntEnum):
         person = {EmbeddedPersonAttributes.NAME.name: person_details[EmbeddedPersonAttributes.NAME.value],
                   EmbeddedPersonAttributes.SURNAME.name: person_details[EmbeddedPersonAttributes.SURNAME.value],
                   EmbeddedPersonAttributes.BIRTHDATE.name: person_details[EmbeddedPersonAttributes.BIRTHDATE.value],
-                  EmbeddedPersonAttributes.FISCAL_CODE.name: person_details[EmbeddedPersonAttributes.FISCAL_CODE.value]}
+                  EmbeddedPersonAttributes.FISCAL_CODE.name: person_details[EmbeddedPersonAttributes.FISCAL_CODE.value],
+                  EmbeddedPersonAttributes.TESTS.name: [],
+                  EmbeddedPersonAttributes.VACCINATIONS.name: []
+                  }
         return person
 
 
@@ -303,7 +316,7 @@ def create_index_function(collection_name):
     :param collection_name: collection in which the index is created
     :return:
     """
-    collection_name.create_index([('vaccine name', 'text')])
+    collection_name.create_index([('FISCAL_CODE', 'text')])
 
 
 def retrieve_person():
@@ -320,7 +333,6 @@ def retrieve_detailed_person():
     Method that initializes a list containing all the attributes for a generic person
     """
 
-    # TODO change the fiscal code field
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
     birthdate = build_date("1950-01-01", days_ahead=12775)
@@ -340,12 +352,15 @@ def build_date(start_date, days_ahead):
     return result_date
 
 
-def retrieve_issuer():
+def retrieve_issuer(issuer_index):
     """
-    Method to randomly retrieve a list containing all the attributes for an issuer.
+    Method to retrieve a list containing all the attributes for an issuer.
+    If an index is provided, it will be used to enable the search, otherwise a random index will be chosen.
     """
-    issuer_index = random.randint(0, len(ISSUERS) - 1)
-    return ISSUERS[issuer_index]
+    try:
+        return ISSUERS[issuer_index]
+    except IndexError:
+        print("Index out of bound, please insert a valid index!")
 
 
 def retrieve_vaccine():
@@ -372,11 +387,38 @@ def insert_document(collection, document):
     collection.insert_one(document)
 
 
+def create_and_insert_all_issuer_doc(collection):
+    """
+    Method to insert all the issuers document and to initialize a local dictionary to avoid queries for
+    retrieving ObjectIds.
+    """
+    for i in range(len(ISSUERS)):
+        issuer_document = IssuerAttributes.create_embedded_issuer(retrieve_issuer(i), add_location_details=True)
+        print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
+              + retrieve_issuer(i)[IssuerAttributes.NAME.value])
+        insert_document(collection, issuer_document)
+        ISSUERS_TABLE.update({i: collection.find_one({'NAME': retrieve_issuer(i)[IssuerAttributes.NAME.value]},
+                                                     {'ObjectId': 1})})
+
+
+def create_and_insert_people_doc(collection):
+    for index in range(NUMBER_OF_PEOPLE):
+        person_details = retrieve_detailed_person()
+        person_document = EmbeddedPersonAttributes.create_embedded_person(person_details)
+        print("Inserting the person: "+ person_details[EmbeddedPersonAttributes.NAME.value] +
+              ' '+ person_details[EmbeddedPersonAttributes.SURNAME.value])
+        insert_document(collection, person_document)
+        PEOPLE_TABLE.update({index: collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
+                                                        {'ObjectId': 1})})
+
+
 if __name__ == '__main__':
     cluster = pym.MongoClient(CONNECTION_STRING)
     db = cluster['polipass']
     db.drop_collection('covid_certificates')
-    collection = db['covid_certificates']
+    db.drop_collection('issuers')
+    covid_certificates_collection = db['covid_certificates']
+    issuers_collection = db['issuers']
 
     # Initialization of all the global variables
     read_names()
@@ -386,16 +428,7 @@ if __name__ == '__main__':
     read_issuers()
     read_vaccines()
     read_tests()
-
-    # creation of the documents
-    vaccination = VaccinationAttributes.create_vaccination_document(retrieve_vaccine(),
-                                                                    retrieve_detailed_person(),
-                                                                    retrieve_person(),
-                                                                    retrieve_person())
-
-    test = TestAttributes.create_test_document(retrieve_test(), retrieve_detailed_person(), retrieve_person(),
-                                               retrieve_person())
-
-    insert_document(collection, vaccination)
-    insert_document(collection, test)
+    #Insertion of the documents
+    create_and_insert_people_doc(covid_certificates_collection)
+    create_and_insert_all_issuer_doc(issuers_collection)
     cluster.close()
