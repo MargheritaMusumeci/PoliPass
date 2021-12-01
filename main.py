@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import random
 
 import json
@@ -7,9 +8,9 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 
-# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    # "&tlsAllowInvalidCertificates=true"
 
 NUMBER_OF_PEOPLE = 10
 
@@ -276,6 +277,7 @@ class PersonAttributes(IntEnum):
     TESTS = 9
     VACCINATIONS = 10
     GREEN_PASS = 11
+    PASSWORD = 12
 
     @classmethod
     def create_person(cls, person_details):
@@ -291,9 +293,23 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
                   PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
                   PersonAttributes.TESTS.name: [],
-                  PersonAttributes.VACCINATIONS.name: []
+                  PersonAttributes.VACCINATIONS.name: [],
+                  PersonAttributes.PASSWORD.name: encode_password("password")
                   }
         return person
+
+
+def encode_password(string):
+    """
+    Encodes a password using SHA-256 algorithm.
+    """
+    # Converts the string into bytes
+    encoded_string = string.encode()
+    # Create the SHA-256 object
+    result = hashlib.sha256(encoded_string)
+    # Get the hexadecimal format of the encoded data
+    hexa_string = result.hexdigest()
+    return hexa_string
 
 
 def read_names():
