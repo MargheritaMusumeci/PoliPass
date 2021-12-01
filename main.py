@@ -2,10 +2,10 @@ import datetime
 import random
 
 import json
-import numpy as np
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
+import qrcode
 
 # CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
@@ -275,7 +275,6 @@ class PersonAttributes(IntEnum):
     EMERGENCY_CONTACT = 8
     TESTS = 9
     VACCINATIONS = 10
-    GREEN_PASS = 11
 
     @classmethod
     def create_person(cls, person_details):
@@ -290,10 +289,40 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.PHONE_NUMBER.name: person_details[PersonAttributes.PHONE_NUMBER.value],
                   PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
                   PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
+                  PersonAttributes.EMERGENCY_CONTACT.name: "",
                   PersonAttributes.TESTS.name: [],
-                  PersonAttributes.VACCINATIONS.name: []
+                  PersonAttributes.VACCINATIONS.name: [],
                   }
         return person
+
+
+class GreenPassAttributes(IntEnum):
+    """
+    Enum class to retrieve the index of an attribute for a green pass embedded instance.
+    """
+    QR_CODE = 0
+    EXPIRATION_DATE = 1
+
+    @classmethod
+    def create_green_pass_from_vaccination(cls, vaccination):
+        date = vaccination[VaccinationAttributes.DATE.name]
+        dose_number = vaccination[VaccinationAttributes.DOSE.name]
+        vaccine = vaccination[VaccinationAttributes.VACCINE.name]
+        if dose_number == 1:
+            if vaccine[EmbeddedVaccineAttributes.NAME.name] == "COVID-19 Vaccine Janssen":
+                days_ahead = 270
+            else:
+                days_ahead = 30
+        else:
+            if dose_number == 2:
+                days_ahead = 270
+            else:
+                days_ahead = 365
+        expiration_date = date + datetime.timedelta(days=days_ahead)
+        green_pass = {GreenPassAttributes.QR_CODE.name: str(qrcode.make(expiration_date)),
+                      GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
+                      }
+        return green_pass
 
 
 def read_names():
@@ -419,7 +448,7 @@ def build_detailed_person():
     birth_place = random.choice(MUNICIPALITIES)
     fiscal_code = codicefiscale.encode(name, surname, sex, str(birthdate),
                                        birth_place)
-    address = ADDRESSES[random.randint(0, len(ADDRESSES)-1)]
+    address = ADDRESSES[random.randint(0, len(ADDRESSES) - 1)]
     number = "+393"
     for i in range(0, 9):
         number += str(random.randint(0, 9))
@@ -514,28 +543,40 @@ def insert_ordered_vaccination(collection, person_index):
     Method to insert a vaccination for the chosen person_id.
     It checks whether the person has already done any vaccination. If yes, it retrieves the vaccine name, producer and
     type to guarantee consistency among all the doses.
+    :return the vaccination document that has been just created.
     """
     person_id = PEOPLE_TABLE[person_index]
     vaccinations_list = collection.find_one({'_id': person_id}, {'VACCINATIONS': 1})['VACCINATIONS']
     print(vaccinations_list)
     if len(vaccinations_list) == 0:
-        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+        new_vaccination_doc = VaccinationAttributes.create_vaccination_document \
+            (retrieve_vaccine(0, len(VACCINES) - 1), retrieve_person(), retrieve_person())
+        collection.find_one_and_update({'_id': person_id},
                                        {'$push': {'VACCINATIONS': {
-                                           '$each': [
-                                               VaccinationAttributes.
-                                       create_vaccination_document
-                                               (retrieve_vaccine(0, len(VACCINES) - 1), retrieve_person(),
-                                                retrieve_person())],
+                                           '$each': [new_vaccination_doc],
                                            '$sort': {'DATE': -1}}}})
     else:
         vaccination_details = list(vaccinations_list[0].values())
         new_vaccination_doc = VaccinationAttributes.create_vaccination_doc_from_previous_one(vaccination_details)
         if new_vaccination_doc is not None:
-            collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+            collection.find_one_and_update({'_id': person_id},
                                            {'$push': {'VACCINATIONS': {
                                                '$each': [new_vaccination_doc],
                                                '$sort': {'DATE': -1}
                                            }}})
+    insert_green_pass(collection, new_vaccination_doc, person_index)
+
+
+def insert_green_pass(collection, vaccination, person_index):
+    """
+    Method used to create and update the green pass for a given person.
+    """
+    person_id = PEOPLE_TABLE[person_index]
+    collection.find_one_and_update({'_id': person_id},
+                                   {'$set': {'GREEN_PASS':
+                                                 GreenPassAttributes.create_green_pass_from_vaccination(vaccination)
+                                             }
+                                    })
 
 
 if __name__ == '__main__':
@@ -557,4 +598,8 @@ if __name__ == '__main__':
 
     # Insertion of the documents
     create_and_insert_people_doc(covid_certificates_collection)
+    create_and_insert_all_issuer_doc(issuers_collection)
+    for i in range(len(PEOPLE_TABLE) - 1):
+        insert_ordered_vaccination(covid_certificates_collection, i)
+        insert_ordered_vaccination(covid_certificates_collection, i)
     cluster.close()
