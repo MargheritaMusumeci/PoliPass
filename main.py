@@ -107,7 +107,12 @@ class VaccinationAttributes(IntEnum):
         # The first element in the vaccination instance is a dictionary representing the last vaccine done.
         vaccine_details = list(vaccination[VaccinationAttributes.VACCINE.value].values())
         previous_dose = vaccination[VaccinationAttributes.DOSE.value]
-
+        vaccine_name = vaccine_details[EmbeddedVaccineAttributes.NAME.value]
+        # Handling of the case with single-dose vaccine Janssen
+        if vaccine_name == "COVID-19 Vaccine Janssen":
+            previous_dose = 2
+            vaccine_details[EmbeddedVaccineAttributes.NAME.value:
+                            EmbeddedVaccineAttributes.TYPE.value+1] = retrieve_vaccine(0, 1)
         if previous_dose == 1:
             days_to_wait = 30
             injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
@@ -172,7 +177,7 @@ class EmbeddedVaccineAttributes(IntEnum):
         production_date = build_date(starting_date, days_ahead=max_num_production_days, is_random=False)
         vaccine = {EmbeddedVaccineAttributes.NAME.name: previous_vaccine_details[EmbeddedVaccineAttributes.NAME.value],
                    EmbeddedVaccineAttributes.PRODUCER.name: previous_vaccine_details[
-                       EmbeddedVaccineAttributes.PRODUCER.value],
+                   EmbeddedVaccineAttributes.PRODUCER.value],
                    EmbeddedVaccineAttributes.TYPE.name: previous_vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
                    EmbeddedVaccineAttributes.BATCH.name: batch,
                    EmbeddedVaccineAttributes.PRODUCTION_DATE.name: production_date}
@@ -385,7 +390,6 @@ def retrieve_detailed_person():
     """
     Method that initializes a list containing all the attributes for a generic person
     """
-
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
     birthdate = build_date("1950-01-01", days_ahead=12775)
@@ -405,7 +409,7 @@ def build_date(start_date, days_ahead, is_random=True):
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         result_date = start_date + datetime.timedelta(days=random.randint(0, days_ahead))
     else:
-            result_date = start_date + datetime.timedelta(days=days_ahead)
+        result_date = start_date + datetime.timedelta(days=days_ahead)
     return result_date
 
 
@@ -527,9 +531,9 @@ if __name__ == '__main__':
     create_and_insert_all_issuer_doc(issuers_collection)
     print("People to vaccinate: " + str(PEOPLE_TABLE[0]))
 
-    insert_ordered_vaccination(covid_certificates_collection, 0)
-    insert_ordered_vaccination(covid_certificates_collection, 0)
-    insert_ordered_vaccination(covid_certificates_collection, 0)
-    insert_ordered_vaccination(covid_certificates_collection, 0)
+    for i in range(len(PEOPLE_TABLE)):
+        insert_ordered_vaccination(covid_certificates_collection, i)
+        insert_ordered_vaccination(covid_certificates_collection, i)
+        insert_ordered_vaccination(covid_certificates_collection, i)
 
     cluster.close()
