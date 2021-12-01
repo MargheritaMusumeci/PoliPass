@@ -1,0 +1,111 @@
+QUERIES
+
+1) How many vaccines per Person?
+
+	db.Person.aggregate({
+		$project: {
+			NAME: 1,
+			NumberOfVaccines: {$cond: {if: {$isArray: "$VAX"}, then: {$size: "$VAX"}, else: 0}}
+		}
+	})
+
+2) How many tests per Person?
+
+	db.Person.aggregate({
+		$project: {
+			NAME: 1,
+			NumberOfTests: {$cond: {if: {$isArray: "$TEST"}, then: {$size: "$TEST"}, else: 0}}
+		}
+	})
+
+	OR
+
+	db.Person.aggregate({
+		$project: {
+			NAME: 1,
+			NumberOfTests: {$cond: {if: {$isArray: "$TEST"}, then: {$sum: 1}, else: 0}}
+		}
+	})
+
+3) Who are the positive persons?
+
+    db.Person.aggregate([
+      {
+        $project: {
+          NAME: 1,
+          result: {$arrayElemAt: ["$TEST", -1]}
+        }
+      },
+      {
+        $match: {"result.RESULT": "Positive"}
+      }
+    ])
+
+4) How many positive tests for person?
+
+	db.Person.aggregate([
+	  {$match: {TEST: {$exists: true}}},
+	  {
+		$project: {
+			NAME: 1,
+			NumberOfTests: {$size: {
+			"$filter": {
+			    input: "$TEST",
+			    as: "t",
+			    cond: {$eq: ["$$t.Result", "Positive"]}
+			  }
+			}}
+		}
+	  }
+	])
+
+5) Top 5 person with at least a test sorted by the number of positive tests
+
+	db.Person.aggregate([
+	  {$match: {TEST: {$exists: true}}},
+	  {
+		$project: {
+			NAME: 1,
+			NumberOfTests: {$size: {
+			"$filter": {
+			    input: "$TEST",
+			    as: "t",
+			    cond: {$eq: ["$$t.Result", "Positive"]}
+			  }
+			}}
+		  }
+	  },{"$sort": {"NumberOfTests": -1}},{"$limit": 5}
+	])
+
+6) Positivity rate per Vaccine
+
+7) Number of vaccine/test done by a doctor/nurse
+
+8) Percentage of vaccinated person over a certain age
+
+9) The most popular test
+
+10) The most popular vaccine
+
+11) Find all the person vaccinated with a given lot of vaccine
+
+12) Find the last test of a person
+
+13) Find all the emergency contact of positive persons (this one could be added in the project of 3)
+
+14) Percentage of persons with 2 doses of vaccine but green pass not valid (due to a positive test)
+
+15) Find the no-vax king: the person with the largest number of tests and no vaccine
+
+16) Find all the issuers in Milan
+
+17) Density of vaccination wrt the opening hours (or find the hour with more vaccines done)
+
+
+COMMANDS
+
+1) Create person's documents
+
+2) Insert a new test (update of the array)
+
+3) Change the result of a test (if the result inserted is wrong)
