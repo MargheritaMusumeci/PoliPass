@@ -139,4 +139,6 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
-.idea
+# idea files
+*.iml
+/.idea/
