@@ -2,7 +2,7 @@ import datetime
 import random
 
 import json
-
+import numpy as np
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
@@ -86,7 +86,7 @@ class VaccinationAttributes(IntEnum):
         vaccine_issued = EmbeddedVaccineAttributes.create_embedded_vaccine(vaccine)
         production_date = vaccine_issued['PRODUCTION_DATE']
         days = random.randint(0, 30)
-        hours = random.randint(0, 24)
+        hours = random.randint(8, 24)
         minutes = random.randint(0, 60)
         injection_date = production_date + datetime.timedelta(days=days, hours=hours, minutes=minutes)
         vaccination = {
@@ -112,7 +112,7 @@ class VaccinationAttributes(IntEnum):
         if vaccine_name == "COVID-19 Vaccine Janssen":
             previous_dose = 2
             vaccine_details[EmbeddedVaccineAttributes.NAME.value:
-                            EmbeddedVaccineAttributes.TYPE.value+1] = retrieve_vaccine(0, 1)
+                            EmbeddedVaccineAttributes.TYPE.value + 1] = retrieve_vaccine(0, 1)
         if previous_dose == 1:
             days_to_wait = 30
             injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
@@ -177,7 +177,7 @@ class EmbeddedVaccineAttributes(IntEnum):
         production_date = build_date(starting_date, days_ahead=max_num_production_days, is_random=False)
         vaccine = {EmbeddedVaccineAttributes.NAME.name: previous_vaccine_details[EmbeddedVaccineAttributes.NAME.value],
                    EmbeddedVaccineAttributes.PRODUCER.name: previous_vaccine_details[
-                   EmbeddedVaccineAttributes.PRODUCER.value],
+                       EmbeddedVaccineAttributes.PRODUCER.value],
                    EmbeddedVaccineAttributes.TYPE.name: previous_vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
                    EmbeddedVaccineAttributes.BATCH.name: batch,
                    EmbeddedVaccineAttributes.PRODUCTION_DATE.name: production_date}
@@ -268,11 +268,17 @@ class PersonAttributes(IntEnum):
     SURNAME = 1
     BIRTHDATE = 2
     FISCAL_CODE = 3
-    TESTS = 4
-    VACCINATIONS = 5
+    BIRTH_PLACE = 4
+    PHONE_NUMBER = 5
+    EMAIL = 6
+    ADDRESS = 7
+    EMERGENCY_CONTACT = 8
+    TESTS = 9
+    VACCINATIONS = 10
+    GREEN_PASS = 11
 
     @classmethod
-    def create_embedded_person(cls, person_details):
+    def create_person(cls, person_details):
         """
         Method that creates a dictionary representing an embedded person
         """
@@ -280,6 +286,10 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.SURNAME.name: person_details[PersonAttributes.SURNAME.value],
                   PersonAttributes.BIRTHDATE.name: person_details[PersonAttributes.BIRTHDATE.value],
                   PersonAttributes.FISCAL_CODE.name: person_details[PersonAttributes.FISCAL_CODE.value],
+                  PersonAttributes.BIRTH_PLACE.name: person_details[PersonAttributes.BIRTH_PLACE.value],
+                  PersonAttributes.PHONE_NUMBER.name: person_details[PersonAttributes.PHONE_NUMBER.value],
+                  PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
+                  PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
                   PersonAttributes.TESTS.name: [],
                   PersonAttributes.VACCINATIONS.name: []
                   }
@@ -329,7 +339,14 @@ def read_addresses():
         for line in f:
             if line == "\n":
                 continue
-            ADDRESSES.append(line.rstrip('\n').rstrip().lstrip())
+            address_line = line.rstrip('\n').rstrip().lstrip().split(',')
+            address = ""
+            for i in range(len(address_line)):
+                if i > 0:
+                    address = address + " " + address_line[i]
+                else:
+                    address = address + address_line[i]
+            ADDRESSES.append(address)
     f.close()
 
 
@@ -386,16 +403,28 @@ def retrieve_person():
     return [NAMES[name_index], SURNAMES[surname_index]]
 
 
-def retrieve_detailed_person():
+def build_detailed_person():
     """
     Method that initializes a list containing all the attributes for a generic person
     """
     name_index = random.randint(0, len(NAMES) - 1)
     surname_index = random.randint(0, len(SURNAMES) - 1)
+    name = NAMES[name_index]
+    surname = SURNAMES[surname_index]
+    if name[len(name) - 1] == 'a':
+        sex = 'F'
+    else:
+        sex = 'M'
     birthdate = build_date("1950-01-01", days_ahead=12775)
-    fiscal_code = codicefiscale.encode(SURNAMES[surname_index], NAMES[name_index], 'M', str(birthdate),
-                                       random.choice(MUNICIPALITIES))
-    return [NAMES[name_index], SURNAMES[surname_index], birthdate, fiscal_code]
+    birth_place = random.choice(MUNICIPALITIES)
+    fiscal_code = codicefiscale.encode(name, surname, sex, str(birthdate),
+                                       birth_place)
+    address = ADDRESSES[random.randint(0, len(ADDRESSES)-1)]
+    number = "+393"
+    for i in range(0, 9):
+        number += str(random.randint(0, 9))
+    email = (name + '.' + surname + "@polipass.it").lower()
+    return [name, surname, birthdate, fiscal_code, birth_place, number, email, address]
 
 
 def build_date(start_date, days_ahead, is_random=True):
@@ -470,8 +499,8 @@ def create_and_insert_people_doc(collection):
     Furthermore, it updates the dictionary adding the pair (index, id) for each person.
     """
     for index in range(NUMBER_OF_PEOPLE):
-        person_details = retrieve_detailed_person()
-        person_document = PersonAttributes.create_embedded_person(person_details)
+        person_details = build_detailed_person()
+        person_document = PersonAttributes.create_person(person_details)
         print("Inserting the person: " + person_details[PersonAttributes.NAME.value] +
               ' ' + person_details[PersonAttributes.SURNAME.value])
         insert_document(collection, person_document)
@@ -494,8 +523,8 @@ def insert_ordered_vaccination(collection, person_index):
                                        {'$push': {'VACCINATIONS': {
                                            '$each': [
                                                VaccinationAttributes.
-                                               create_vaccination_document
-                                               (retrieve_vaccine(0, len(VACCINES)-1), retrieve_person(),
+                                       create_vaccination_document
+                                               (retrieve_vaccine(0, len(VACCINES) - 1), retrieve_person(),
                                                 retrieve_person())],
                                            '$sort': {'DATE': -1}}}})
     else:
@@ -528,12 +557,4 @@ if __name__ == '__main__':
 
     # Insertion of the documents
     create_and_insert_people_doc(covid_certificates_collection)
-    create_and_insert_all_issuer_doc(issuers_collection)
-    print("People to vaccinate: " + str(PEOPLE_TABLE[0]))
-
-    for i in range(len(PEOPLE_TABLE)):
-        insert_ordered_vaccination(covid_certificates_collection, i)
-        insert_ordered_vaccination(covid_certificates_collection, i)
-        insert_ordered_vaccination(covid_certificates_collection, i)
-
     cluster.close()
