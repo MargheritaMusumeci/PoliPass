@@ -1,7 +1,9 @@
 import datetime
+import hashlib
 import random
 
 import json
+import numpy as np
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
@@ -275,6 +277,8 @@ class PersonAttributes(IntEnum):
     EMERGENCY_CONTACT = 8
     TESTS = 9
     VACCINATIONS = 10
+    GREEN_PASS = 11
+    PASSWORD = 12
 
     @classmethod
     def create_person(cls, person_details):
@@ -292,8 +296,22 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.EMERGENCY_CONTACT.name: "",
                   PersonAttributes.TESTS.name: [],
                   PersonAttributes.VACCINATIONS.name: [],
+                  PersonAttributes.PASSWORD.name: encode_password("password")
                   }
         return person
+
+
+def encode_password(string):
+    """
+    Encodes a password using SHA-256 algorithm.
+    """
+    # Converts the string into bytes
+    encoded_string = string.encode()
+    # Create the SHA-256 object
+    result = hashlib.sha256(encoded_string)
+    # Get the hexadecimal format of the encoded data
+    hexa_string = result.hexdigest()
+    return hexa_string
 
 
 class GreenPassAttributes(IntEnum):
@@ -559,7 +577,7 @@ def insert_ordered_vaccination(collection, person_index):
         vaccination_details = list(vaccinations_list[0].values())
         new_vaccination_doc = VaccinationAttributes.create_vaccination_doc_from_previous_one(vaccination_details)
         if new_vaccination_doc is not None:
-            collection.find_one_and_update({'_id': person_id},
+            collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                            {'$push': {'VACCINATIONS': {
                                                '$each': [new_vaccination_doc],
                                                '$sort': {'DATE': -1}
