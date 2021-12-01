@@ -101,6 +101,35 @@ class VaccinationAttributes(IntEnum):
         }
         return vaccination
 
+    @classmethod
+    def create_vaccination_doc_from_previous_one(cls, vaccination):
+        """
+        Method to create a vaccination document after one vaccination has been already done.
+        """
+        vaccine_details = list(vaccination[VaccinationAttributes.VACCINE.value].values())
+        vaccine_doc = EmbeddedVaccineAttributes.create_embedded_vaccine(vaccine_details)
+        previous_dose = vaccination[VaccinationAttributes.DOSE.value]
+        if previous_dose == 1:
+            days_to_wait = 30
+            injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
+        else:
+            if previous_dose == 2:
+                days_to_wait = 150
+                injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
+            else:
+                print("The person has already done 3 vaccine doses")
+                return
+        vaccination_document_to_add = {
+            VaccinationAttributes.VACCINE.name: vaccine_doc,
+            VaccinationAttributes.DATE.name: injection_date,
+            VaccinationAttributes.DOSE.name: previous_dose + 1,
+            # TODO decide whether taking the same ISSUER or not. Now it is randomly chosen.
+            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
+        }
+        return vaccination_document_to_add
+
 
 class IssuerAttributes(IntEnum):
     TYPE = 0
@@ -380,7 +409,8 @@ def retrieve_test():
 def insert_document(collection, document):
     """
     Method to insert a test document inside the collection.
-    :param collection
+    :param collection MongoDB collection to update
+    :param document MongoDB document to insert in the collection
     """
     collection.insert_one(document)
 
@@ -396,11 +426,15 @@ def create_and_insert_all_issuer_doc(collection):
               + retrieve_issuer(i)[IssuerAttributes.NAME.value])
         insert_document(collection, issuer_document)
         identifier = collection.find_one({'NAME': retrieve_issuer(i)[IssuerAttributes.NAME.value]},
-                                 {'ObjectId': 1})['_id']
+                                         {'ObjectId': 1})['_id']
         ISSUERS_TABLE.update({i: identifier})
 
 
 def create_and_insert_people_doc(collection):
+    """
+    Method to inside the chosen collection NUMBER OF PEOPLE instances of person documents.
+    Furthermore, it updates the dictionary adding the pair (index, id) for each person.
+    """
     for index in range(NUMBER_OF_PEOPLE):
         person_details = retrieve_detailed_person()
         person_document = PersonAttributes.create_embedded_person(person_details)
@@ -408,8 +442,36 @@ def create_and_insert_people_doc(collection):
               ' ' + person_details[PersonAttributes.SURNAME.value])
         insert_document(collection, person_document)
         identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
-                                                        {'ObjectId': 1})
+                                         {'ObjectId': 1})
         PEOPLE_TABLE.update({index: identifier['_id']})
+
+
+def insert_ordered_vaccination(collection, person_index):
+    """
+    Method to insert a vaccination for the chosen person_id.
+    It checks whether the person has already done any vaccination. If yes it retrieves the vaccine name, producer and
+    type to guarantee consistency among all the doses.
+    """
+    person_id = PEOPLE_TABLE[person_index]
+    vaccinations_list = collection.find_one({'_id': person_id}, {'VACCINATIONS': 1})['VACCINATIONS']
+    print(vaccinations_list)
+    if len(vaccinations_list) == 0:
+        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                       {'$push': {'VACCINATIONS': {
+                                           '$each': [
+                                                VaccinationAttributes.
+                                                create_vaccination_document
+                                                (retrieve_vaccine(), retrieve_person(),
+                                                 retrieve_person())],
+                                           '$sort': {'DATE': -1}}}})
+    else:
+        vaccination_details = list(vaccinations_list[0].values())
+        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                       {'$push': {'VACCINATIONS': {
+                                           '$each': [VaccinationAttributes.
+                                                     create_vaccination_doc_from_previous_one(vaccination_details)],
+                                           '$sort': {'DATE': -1}
+                                       }}})
 
 
 if __name__ == '__main__':
@@ -432,11 +494,12 @@ if __name__ == '__main__':
     # Insertion of the documents
     create_and_insert_people_doc(covid_certificates_collection)
     create_and_insert_all_issuer_doc(issuers_collection)
-    print(PEOPLE_TABLE[0])
-    covid_certificates_collection.find_one_and_update({'_id': PEOPLE_TABLE[0]},
-                                                      {'$push': {'VACCINATIONS':
-                                                                     VaccinationAttributes.
-                                                      create_vaccination_document
-                                                                     (retrieve_vaccine(), retrieve_person(),
-                                                                      retrieve_person())}})
+    print("People to vaccinate: " + str(PEOPLE_TABLE[0]))
+
+    insert_ordered_vaccination(covid_certificates_collection, 0)
+    insert_ordered_vaccination(covid_certificates_collection, 0)
+    insert_ordered_vaccination(covid_certificates_collection, 0)
+
+    vaccine_issued = covid_certificates_collection.find_one({'_id': PEOPLE_TABLE[0]}, {'VACCINATIONS': 1})
+
     cluster.close()
