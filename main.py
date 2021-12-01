@@ -48,7 +48,6 @@ class TestAttributes(IntEnum):
         """
         Method to create a test document.
         :param test_type the type of the test
-        :param person list containing all attributes for a person
         :param doctor list containing all attributes for a doctor
         :param nurse list containing all attributes for a nurse
         """
@@ -108,30 +107,76 @@ class VaccinationAttributes(IntEnum):
         # The first element in the vaccination instance is a dictionary representing the last vaccine done.
         vaccine_details = list(vaccination[VaccinationAttributes.VACCINE.value].values())
         previous_dose = vaccination[VaccinationAttributes.DOSE.value]
+
         if previous_dose == 1:
             days_to_wait = 30
             injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
-            vaccine_doc = EmbeddedVaccineAttributes.\
+            vaccine_doc = EmbeddedVaccineAttributes. \
                 create_embedded_vaccine_from_previous(vaccine_details, max_num_production_days=28)
         else:
             if previous_dose == 2:
                 days_to_wait = 150
                 injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
-                vaccine_doc = EmbeddedVaccineAttributes.\
+                vaccine_doc = EmbeddedVaccineAttributes. \
                     create_embedded_vaccine_from_previous(vaccine_details, max_num_production_days=149)
             else:
-                print("The person has already done 3 vaccine doses")
+                print("The person has already done all required vaccine doses")
                 return None
         vaccination_document_to_add = {
             VaccinationAttributes.VACCINE.name: vaccine_doc,
             VaccinationAttributes.DATE.name: injection_date,
             VaccinationAttributes.DOSE.name: previous_dose + 1,
-            # TODO decide whether taking the same ISSUER or not. Now it is randomly chosen.
+            # TODO decide whether or not taking the same ISSUER. Now it is randomly chosen.
             VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
             VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
             VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
         }
         return vaccination_document_to_add
+
+
+class EmbeddedVaccineAttributes(IntEnum):
+    """
+    Enum class containing all the attributes for an embedded vaccine
+    """
+    NAME = 0
+    PRODUCER = 1
+    TYPE = 2
+    BATCH = 3
+    PRODUCTION_DATE = 4
+
+    @classmethod
+    def create_embedded_vaccine(cls, vaccine_details):
+        """
+        Method to build the first vaccine as an embedded MongoDB document.
+        """
+        batch = random.randint(0, 10000)
+        starting_possible_date = "2021-04-01"
+        vaccine = {EmbeddedVaccineAttributes.NAME.name: vaccine_details[EmbeddedVaccineAttributes.NAME.value],
+                   EmbeddedVaccineAttributes.PRODUCER.name: vaccine_details[EmbeddedVaccineAttributes.PRODUCER.value],
+                   EmbeddedVaccineAttributes.TYPE.name: vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
+                   EmbeddedVaccineAttributes.BATCH.name: batch,
+                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: build_date(starting_possible_date, days_ahead=210)}
+        return vaccine
+
+    @classmethod
+    def create_embedded_vaccine_from_previous(cls, previous_vaccine_details, max_num_production_days):
+        """
+        Method to build further instances of vaccine for the same person.
+        :param previous_vaccine_details list containing all information about the previous vaccine
+        :param max_num_production_days maximum number of days within which the vaccine can be produced,
+        given the last production.
+        """
+        previous_batch = previous_vaccine_details[EmbeddedVaccineAttributes.BATCH.value]
+        batch = random.randint(previous_batch, previous_batch + 5000)
+        starting_date = previous_vaccine_details[EmbeddedVaccineAttributes.PRODUCTION_DATE.value]
+        production_date = build_date(starting_date, days_ahead=max_num_production_days, is_random=False)
+        vaccine = {EmbeddedVaccineAttributes.NAME.name: previous_vaccine_details[EmbeddedVaccineAttributes.NAME.value],
+                   EmbeddedVaccineAttributes.PRODUCER.name: previous_vaccine_details[
+                       EmbeddedVaccineAttributes.PRODUCER.value],
+                   EmbeddedVaccineAttributes.TYPE.name: previous_vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
+                   EmbeddedVaccineAttributes.BATCH.name: batch,
+                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: production_date}
+        return vaccine
 
 
 class IssuerAttributes(IntEnum):
@@ -187,50 +232,6 @@ class EmbeddedPositionDetails(IntEnum):
             EmbeddedPositionDetails.PROVINCE.name: location_details[EmbeddedPositionDetails.PROVINCE.value],
             EmbeddedPositionDetails.ZIP.name: location_details[EmbeddedPositionDetails.ZIP.value]}
         return embedded_location
-
-
-class EmbeddedVaccineAttributes(IntEnum):
-    """
-    Enum class containing all the attributes for an embedded vaccine
-    """
-    NAME = 0
-    PRODUCER = 1
-    TYPE = 2
-    BATCH = 3
-    PRODUCTION_DATE = 4
-
-    @classmethod
-    def create_embedded_vaccine(cls, vaccine_details):
-        """
-        Method to build the first vaccine as an embedded MongoDB document.
-        """
-        batch = random.randint(0, 10000)
-        starting_possible_date = "2021-04-01"
-        vaccine = {EmbeddedVaccineAttributes.NAME.name: vaccine_details[EmbeddedVaccineAttributes.NAME.value],
-                   EmbeddedVaccineAttributes.PRODUCER.name: vaccine_details[EmbeddedVaccineAttributes.PRODUCER.value],
-                   EmbeddedVaccineAttributes.TYPE.name: vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
-                   EmbeddedVaccineAttributes.BATCH.name: batch,
-                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: build_date(starting_possible_date, days_ahead=210)}
-        return vaccine
-
-    @classmethod
-    def create_embedded_vaccine_from_previous(cls, previous_vaccine_details, max_num_production_days):
-        """
-        Method to build further instances of vaccine for the same person.
-        :param previous_vaccine_details list containing all information about the previous vaccine
-        :param max_num_production_days maximum number of days within which the vaccine can be produced, given the last production.
-        """
-        previous_batch = previous_vaccine_details[EmbeddedVaccineAttributes.BATCH.value]
-        batch = random.randint(previous_batch, previous_batch + 5000)
-        starting_date = previous_vaccine_details[EmbeddedVaccineAttributes.PRODUCTION_DATE.value]
-        production_date = build_date(starting_date, days_ahead=max_num_production_days, is_random=False)
-        vaccine = {EmbeddedVaccineAttributes.NAME.name: previous_vaccine_details[EmbeddedVaccineAttributes.NAME.value],
-                   EmbeddedVaccineAttributes.PRODUCER.name: previous_vaccine_details[EmbeddedVaccineAttributes.PRODUCER.value],
-                   EmbeddedVaccineAttributes.TYPE.name: previous_vaccine_details[EmbeddedVaccineAttributes.TYPE.value],
-                   EmbeddedVaccineAttributes.BATCH.name: batch,
-                   EmbeddedVaccineAttributes.PRODUCTION_DATE.name: production_date }
-        return vaccine
-
 
 
 class EmbeddedDoctorAttributes(IntEnum):
@@ -404,7 +405,7 @@ def build_date(start_date, days_ahead, is_random=True):
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         result_date = start_date + datetime.timedelta(days=random.randint(0, days_ahead))
     else:
-        result_date = start_date + datetime.timedelta(days=days_ahead)
+            result_date = start_date + datetime.timedelta(days=days_ahead)
     return result_date
 
 
@@ -419,11 +420,11 @@ def retrieve_issuer(issuer_index):
         print("Index out of bound, please insert a valid index!")
 
 
-def retrieve_vaccine():
+def retrieve_vaccine(start_index, end_index):
     """
     Method to randomly retrieve a list containing all the attributes for a vaccine.
     """
-    vaccine_index = random.randint(0, len(VACCINES) - 1)
+    vaccine_index = random.randint(start_index, end_index)
     return VACCINES[vaccine_index]
 
 
@@ -488,20 +489,20 @@ def insert_ordered_vaccination(collection, person_index):
         collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                        {'$push': {'VACCINATIONS': {
                                            '$each': [
-                                                VaccinationAttributes.
-                                                create_vaccination_document
-                                                (retrieve_vaccine(), retrieve_person(),
-                                                 retrieve_person())],
+                                               VaccinationAttributes.
+                                               create_vaccination_document
+                                               (retrieve_vaccine(0, len(VACCINES)-1), retrieve_person(),
+                                                retrieve_person())],
                                            '$sort': {'DATE': -1}}}})
     else:
         vaccination_details = list(vaccinations_list[0].values())
         new_vaccination_doc = VaccinationAttributes.create_vaccination_doc_from_previous_one(vaccination_details)
         if new_vaccination_doc is not None:
             collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
-                                       {'$push': {'VACCINATIONS': {
-                                           '$each': [new_vaccination_doc],
-                                           '$sort': {'DATE': -1}
-                                       }}})
+                                           {'$push': {'VACCINATIONS': {
+                                               '$each': [new_vaccination_doc],
+                                               '$sort': {'DATE': -1}
+                                           }}})
 
 
 if __name__ == '__main__':
@@ -530,6 +531,5 @@ if __name__ == '__main__':
     insert_ordered_vaccination(covid_certificates_collection, 0)
     insert_ordered_vaccination(covid_certificates_collection, 0)
     insert_ordered_vaccination(covid_certificates_collection, 0)
-    vaccine_issued = covid_certificates_collection.find_one({'_id': PEOPLE_TABLE[0]}, {'VACCINATIONS': 1})
 
     cluster.close()
