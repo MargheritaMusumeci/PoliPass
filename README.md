@@ -23,3 +23,14 @@
 ## Database Generator
 
 ## GUI 
+
+To run the server, go to App/Server and type the following command on the terminal 
+
+```sh
+ node index.js 
+```
+To start the application, go to App/Client and type the following command on the terminal 
+
+```sh
+ npm start 
+```
