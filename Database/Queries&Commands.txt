@@ -79,17 +79,58 @@ QUERIES
 
 6) Positivity rate per Vaccine
 
-7) Number of vaccine/test done by a doctor/nurse
+     db.Person.aggregate([
+          {$match: {VAX: {$exists: true}}},
+          {$project: {vaccine: {$arrayElemAt: ["$VAX", 0]} , test: {$arrayElemAt: ["$TEST" , 0]}}},
+          {$project: {vaccine: "$vaccine" , resultTest: {$cond: {if: {$eq: ["$test.Result" , "Positive"]}, then: 1, else: 0}}}},
+          {$group: {_id: {name: "$vaccine.NAME"} , totalVaccine: {$sum: 1} , totalPositive: {$sum: "$resultTest"}}},
+          {$project: {name: "$name" , rate: {$divide: ["$totalPositive" , "$totalVaccine"]}}}
+      ]
+
+7) Number of vaccine done by a doctor/nurse
+
+7) Number of test done by a doctor/nurse
 
 8) Percentage of vaccinated person over a certain age
 
+    Date(): return the current date
+    new Date(ISODate.getTime() - 1000 * 86400 * 365 * NUM_OF_DAYS)
+
 9) The most popular test
+
+  db.Person.aggregate([
+      {$project: {tests: "$TEST"}},
+      {$unwind: "$tests"},
+      {$project: {type: "$tests.NAME"}},
+      {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
+      {$sort: {count: -1}}
+  ])
 
 10) The most popular vaccine
 
+   db.Person.aggregate([
+      {$project: {vaccine: "$VAX"}},
+      {$unwind: "$vaccine"},
+      {$project: {type: "$vaccine.NAME"}},
+      {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
+      {$sort: {count: -1}}
+  ])
+
 11) Find all the person vaccinated with a given lot of vaccine
 
+  db.Person.find({
+      "VAX.LOT": "100" ,
+      "VAX.NAME": "Moderna"
+  })
+
 12) Find the last test of a person
+
+  db.Person.find({},
+     {
+       name: "$NAME",
+       lastTest: {$cond: {if: {$isArray: "$TEST"}, then: {$arrayElemAt: ["$TEST" , 0]}, else: "None"}}
+     }
+  )
 
 13) Find all the emergency contact of positive persons (this one could be added in the project of 3)
 
@@ -97,9 +138,24 @@ QUERIES
 
 15) Find the no-vax king: the person with the largest number of tests and no vaccine
 
-16) Find all the issuers in Milan
+  db.Person.aggregate([
+    {$match: {$and: [{VAX: {$exists: false}} , {TEST: {$exists: true}}]}},
+    {$addFields: {numberOfTests: {$size: "$TEST"}}},
+    {$sort: {numberOfTest: -1}} , {$limit: 1}
+  ])
 
-17) Density of vaccination wrt the opening hours (or find the hour with more vaccines done)
+16) Find all the issuers in Milan
+    db.Issuers.find({address.city: "Milan"})
+
+17) Density of vaccinations wrt the opening hours (or find the hour with more vaccines done)
+
+18) Number of non vaccinated person
+
+19) The youngest with the green pass
+
+20) Person with green pass that will expire in the next month
+
+21) Average age of positive persons
 
 
 COMMANDS
@@ -109,3 +165,5 @@ COMMANDS
 2) Insert a new test (update of the array)
 
 3) Change the result of a test (if the result inserted is wrong)
+
+4) Drop all
