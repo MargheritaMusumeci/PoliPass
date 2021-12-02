@@ -3,17 +3,18 @@ import hashlib
 import random
 
 import json
-import numpy as np
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
 
-# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    # "&tlsAllowInvalidCertificates=true"
 
-NUMBER_OF_PEOPLE = 10
+NUMBER_OF_PEOPLE = 1
+MAX_NUMBER_OF_DOSES = 3
+MAX_NUMBER_OF_TESTS = 5
 
 NAMES = []
 SURNAMES = []
@@ -22,6 +23,7 @@ ADDRESSES = []
 ISSUERS = []
 VACCINES = []
 TESTS = []
+MOBILE_PREFIXES = []
 """
 Dictionary used to bind each issuer with its ObjectId inside MongoDB
 It is updated after the creation of each issuer inside the function create_and_insert_all_issuer_doc
@@ -59,7 +61,32 @@ class TestAttributes(IntEnum):
         else:
             result = "negative"
         test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
-                TestAttributes.DATE.name: build_date("2019-01-01", days_ahead=730),
+                TestAttributes.DATE.name: build_date("2021-06-01", days_ahead=365),
+                TestAttributes.TYPE.name: test_type,
+                TestAttributes.RESULT.name: result,
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
+                }
+        return test
+
+    @classmethod
+    def create_test_document_from_previous_one(cls, test_type, doctor, nurse, previous_test):
+        """
+        Method to create a test document after one test has already been done.
+        :param test_type the type of the test
+        :param doctor list containing all attributes for a doctor
+        :param nurse list containing all attributes for a nurse
+        :param previous_test the last test done
+        """
+        previous_date = str(datetime.datetime.date(previous_test['DATE']))
+        positivity = random.random()
+        if positivity >= 0.5:
+            result = "positive"
+        else:
+            result = "negative"
+        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
+                # TODO set the date between previous date and current date
+                TestAttributes.DATE.name: build_date(previous_date, days_ahead=30),
                 TestAttributes.TYPE.name: test_type,
                 TestAttributes.RESULT.name: result,
                 TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
@@ -285,6 +312,7 @@ class PersonAttributes(IntEnum):
         """
         Method that creates a dictionary representing an embedded person
         """
+        emergency_contact = EmergencyContactAttributes.create_embedded_emergency_contact(retrieve_person())
         person = {PersonAttributes.NAME.name: person_details[PersonAttributes.NAME.value],
                   PersonAttributes.SURNAME.name: person_details[PersonAttributes.SURNAME.value],
                   PersonAttributes.BIRTHDATE.name: person_details[PersonAttributes.BIRTHDATE.value],
@@ -293,10 +321,11 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.PHONE_NUMBER.name: person_details[PersonAttributes.PHONE_NUMBER.value],
                   PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
                   PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
-                  PersonAttributes.EMERGENCY_CONTACT.name: "",
+                  PersonAttributes.EMERGENCY_CONTACT.name: emergency_contact,
                   PersonAttributes.TESTS.name: [],
                   PersonAttributes.VACCINATIONS.name: [],
-                  PersonAttributes.PASSWORD.name: encode_password("password")
+                  PersonAttributes.PASSWORD.name: encode_password("password"),
+                  PersonAttributes.GREEN_PASS.name: None
                   }
         return person
 
@@ -310,8 +339,8 @@ def encode_password(string):
     # Create the SHA-256 object
     result = hashlib.sha256(encoded_string)
     # Get the hexadecimal format of the encoded data
-    hexa_string = result.hexdigest()
-    return hexa_string
+    hex_string = result.hexdigest()
+    return hex_string
 
 
 class GreenPassAttributes(IntEnum):
@@ -319,7 +348,8 @@ class GreenPassAttributes(IntEnum):
     Enum class to retrieve the index of an attribute for a green pass embedded instance.
     """
     QR_CODE = 0
-    EXPIRATION_DATE = 1
+    ISSUE_DATE = 1
+    EXPIRATION_DATE = 2
 
     @classmethod
     def create_green_pass_from_vaccination(cls, vaccination):
@@ -338,9 +368,38 @@ class GreenPassAttributes(IntEnum):
                 days_ahead = 365
         expiration_date = date + datetime.timedelta(days=days_ahead)
         green_pass = {GreenPassAttributes.QR_CODE.name: str(qrcode.make(expiration_date)),
+                      GreenPassAttributes.ISSUE_DATE.name: date,
                       GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
                       }
         return green_pass
+
+    @classmethod
+    def create_green_pass_from_test(cls, test):
+        date = test[TestAttributes.DATE.name]
+        expiration_date = date + datetime.timedelta(days=2)
+        green_pass = {GreenPassAttributes.QR_CODE.name: str(qrcode.make(expiration_date)),
+                      GreenPassAttributes.ISSUE_DATE.name: date,
+                      GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
+                      }
+        return green_pass
+
+
+class EmergencyContactAttributes(IntEnum):
+    """
+    Enum class to retrieve the index of an attribute for an emergency contact embedded instance.
+    """
+    NAME = 0
+    SURNAME = 1
+    PHONE_NUMBER = 2
+
+    @classmethod
+    def create_embedded_emergency_contact(cls, person_details):
+        phone_number = random.choice(MOBILE_PREFIXES) + str(random.randint(1111111, 9999999))
+        contact = {EmergencyContactAttributes.NAME.name: person_details[EmergencyContactAttributes.NAME.value],
+                   EmergencyContactAttributes.SURNAME.name: person_details[EmergencyContactAttributes.SURNAME.value],
+                   EmergencyContactAttributes.PHONE_NUMBER.name: phone_number
+                   }
+        return contact
 
 
 def read_names():
@@ -430,6 +489,17 @@ def read_tests():
             if line == "\n":
                 continue
             TESTS.append((line.rstrip('\n').rstrip().lstrip()))
+
+
+def read_mobile_prefixes():
+    """
+    Method to read all the italian mobile prefixes from the file mobile_prefixes.txt.
+    """
+    with open("files/mobile_prefixes.txt", 'r', encoding='utf8') as file:
+        for line in file:
+            if line == "\n":
+                continue
+            MOBILE_PREFIXES.append((line.rstrip('\n').rstrip().lstrip()))
 
 
 def create_index_function(collection_name):
@@ -582,7 +652,8 @@ def insert_ordered_vaccination(collection, person_index):
                                                '$each': [new_vaccination_doc],
                                                '$sort': {'DATE': -1}
                                            }}})
-    insert_green_pass(collection, new_vaccination_doc, person_index)
+    if new_vaccination_doc is not None:
+        insert_green_pass(collection, new_vaccination_doc, person_index)
 
 
 def insert_green_pass(collection, vaccination, person_index):
@@ -592,9 +663,105 @@ def insert_green_pass(collection, vaccination, person_index):
     person_id = PEOPLE_TABLE[person_index]
     collection.find_one_and_update({'_id': person_id},
                                    {'$set': {'GREEN_PASS':
-                                                 GreenPassAttributes.create_green_pass_from_vaccination(vaccination)
+                                             GreenPassAttributes.create_green_pass_from_vaccination(vaccination)
                                              }
                                     })
+
+
+def insert_ordered_test(collection, person_index):
+    """
+    Method to insert a test for the chosen person_id. If the person has an active green pass and the test result is
+    positive, the green pass gets deleted. If the test result is negative and the person has an active vaccine, it
+    recreates the green pass from the vaccine details. Otherwise, if the test result is negative a new green pass
+    is created when the person has not gotten the vaccine or when their vaccine is eligible for a green pass.
+    """
+    person_id = PEOPLE_TABLE[person_index]
+    info = collection.find_one({'_id': person_id}, {"VACCINATIONS": 1, "TESTS": 1, "GREEN_PASS": 1})
+    vaccinations_list = info['VACCINATIONS']
+    tests_list = info['TESTS']
+    green_pass = info['GREEN_PASS']
+
+    # if the green pass is expired, remove it
+    if green_pass is not None and datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
+        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                       {'$set': {'GREEN_PASS': None}
+                                        })
+
+    # create a new test
+    if len(tests_list) == 0:
+        test = TestAttributes.create_test_document(random.choice(TESTS), retrieve_person(), retrieve_person())
+    else:
+        last_test = collection.find_one({'_id': PEOPLE_TABLE[person_index]},
+                                        {'TESTS': {
+                                            '$slice': 1
+                                        }})['TESTS'][0]
+        test = TestAttributes.create_test_document_from_previous_one(random.choice(TESTS), retrieve_person(),
+                                                                     retrieve_person(), last_test)
+    result = test['RESULT']
+
+    # handle the case where the person got a vaccine
+    if len(vaccinations_list) != 0:
+        last_vaccination = collection.find_one({'_id': PEOPLE_TABLE[person_index]},
+                                               {'VACCINATIONS': {
+                                                   '$slice': 1
+                                               }})['VACCINATIONS'][0]
+        if result == "positive":
+            if green_pass is not None and green_pass['ISSUE_DATE'] <= test['DATE'] <= green_pass['EXPIRATION_DATE']:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}}},
+                                                '$set': {'GREEN_PASS': None}
+                                                })
+            elif green_pass is not None:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}
+                                               }}})
+            else:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}
+                                               }}})
+        elif result == "negative":
+            # TODO handle the case where the last vaccination is not eligible for a green pass
+            collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                           {'$push': {'TESTS': {
+                                                '$each': [test],
+                                                '$sort': {'DATE': -1}}},
+                                            '$set': {'GREEN_PASS':
+                                                     GreenPassAttributes.create_green_pass_from_vaccination(
+                                                      last_vaccination)
+                                                     }
+                                            })
+
+    # handle the case where the person did not get a vaccine
+    else:
+        if result == "positive":
+            if green_pass is None:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}
+                                               }}})
+            else:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}}},
+                                                   '$set': {'GREEN_PASS': None}
+                                                })
+        elif result == "negative":
+            collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                           {'$push': {'TESTS': {
+                                               '$each': [test],
+                                               '$sort': {'DATE': -1}}},
+                                            '$set': {'GREEN_PASS':
+                                                     GreenPassAttributes.create_green_pass_from_test(test)
+                                                     }
+                                            })
 
 
 if __name__ == '__main__':
@@ -613,11 +780,22 @@ if __name__ == '__main__':
     read_issuers()
     read_vaccines()
     read_tests()
+    read_mobile_prefixes()
 
     # Insertion of the documents
     create_and_insert_people_doc(covid_certificates_collection)
     create_and_insert_all_issuer_doc(issuers_collection)
-    for i in range(len(PEOPLE_TABLE) - 1):
-        insert_ordered_vaccination(covid_certificates_collection, i)
-        insert_ordered_vaccination(covid_certificates_collection, i)
+
+    # Insertion of vaccines
+    for j in range(len(PEOPLE_TABLE)):
+        doses = random.randint(0, MAX_NUMBER_OF_DOSES)
+        for k in range(doses):
+            insert_ordered_vaccination(covid_certificates_collection, j)
+
+    # Insertion of tests
+    for j in range(len(PEOPLE_TABLE)):
+        tests = random.randint(0, MAX_NUMBER_OF_TESTS)
+        for k in range(tests):
+            insert_ordered_test(covid_certificates_collection, j)
+
     cluster.close()
