@@ -8,15 +8,6 @@ import {
   Image
 } from "react-native";
 
-const createAccount = async () => {
-  try{
-  let res = await fetch('http://localhost:3000/');
-  console.log(await res.text()) 
-  }catch{
-  console.error('error')
-  }
-}
-
 function Main({ navigation }) {
   return (
     <View style={styles.rect}>
@@ -32,7 +23,7 @@ function Main({ navigation }) {
           Consult your green pass whenever and wherever you want!
         </Text>
         <TouchableOpacity
-          onPress={ () => createAccount() }
+          onPress={ () => navigation.navigate("Signup") }
           style={styles.signup}
         >
           <Text style={styles.button_text}>Create account</Text>
