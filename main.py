@@ -1,18 +1,17 @@
 import datetime
 import hashlib
 import random
-
 import json
 import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
 
-CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    # "&tlsAllowInvalidCertificates=true"
+# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+     "&tlsAllowInvalidCertificates=true"
 
-NUMBER_OF_PEOPLE = 1
+NUMBER_OF_PEOPLE = 20
 MAX_NUMBER_OF_DOSES = 3
 MAX_NUMBER_OF_TESTS = 5
 
@@ -223,7 +222,8 @@ class IssuerAttributes(IntEnum):
         """
         Method to create an issuer given a list of attributes.
         :param params list with all fields mapped according to IssuerAttributes enum
-        :param add_location_details is a boolean variable to assess if the details about the issuer position are required.
+        :param add_location_details is a boolean variable to assess
+        if the details about the issuer position are required.
         """
         if not add_location_details:
             issuer = {
@@ -663,7 +663,7 @@ def insert_green_pass(collection, vaccination, person_index):
     person_id = PEOPLE_TABLE[person_index]
     collection.find_one_and_update({'_id': person_id},
                                    {'$set': {'GREEN_PASS':
-                                             GreenPassAttributes.create_green_pass_from_vaccination(vaccination)
+                                                 GreenPassAttributes.create_green_pass_from_vaccination(vaccination)
                                              }
                                     })
 
@@ -679,12 +679,16 @@ def insert_ordered_test(collection, person_index):
     info = collection.find_one({'_id': person_id}, {"VACCINATIONS": 1, "TESTS": 1, "GREEN_PASS": 1})
     vaccinations_list = info['VACCINATIONS']
     tests_list = info['TESTS']
-    green_pass = info['GREEN_PASS']
+
+    try:
+        green_pass = info['GREEN_PASS']
+    except KeyError:
+        green_pass = None
 
     # if the green pass is expired, remove it
     if green_pass is not None and datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
         collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
-                                       {'$set': {'GREEN_PASS': None}
+                                       {'$unset': {'GREEN_PASS': ""}
                                         })
 
     # create a new test
@@ -711,8 +715,8 @@ def insert_ordered_test(collection, person_index):
                                                {'$push': {'TESTS': {
                                                    '$each': [test],
                                                    '$sort': {'DATE': -1}}},
-                                                '$set': {'GREEN_PASS': None}
-                                                })
+                                                   '$unset': {'GREEN_PASS': ""}
+                                               })
             elif green_pass is not None:
                 collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                                {'$push': {'TESTS': {
@@ -729,13 +733,13 @@ def insert_ordered_test(collection, person_index):
             # TODO handle the case where the last vaccination is not eligible for a green pass
             collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                            {'$push': {'TESTS': {
-                                                '$each': [test],
-                                                '$sort': {'DATE': -1}}},
-                                            '$set': {'GREEN_PASS':
-                                                     GreenPassAttributes.create_green_pass_from_vaccination(
-                                                      last_vaccination)
-                                                     }
-                                            })
+                                               '$each': [test],
+                                               '$sort': {'DATE': -1}}},
+                                               '$set': {'GREEN_PASS':
+                                                   GreenPassAttributes.create_green_pass_from_vaccination(
+                                                   last_vaccination)
+                                               }
+                                           })
 
     # handle the case where the person did not get a vaccine
     else:
@@ -751,17 +755,17 @@ def insert_ordered_test(collection, person_index):
                                                {'$push': {'TESTS': {
                                                    '$each': [test],
                                                    '$sort': {'DATE': -1}}},
-                                                   '$set': {'GREEN_PASS': None}
-                                                })
+                                                   '$unset': {'GREEN_PASS': ""}
+                                               })
         elif result == "negative":
             collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                            {'$push': {'TESTS': {
                                                '$each': [test],
                                                '$sort': {'DATE': -1}}},
-                                            '$set': {'GREEN_PASS':
-                                                     GreenPassAttributes.create_green_pass_from_test(test)
-                                                     }
-                                            })
+                                               '$set': {'GREEN_PASS':
+                                                            GreenPassAttributes.create_green_pass_from_test(test)
+                                                        }
+                                           })
 
 
 if __name__ == '__main__':
