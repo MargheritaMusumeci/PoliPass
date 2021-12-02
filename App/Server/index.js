@@ -7,11 +7,20 @@ const port = 3000;
 
 // end points --> 
 app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
     console.log("called")
     res.send("Hello World");
 });
+
+app.post("/login", (req, res) => {
+    console.log(req.body)
+    res.send("Hello World");
+});
+
+// database query -->
+
 
 // database connection --> 
 const {MongoClient} = require('mongodb');

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,7 +10,46 @@ import {
 } from "react-native";
 import Divider from "./components/Divider";
 
+show = true;
+
+const easter_egg = () =>{
+  show = !show;
+  console.log(show)
+}
+
+const doLogin = async (navigation) => {
+  try{
+    let res = await fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({a: 1, b: 'Textual content'})
+    });
+
+    console.log(await res.text()) 
+  }catch{
+    console.error('error')
+  }
+
+  navigation.navigate("Home")
+}
+
+const createAccount = async () => {
+  try{
+  let res = await fetch('http://localhost:3000/');
+  console.log(await res.text()) 
+  }catch{
+  console.error('error')
+  }
+}
+
+
 function Login({ navigation }) {
+
+  const [shouldShow, setShouldShow] = useState(true)
+
   return (
     <View style={styles.rect}>
       <StatusBar hidden />
@@ -25,16 +64,29 @@ function Login({ navigation }) {
           
         </View>
         <Text style={styles.email}>Email</Text>
+        <TextInput placeholder="" style={styles.textInputEmail}></TextInput>
         <Text style={styles.password}>Password</Text>
         <TextInput
           placeholder=""
           secureTextEntry={true}
           style={styles.textInputPassword}
         ></TextInput>
-        <Text style={styles.text5}>Forgotten your password?</Text>
-        <TextInput placeholder="" style={styles.textInputEmail}></TextInput>
-      </View>
-      <View style={styles.textColumnFiller}></View>
+        </View>
+        <View style={styles.textColumnFiller}>
+        {shouldShow ?
+        ( <TouchableOpacity onPress={() => setShouldShow(!shouldShow)}>
+          <Text style={styles.text5}>Forgotten your password?</Text>
+        </TouchableOpacity>) : (
+          <View style={styles.textColumnFiller}>
+            <TouchableOpacity onPress={() => setShouldShow(!shouldShow)}>
+        <Text style={styles.easter_egg_text}>We can’t give you your password back, but we can wish you a Merry Christmas! </Text>
+      </TouchableOpacity><Image
+            source={require("../assets/santa-claus.png")}
+            resizeMode="contain"
+            style={styles.easter_egg}
+      ></Image></View>
+        ) }
+        </View>
       <View style={styles.rect4}>
         <Divider style={styles.divider}></Divider>
         <View style={styles.buttonRow}>
@@ -45,7 +97,7 @@ function Login({ navigation }) {
             <Text style={styles.text2}>Sign up</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => doLogin(navigation)}
             style={styles.button2}
           >
             <Text style={styles.text6}>Log in</Text>
@@ -114,7 +166,7 @@ const styles = StyleSheet.create({
     color: "rgba(123,139,151,1)",
     fontSize: 18,
     lineHeight: 20,
-    marginTop: 87,
+    marginTop: 50,
     marginLeft: 18
   },
   textInputPassword: {
@@ -145,10 +197,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     fontSize: 18,
     lineHeight: 20,
-    marginTop: -221,
+    marginTop: 0,
     marginLeft: 18
   },
   textColumn: {},
+
   textColumnFiller: {
     flex: 1
   },
@@ -192,6 +245,23 @@ const styles = StyleSheet.create({
     marginTop: 13,
     marginLeft: 31,
     marginRight: 26
+  },
+  easter_egg: {
+    height: 180,
+    width: 180,
+    marginTop: 38,
+    marginLeft: 110,
+
+  },
+  easter_egg_text:{
+    color: "#e36861",
+    fontSize: 18,
+    lineHeight: 20,
+    marginTop: 60,
+    marginLeft: 40,
+    marginRight:40,
+    textAlign: 'center',
+
   }
 });
 export default Login;
