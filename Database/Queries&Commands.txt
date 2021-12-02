@@ -91,10 +91,17 @@ QUERIES
 
 7) Number of test done by a doctor/nurse
 
-8) Percentage of vaccinated person over a certain age
+8) Percentage of vaccinated person over a certain age (for example older than 20yo)
 
-    Date(): return the current date
-    new Date(ISODate.getTime() - 1000 * 86400 * 365 * NUM_OF_DAYS)
+    (BIRTHDATE saved as new Date("1999-03-18"))
+
+    db.Person.aggregate([
+        {$match: {$and: [{BIRTHDATE: {$exists: true}} , {VAX: {$exists: true}}]}},
+        {$project: {age: {"$divide":[{$subtract: [new Date("2021-12-02T00:00:00.000Z") ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
+        {$project: {age: "$age" , VacPersonOverAge: {$cond: {if: {age: {$gte: ["$age" , 20]}}, then: 1, else: 0}}}},
+        {$group: {_id: null ,totNumOfVaccinatedPerson: {$sum: 1} , numOfVaccinatedPersonOverAge: {$sum: "$VacPersonOverAge"}}},
+        {$project: {numOfVaccinatedPersonOverAge: "$numOfVaccinatedPersonOverAge" , totalNumberOfVaccinatedPerson: "$totNumOfVaccinatedPerson" , rate: {$divide: ["$numOfVaccinatedPersonOverAge" , "$totNumOfVaccinatedPerson"]}}}
+    ])
 
 9) The most popular test
 
