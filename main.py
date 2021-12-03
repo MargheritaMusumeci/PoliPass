@@ -6,6 +6,8 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
+from PIL import Image
+import io
 
 #CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
@@ -151,7 +153,7 @@ class VaccinationAttributes(IntEnum):
         previous_dose = vaccination[VaccinationAttributes.DOSE.value]
         vaccine_name = vaccine_details[EmbeddedVaccineAttributes.NAME.value]
         # Handling of the case with single-dose vaccine Janssen
-        if vaccine_name == "COVID-19 Vaccine Janssen":
+        if vaccine_name == "COVID-19 Vaccine Janssen" or (vaccine_name == "Vaxzevria" and previous_dose == 2):
             previous_dose = 2
             vaccine_details[EmbeddedVaccineAttributes.NAME.value:
                             EmbeddedVaccineAttributes.TYPE.value + 1] = retrieve_vaccine(0, 1)
@@ -289,7 +291,6 @@ class EmbeddedDoctorAttributes(IntEnum):
     NAME = 0
     SURNAME = 1
     FISCAL_CODE = 2
-    #MAIL = 2
 
     @classmethod
     def create_embedded_doctor(cls, doctor_details):
@@ -299,8 +300,7 @@ class EmbeddedDoctorAttributes(IntEnum):
         name = doctor_details[EmbeddedDoctorAttributes.NAME.value]
         surname = doctor_details[EmbeddedDoctorAttributes.SURNAME.value]
         doctor = {EmbeddedDoctorAttributes.NAME.name: name,
-                  EmbeddedDoctorAttributes.SURNAME.name: surname,
-                  EmbeddedDoctorAttributes.MAIL.name: (name + '.' + surname + "@polipass.it").lower()
+                  EmbeddedDoctorAttributes.SURNAME.name: surname
         }
         return doctor
 
@@ -322,8 +322,8 @@ class EmbeddedDoctorAttributes(IntEnum):
                 surname = None
         if name is not None and surname is not None:
             caregiver_doc = {
-                EmbeddedDoctorAttributes.NAME.name : name,
-                EmbeddedDoctorAttributes.SURNAME.name : surname,
+                EmbeddedDoctorAttributes.NAME.name: name,
+                EmbeddedDoctorAttributes.SURNAME.name: surname,
                 EmbeddedDoctorAttributes.FISCAL_CODE.name: fiscal_code,
             }
             return caregiver_doc
@@ -421,7 +421,7 @@ class GreenPassAttributes(IntEnum):
             else:
                 days_ahead = 365
         expiration_date = date + datetime.timedelta(days=days_ahead)
-        green_pass = {GreenPassAttributes.QR_CODE.name: str(qrcode.make(expiration_date)),
+        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(str(expiration_date)),
                       GreenPassAttributes.ISSUE_DATE.name: date,
                       GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
                       }
@@ -431,7 +431,7 @@ class GreenPassAttributes(IntEnum):
     def create_green_pass_from_test(cls, test):
         date = test[TestAttributes.DATE.name]
         expiration_date = date + datetime.timedelta(days=2)
-        green_pass = {GreenPassAttributes.QR_CODE.name: str(qrcode.make(expiration_date)),
+        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(str(expiration_date)),
                       GreenPassAttributes.ISSUE_DATE.name: date,
                       GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
                       }
@@ -604,7 +604,7 @@ def build_detailed_person():
         sex = 'M'
     birthdate = build_date("1950-01-01", days_ahead=12775)
     birth_place = random.choice(MUNICIPALITIES)
-    fiscal_code = codicefiscale.encode(name, surname, sex, str(birthdate),
+    fiscal_code = codicefiscale.encode(surname, name, sex, str(birthdate),
                                        birth_place)
     address = ADDRESSES[random.randint(0, len(ADDRESSES) - 1)]
     number = "+393"
@@ -627,6 +627,18 @@ def build_date(start_date, days_ahead, is_random=True):
     else:
         result_date = start_date + datetime.timedelta(days=days_ahead)
     return result_date
+
+
+def build_green_pass_qrcode(expiration_date):
+    """
+    Method that saves an image representing a green pass qr code and returns it as a binary file.
+    """
+    green_pass_img = qrcode.make(expiration_date)
+    green_pass_img.save("green_pass.png")
+    green_pass_img = Image.open("green_pass.png")
+    green_pass_qr_bytes = io.BytesIO()
+    green_pass_img.save(green_pass_qr_bytes, format='PNG')
+    return green_pass_qr_bytes.getvalue()
 
 
 def retrieve_issuer(issuer_index):
@@ -704,6 +716,7 @@ def create_and_insert_people_doc(collection):
         except KeyError:
             pass
         """
+
 
 def insert_ordered_vaccination(collection, person_index):
     """
