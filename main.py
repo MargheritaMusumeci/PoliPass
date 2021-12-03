@@ -7,15 +7,15 @@ from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
 
-CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-     # "&tlsAllowInvalidCertificates=true"
+#CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    "&tlsAllowInvalidCertificates=true"
 
 # Constants
-NUMBER_OF_PEOPLE = 10000
+NUMBER_OF_PEOPLE = 10
 MAX_NUMBER_OF_DOSES = 3
 MAX_NUMBER_OF_TESTS = 5
-PROB_BEING_DOCTOR_OR_NURSE = 0.1
+PROB_BEING_DOCTOR_OR_NURSE = 0.5
 
 # Global variables
 NAMES = []
@@ -77,8 +77,8 @@ class TestAttributes(IntEnum):
                 TestAttributes.DATE.name: build_date("2021-06-01", days_ahead=365),
                 TestAttributes.TYPE.name: test_type,
                 TestAttributes.RESULT.name: result,
-                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
-                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse())
                 }
         return test
 
@@ -102,8 +102,8 @@ class TestAttributes(IntEnum):
                 TestAttributes.DATE.name: build_date(previous_date, days_ahead=30),
                 TestAttributes.TYPE.name: test_type,
                 TestAttributes.RESULT.name: result,
-                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
-                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse)
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse())
                 }
         return test
 
@@ -136,8 +136,8 @@ class VaccinationAttributes(IntEnum):
             VaccinationAttributes.DATE.name: injection_date,
             VaccinationAttributes.DOSE.name: 1,
             VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
-            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(doctor),
-            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(nurse),
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse()),
         }
         return vaccination
 
@@ -175,8 +175,8 @@ class VaccinationAttributes(IntEnum):
             VaccinationAttributes.DOSE.name: previous_dose + 1,
             # TODO decide whether or not taking the same ISSUER. Now it is randomly chosen.
             VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
-            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
-            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_embedded_doctor(retrieve_person()),
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse()),
         }
         return vaccination_document_to_add
 
@@ -288,7 +288,8 @@ class EmbeddedDoctorAttributes(IntEnum):
     """
     NAME = 0
     SURNAME = 1
-    MAIL = 2
+    FISCAL_CODE = 2
+    #MAIL = 2
 
     @classmethod
     def create_embedded_doctor(cls, doctor_details):
@@ -299,8 +300,33 @@ class EmbeddedDoctorAttributes(IntEnum):
         surname = doctor_details[EmbeddedDoctorAttributes.SURNAME.value]
         doctor = {EmbeddedDoctorAttributes.NAME.name: name,
                   EmbeddedDoctorAttributes.SURNAME.name: surname,
-                  EmbeddedDoctorAttributes.MAIL.name: (name + '.' + surname + "@polipass.it").lower()}
+                  EmbeddedDoctorAttributes.MAIL.name: (name + '.' + surname + "@polipass.it").lower()
+        }
         return doctor
+
+    @classmethod
+    def create_doctor(cls, fiscal_code):
+        """
+        Method to create an embedded doctor/nurse given his/her fiscal code.
+        :param fiscal_code fiscal code to enable the searching inside NURSES_TABLE or DOCTOR_TABLES
+        """
+        try:
+            name = NURSES_TABLE[fiscal_code][0]
+            surname = NURSES_TABLE[fiscal_code][1]
+        except KeyError:
+            try:
+                name = DOCTORS_TABLE[fiscal_code][0]
+                surname = DOCTORS_TABLE[fiscal_code][1]
+            except KeyError:
+                name = None
+                surname = None
+        if name is not None and surname is not None:
+            caregiver_doc = {
+                EmbeddedDoctorAttributes.NAME.name : name,
+                EmbeddedDoctorAttributes.SURNAME.name : surname,
+                EmbeddedDoctorAttributes.FISCAL_CODE.name: fiscal_code,
+            }
+            return caregiver_doc
 
 
 class PersonAttributes(IntEnum):
@@ -339,8 +365,7 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.EMERGENCY_CONTACT.name: emergency_contact,
                   PersonAttributes.TESTS.name: [],
                   PersonAttributes.VACCINATIONS.name: [],
-                  PersonAttributes.PASSWORD.name: encode_password("password"),
-                  PersonAttributes.GREEN_PASS.name: None
+                  PersonAttributes.PASSWORD.name: encode_password("password")
                   }
         probability = random.random()
         role = None
@@ -348,6 +373,14 @@ class PersonAttributes(IntEnum):
             role = random.choice(["doctor", "nurse"])
         if role is not None:
             person[PersonAttributes.ROLE.name] = role
+            if role == "doctor":
+                DOCTORS_TABLE.update(
+                    {person[PersonAttributes.FISCAL_CODE.name]:
+                        [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+            if role == "nurse":
+                NURSES_TABLE.update(
+                    {person[PersonAttributes.FISCAL_CODE.name]:
+                        [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
         return person
 
 
@@ -541,6 +574,22 @@ def retrieve_person():
     return [NAMES[name_index], SURNAMES[surname_index]]
 
 
+def retrieve_nurse():
+    fiscal_code = random.choice(list(NURSES_TABLE.keys()))
+    try:
+        return fiscal_code
+    except KeyError:
+        print("Error, no nurse available")
+
+
+def retrieve_doctor():
+    fiscal_code = random.choice(list(DOCTORS_TABLE.keys()))
+    try:
+        return fiscal_code
+    except KeyError:
+        print("Error, no doctor available")
+
+
 def build_detailed_person():
     """
     Method that initializes a list containing all the attributes for a generic person
@@ -645,6 +694,7 @@ def create_and_insert_people_doc(collection):
         identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
                                          {'ObjectId': 1})
         PEOPLE_TABLE.update({index: identifier['_id']})
+        """
         try:
             role = person_document['ROLE']
             if role == "doctor":
@@ -653,7 +703,7 @@ def create_and_insert_people_doc(collection):
                 NURSES_TABLE.update({index: identifier['_id']})
         except KeyError:
             pass
-
+        """
 
 def insert_ordered_vaccination(collection, person_index):
     """
@@ -766,7 +816,7 @@ def insert_ordered_test(collection, person_index):
                                                '$sort': {'DATE': -1}}},
                                                '$set': {'GREEN_PASS':
                                                    GreenPassAttributes.create_green_pass_from_vaccination(
-                                                   last_vaccination)
+                                                       last_vaccination)
                                                }
                                            })
 
@@ -792,7 +842,7 @@ def insert_ordered_test(collection, person_index):
                                                '$each': [test],
                                                '$sort': {'DATE': -1}}},
                                                '$set': {'GREEN_PASS':
-                                                            GreenPassAttributes.create_green_pass_from_test(test)
+                                                        GreenPassAttributes.create_green_pass_from_test(test)
                                                         }
                                            })
 
@@ -815,20 +865,23 @@ if __name__ == '__main__':
     read_tests()
     read_mobile_prefixes()
 
-    # Insertion of the documents
+    # Insertion of people and issuers
     create_and_insert_people_doc(covid_certificates_collection)
     create_and_insert_all_issuer_doc(issuers_collection)
+
+    for key in DOCTORS_TABLE.keys():
+        print("Doctor: " + str(key))
+    for key in NURSES_TABLE.keys():
+        print("Nurse: " + str(key))
 
     # Insertion of vaccines
     for j in range(len(PEOPLE_TABLE)):
         doses = random.randint(0, MAX_NUMBER_OF_DOSES)
         for k in range(doses):
             insert_ordered_vaccination(covid_certificates_collection, j)
-
     # Insertion of tests
     for j in range(len(PEOPLE_TABLE)):
         tests = random.randint(0, MAX_NUMBER_OF_TESTS)
         for k in range(tests):
             insert_ordered_test(covid_certificates_collection, j)
-
     cluster.close()
