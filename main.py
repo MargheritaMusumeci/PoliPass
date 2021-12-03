@@ -6,7 +6,7 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
-# from PIL import Image
+ from PIL import Image
 import io
 
 CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
@@ -632,12 +632,12 @@ def build_green_pass_qrcode(expiration_date):
     """
     Method that saves an image representing a green pass qr code and returns it as a binary file.
     """
-    # # # green_pass_img = qrcode.make(expiration_date)
-    # # green_pass_img.save("green_pass.png")
-    # # # green_pass_img = Image.open("green_pass.png")
-    # # green_pass_qr_bytes = io.BytesIO()
-    # # green_pass_img.save(green_pass_qr_bytes, format='PNG')
-    # return green_pass_qr_bytes.getvalue()
+    green_pass_img = qrcode.make(expiration_date)
+    green_pass_img.save("green_pass.png")
+    green_pass_img = Image.open("green_pass.png")
+    green_pass_qr_bytes = io.BytesIO()
+    green_pass_img.save(green_pass_qr_bytes, format='PNG')
+    return green_pass_qr_bytes.getvalue()
 
 
 def retrieve_issuer(issuer_index):
