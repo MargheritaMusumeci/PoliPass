@@ -2,57 +2,57 @@ QUERIES
 
 1) How many vaccines per Person?
 
-	db.Person.aggregate({
+	db.covid_certificates.aggregate({
 		$project: {
 			NAME: 1,
-			NumberOfVaccines: {$cond: {if: {$isArray: "$VAX"}, then: {$size: "$VAX"}, else: 0}}
+			NumberOfVaccines: {$cond: {if: {$isArray: "$VACCINATIONS"}, then: {$size: "$VACCINATIONS"}, else: 0}}
 		}
 	})
 
 2) How many tests per Person?
 
-	db.Person.aggregate({
+	db.covid_certificates.aggregate({
 		$project: {
 			NAME: 1,
-			NumberOfTests: {$cond: {if: {$isArray: "$TEST"}, then: {$size: "$TEST"}, else: 0}}
+			NumberOfTests: {$cond: {if: {$isArray: "$TESTS"}, then: {$size: "$TESTS"}, else: 0}}
 		}
 	})
 
 	OR
 
-	db.Person.aggregate({
+	db.covid_certificates.aggregate({
 		$project: {
 			NAME: 1,
-			NumberOfTests: {$cond: {if: {$isArray: "$TEST"}, then: {$sum: 1}, else: 0}}
+			NumberOfTests: {$cond: {if: {$isArray: "$TESTS"}, then: {$sum: 1}, else: 0}}
 		}
 	})
 
 3) Who are the positive persons?
 
-    db.Person.aggregate([
+    db.covid_certificates.aggregate([
       {
         $project: {
           NAME: 1,
-          result: {$arrayElemAt: ["$TEST", -1]}
+          result: {$arrayElemAt: ["$TESTS", -1]}
         }
       },
       {
-        $match: {"result.RESULT": "Positive"}
+        $match: {"result.RESULT": "positive"}
       }
     ])
 
 4) How many positive tests for person?
 
-	db.Person.aggregate([
-	  {$match: {TEST: {$exists: true}}},
+	db.covid_certificates.aggregate([
+	  {$match: {TESTS: {$exists: true}}},
 	  {
 		$project: {
 			NAME: 1,
 			NumberOfTests: {$size: {
 			"$filter": {
-			    input: "$TEST",
+			    input: "$TESTS",
 			    as: "t",
-			    cond: {$eq: ["$$t.Result", "Positive"]}
+			    cond: {$eq: ["$$t.Result", "positive"]}
 			  }
 			}}
 		}
@@ -61,43 +61,53 @@ QUERIES
 
 5) Top 5 person with at least a test sorted by the number of positive tests
 
-	db.Person.aggregate([
-	  {$match: {TEST: {$exists: true}}},
+	db.covid_certificates.aggregate([
+	  {$match: {TESTS: {$exists: true}}},
 	  {
 		$project: {
 			NAME: 1,
 			NumberOfTests: {$size: {
 			"$filter": {
-			    input: "$TEST",
-			    as: "t",
-			    cond: {$eq: ["$$t.Result", "Positive"]}
-			  }
-			}}
-		  }
-	  },{"$sort": {"NumberOfTests": -1}},{"$limit": 5}
+			    input: "$TESTS",as: "t",cond: {$eq: ["$$t.Result", "positive"]}}}}}},
+			    {"$sort": {"NumberOfTests": -1}},{"$limit": 5}
 	])
 
 6) Positivity rate per Vaccine
 
-     db.Person.aggregate([
-          {$match: {VAX: {$exists: true}}},
-          {$project: {vaccine: {$arrayElemAt: ["$VAX", 0]} , test: {$arrayElemAt: ["$TEST" , 0]}}},
-          {$project: {vaccine: "$vaccine" , resultTest: {$cond: {if: {$eq: ["$test.Result" , "Positive"]}, then: 1, else: 0}}}},
+     db.covid_certificates.aggregate([
+          {$match: {VACCINATIONS: {$exists: true}}},
+          {$project: {vaccine: {$arrayElemAt: ["$VACCINATIONS", 0]} , test: {$arrayElemAt: ["$TESTS" , 0]}}},
+          {$project: {vaccine: "$vaccine" , resultTest: {$cond: {if: {$eq: ["$test.Result" , "positive"]}, then: 1, else: 0}}}},
           {$group: {_id: {name: "$vaccine.NAME"} , totalVaccine: {$sum: 1} , totalPositive: {$sum: "$resultTest"}}},
           {$project: {name: "$name" , rate: {$divide: ["$totalPositive" , "$totalVaccine"]}}}
-      ]
+      ])
 
 7) Number of vaccine done by a doctor/nurse
+db.covid_certificates.aggregate([
+      {$project: {vaccines: "$VACCINATIONS"}},
+      {$unwind: "$vaccines"},
+      {$project: {doc: "$vaccines.DOCTOR"}},
+      {$group: {_id: {doc: "$doc"}, count: {$sum: 1}}},
+      {$sort: {count: -1}},
+      {"$limit": 5}
+  ])
 
 7) Number of test done by a doctor/nurse
-
+db.covid_certificates.aggregate([
+      {$project: {tests: "$TESTS"}},
+      {$unwind: "$tests"},
+      {$project: {nurse: "$tests.NURSE"}},
+      {$group: {_id: {nurse: "$nurse"}, count: {$sum: 1}}},
+      {$sort: {count: -1}},
+      {"$limit": 5}
+  ])
 8) Percentage of vaccinated person over a certain age (for example older than 20yo)
 
     (BIRTHDATE saved as new Date("1999-03-18"))
 
-    db.Person.aggregate([
-        {$match: {$and: [{BIRTHDATE: {$exists: true}} , {VAX: {$exists: true}}]}},
-        {$project: {age: {"$divide":[{$subtract: [new Date("2021-12-02T00:00:00.000Z") ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
+    db.covid_certificates.aggregate([
+        {$match: {$and: [{BIRTHDATE: {$exists: true}} , {VACCINATIONS: {$exists: true}}]}},
+        {$project: {age: {"$divide":[{$subtract: ["$$NOW" ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
         {$project: {age: "$age" , VacPersonOverAge: {$cond: {if: {age: {$gte: ["$age" , 20]}}, then: 1, else: 0}}}},
         {$group: {_id: null ,totNumOfVaccinatedPerson: {$sum: 1} , numOfVaccinatedPersonOverAge: {$sum: "$VacPersonOverAge"}}},
         {$project: {numOfVaccinatedPersonOverAge: "$numOfVaccinatedPersonOverAge" , totalNumberOfVaccinatedPerson: "$totNumOfVaccinatedPerson" , rate: {$divide: ["$numOfVaccinatedPersonOverAge" , "$totNumOfVaccinatedPerson"]}}}
@@ -105,8 +115,8 @@ QUERIES
 
 9) The most popular test
 
-  db.Person.aggregate([
-      {$project: {tests: "$TEST"}},
+  db.covid_certificates.aggregate([
+      {$project: {tests: "$TESTS"}},
       {$unwind: "$tests"},
       {$project: {type: "$tests.NAME"}},
       {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
@@ -115,8 +125,8 @@ QUERIES
 
 10) The most popular vaccine
 
-   db.Person.aggregate([
-      {$project: {vaccine: "$VAX"}},
+   db.covid_certificates.aggregate([
+      {$project: {vaccine: "$VACCINATIONS"}},
       {$unwind: "$vaccine"},
       {$project: {type: "$vaccine.NAME"}},
       {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
@@ -125,45 +135,80 @@ QUERIES
 
 11) Find all the person vaccinated with a given lot of vaccine
 
-  db.Person.find({
-      "VAX.LOT": "100" ,
-      "VAX.NAME": "Moderna"
+  db.covid_certificates.find({
+      "VACCINATIONS.LOT": "100" ,
+      "VACCINATIONS.NAME": "Moderna"
   })
 
 12) Find the last test of a person
 
-  db.Person.find({},
-     {
-       name: "$NAME",
-       lastTest: {$cond: {if: {$isArray: "$TEST"}, then: {$arrayElemAt: ["$TEST" , 0]}, else: "None"}}
-     }
+  db.covid_certificates.find({},
+  {name: "$NAME",lastTest: {$cond: {if: {$isArray: "$TESTS"}, then: {$arrayElemAt: ["$TESTS" , 0]}, else: "None"}}}
   )
 
 13) Find all the emergency contact of positive persons (this one could be added in the project of 3)
-
+db.covid_certificates.aggregate([
+      {
+        $project: {
+          NAME: 1,
+          EMERGENCY_CONTACT: 1,
+          result: {$arrayElemAt: ["$TESTS", -1]}
+        }
+      },
+      {
+        $match: {"result.RESULT": "positive"}
+      },
+       {$project: {
+          NAME: 1,
+          EMERGENCY_CONTACT: 1}}
+    ])
 14) Percentage of persons with 2 doses of vaccine but green pass not valid (due to a positive test)
-
+ db.covid_certificates.aggregate([
+             {$match:{VACCINATIONS : {$exists:true}}},
+             {$project: {GREEN_PASS:"$GREEN_PASS",size:{$size:"$VACCINATIONS"}}},
+             {$match:{ size:{$gte:2}}},
+             {$project: {notValid:{ $cond: [ {$ifNull: ['$GREEN_PASS', false]},1, 0 ]}}},
+             { $group:{"_id":null,Vaccinated:{$sum:1},invalidated:{$sum:"$notValid"}}},
+             {$project: {rate: {$divide: ["$invalidated" , "$Vaccinated"]}}}
+    ])
 15) Find the no-vax king: the person with the largest number of tests and no vaccine
 
-  db.Person.aggregate([
-    {$match: {$and: [{VAX: {$exists: false}} , {TEST: {$exists: true}}]}},
-    {$addFields: {numberOfTests: {$size: "$TEST"}}},
+  db.covid_certificates.aggregate([
+    {$match: {$and: [{VACCINATIONS: {$exists: false}} , {TESTS: {$exists: true}}]}},
+    {$addFields: {numberOfTests: {$size: "$TESTS"}}},
     {$sort: {numberOfTest: -1}} , {$limit: 1}
   ])
 
 16) Find all the issuers in Milan
+
     db.Issuers.find({address.city: "Milan"})
 
 17) Density of vaccinations wrt the opening hours (or find the hour with more vaccines done)
 
 18) Number of non vaccinated person
 
+db.covid_certificates.countDocuments({VACCINATIONS:{$size:0}})
+
 19) The youngest with the green pass
 
+db.covid_certificates.aggregate([
+      {$match:{GREEN_PASS: {$exists: true}}},
+       {"$sort": {BIRTHDATE: -1}},{"$limit": 5}
+    ])
 20) Person with green pass that will expire in the next month
 
+db.covid_certificates.aggregate([
+      {$match:{GREEN_PASS: {$exists: true}}},
+       {"$match": GREEN_PASS.EXPIRATION_DATE:{$lte{}}}
+    ])
 21) Average age of positive persons
 
+db.covid_certificates.aggregate([
+    {$project: {BIRTHDATE: 1,result: {$arrayElemAt: ["$TESTS", -1]}}},
+        {$addFields:{age: {"$divide":[{$subtract: ["$$NOW" ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
+        {$match: {"result.RESULT": "positive"}},
+        {$group:{"_id":null,AverageAge: { $avg: "$age" }}}
+      ])
 
 COMMANDS
 

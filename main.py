@@ -6,12 +6,13 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
-from PIL import Image
+# from PIL import Image
 import io
 
+CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+     # "&tlsAllowInvalidCertificates=true"
 #CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    "&tlsAllowInvalidCertificates=true"
 
 # Constants
 NUMBER_OF_PEOPLE = 10
@@ -363,8 +364,6 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
                   PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
                   PersonAttributes.EMERGENCY_CONTACT.name: emergency_contact,
-                  PersonAttributes.TESTS.name: [],
-                  PersonAttributes.VACCINATIONS.name: [],
                   PersonAttributes.PASSWORD.name: encode_password("password")
                   }
         probability = random.random()
@@ -633,12 +632,12 @@ def build_green_pass_qrcode(expiration_date):
     """
     Method that saves an image representing a green pass qr code and returns it as a binary file.
     """
-    green_pass_img = qrcode.make(expiration_date)
-    green_pass_img.save("green_pass.png")
-    green_pass_img = Image.open("green_pass.png")
-    green_pass_qr_bytes = io.BytesIO()
-    green_pass_img.save(green_pass_qr_bytes, format='PNG')
-    return green_pass_qr_bytes.getvalue()
+    # # # green_pass_img = qrcode.make(expiration_date)
+    # # green_pass_img.save("green_pass.png")
+    # # # green_pass_img = Image.open("green_pass.png")
+    # # green_pass_qr_bytes = io.BytesIO()
+    # # green_pass_img.save(green_pass_qr_bytes, format='PNG')
+    # return green_pass_qr_bytes.getvalue()
 
 
 def retrieve_issuer(issuer_index):
@@ -726,7 +725,13 @@ def insert_ordered_vaccination(collection, person_index):
     :return the vaccination document that has been just created.
     """
     person_id = PEOPLE_TABLE[person_index]
-    vaccinations_list = collection.find_one({'_id': person_id}, {'VACCINATIONS': 1})['VACCINATIONS']
+    vaccinations_list = collection.find_one({'_id': person_id}, {'VACCINATIONS': 1})
+
+    try:
+        vaccinations_list = vaccinations_list['VACCINATIONS']
+    except KeyError:
+        vaccinations_list = []
+
     print(vaccinations_list)
     if len(vaccinations_list) == 0:
         new_vaccination_doc = VaccinationAttributes.create_vaccination_document \
@@ -769,8 +774,8 @@ def insert_ordered_test(collection, person_index):
     """
     person_id = PEOPLE_TABLE[person_index]
     info = collection.find_one({'_id': person_id}, {"VACCINATIONS": 1, "TESTS": 1, "GREEN_PASS": 1})
-    vaccinations_list = info['VACCINATIONS']
-    tests_list = info['TESTS']
+
+
 
     try:
         green_pass = info['GREEN_PASS']
@@ -780,8 +785,12 @@ def insert_ordered_test(collection, person_index):
     # if the green pass is expired, remove it
     if green_pass is not None and datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
         collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
-                                       {'$unset': {'GREEN_PASS': ""}
+                                       {'$unset': {'GREEN_PASS': ""},
                                         })
+    try:
+        tests_list = info['TESTS']
+    except KeyError:
+        tests_list = []
 
     # create a new test
     if len(tests_list) == 0:
@@ -794,6 +803,11 @@ def insert_ordered_test(collection, person_index):
         test = TestAttributes.create_test_document_from_previous_one(random.choice(TESTS), retrieve_person(),
                                                                      retrieve_person(), last_test)
     result = test['RESULT']
+    try:
+        vaccinations_list = info['VACCINATIONS']
+    except KeyError:
+        vaccinations_list = []
+
 
     # handle the case where the person got a vaccine
     if len(vaccinations_list) != 0:
@@ -858,6 +872,7 @@ def insert_ordered_test(collection, person_index):
                                                         GreenPassAttributes.create_green_pass_from_test(test)
                                                         }
                                            })
+
 
 
 if __name__ == '__main__':
