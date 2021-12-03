@@ -10,6 +10,26 @@ import {
 } from "react-native";
 import Divider from "./components/Divider";
 
+const doSignup = async (navigation) => {
+  try{
+    let res = await fetch('http://localhost:3000/signup', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({a: 3, b: 'Textual content'})
+    });
+
+    console.log(await res.text()) 
+    
+  }catch{
+    console.error('error')
+  }
+
+  navigation.navigate("Login")
+}
+
 function Signup({ navigation }) {
   return (
     
@@ -92,7 +112,7 @@ function Signup({ navigation }) {
             <Text style={styles.text2}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => doSignup(navigation)}
             style={styles.button2}
           >
             <Text style={styles.text6}>Next</Text>

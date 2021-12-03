@@ -13,6 +13,15 @@ import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
+const getInformation = async () => {
+  try{
+  let res = await fetch('http://localhost:3000/home');
+  console.log(await res.text()) 
+  }catch{
+  console.error('error')
+  }
+}
+
 function Home({ navigation }) {
   return (
     <View style={styles.rect}>

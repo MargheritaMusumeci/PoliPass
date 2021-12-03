@@ -9,29 +9,66 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    console.log("called")
-    res.send("Hello World");
+// receives an id and returns a json with green-pass information
+app.get("/home", (req, res) => {
+
+    console.log(req.body)
+    res.send("Hello World Home");
 });
 
-app.post("/login", (req, res) => {
-    console.log(req.body)
-    res.send("Hello World");
+// receives a json, checks credential, returns ack
+app.post("/login", async (req, res) => {
+
+    credential = req.body
+    result = await checkCredential(credential);
+    if (result) res.send("Ack");
+    else res.send("Nack"); 
+
 });
+
+// receives a json, checks credential, returns ack
+app.post("/signup", (req, res) => {
+
+    console.log(req.body)
+    res.send("Hello World Signup");
+});
+
+// useful functions 
+
+// checks if exist a corrispondece between mail and password provided
+async function checkCredential(credential){
+
+    let hash_password = createHash(credential.Password).toString();
+    res = await findOneListingByName(client, credential.Mail, hash_password);
+    return res;
+}
+
+// Encodes a password using SHA-256 algorithm
+const createHash = (password) => { 
+
+var crypto = require('crypto');
+var hash = crypto.createHash('sha256').update(password).digest('hex');
+return hash;
+}
 
 // database query -->
 
+async function findOneListingByName(client, email, password) {
+    
+   	const result = await client.db("polipass").collection("covid_certificates").find({ EMAIL: email, PASSWORD: password }).count();
+    return result == 1;
+}
 
 // database connection --> 
 const {MongoClient} = require('mongodb');
 
-async function databaseConnection() {
-    
-    //connection uri
-    const uri = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true&tlsAllowInvalidCertificates=true";
+//connection uri
+const uri = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true&tlsAllowInvalidCertificates=true";
 
-    //instance of mongoDB client
-    const client = new MongoClient(uri);
+//instance of mongoDB client
+const client = new MongoClient(uri);
+
+async function databaseConnection() {
 
     //await blocks further execution until that operation has completed
     try {
@@ -41,10 +78,6 @@ async function databaseConnection() {
 
     } catch (e) {
         console.error(e);
-
-    //for the moment close the database connection immediatly 
-    } finally {
-        await client.close();
     }
 }
 

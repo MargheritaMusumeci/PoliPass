@@ -10,45 +10,70 @@ import {
 } from "react-native";
 import Divider from "./components/Divider";
 
-show = true;
+function Login({navigation}) {
 
-const easter_egg = () =>{
-  show = !show;
-  console.log(show)
-}
+  const [shouldShow, setShouldShow] = useState(true);
+  const [error, setError] = useState(true)
+  const [mail, setMail] = useState('');
+  const [password, setPassword] = useState('');
+  let error_message = 'Invalid email or password...';
 
-const doLogin = async (navigation) => {
-  try{
-    let res = await fetch('http://localhost:3000/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({a: 1, b: 'Textual content'})
-    });
+  const doLogin = async (navigation) => {
 
-    console.log(await res.text()) 
-  }catch{
-    console.error('error')
+    // catch input variables 
+    let mail_input = mail;
+    let password_input = password;
+  
+    // check input variables
+    if (mail_input == '' ){
+      error_message = "Email is missing...";
+      if (error == true ) setError(!error);
+      return;
+    }
+
+    if ((mail_input.includes('@') == -1) || (mail_input.includes(".") == -1)){
+      error_message = "Invalid email...";
+      if (error == true ) setError(!error);
+      return;
+    }
+
+    if (password_input == ''){
+      error_message = "Password is missing...";
+      if (error == true ) setError(!error);
+      return;
+    }
+  
+    // send input variables for continuing checks 
+    try{
+      let res = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({Mail: mail, Password: password})
+      });
+  
+      let server_message = '';
+      server_message = await res.text(); 
+
+      console.log(server_message)
+
+      if (server_message == "Ack"){
+        navigation.navigate("Home");
+        
+      }
+      else{
+        error_message = 'Server not reachable...';
+        if (error == true ) setError(!error);
+        return;
+      }
+  
+    }catch{
+      error_message = ("Generic error...");
+      console.error('Generic error...');
+    }
   }
-
-  navigation.navigate("Home")
-}
-
-const createAccount = async () => {
-  try{
-  let res = await fetch('http://localhost:3000/');
-  console.log(await res.text()) 
-  }catch{
-  console.error('error')
-  }
-}
-
-
-function Login({ navigation }) {
-
-  const [shouldShow, setShouldShow] = useState(true)
 
   return (
     <View style={styles.rect}>
@@ -64,15 +89,26 @@ function Login({ navigation }) {
           
         </View>
         <Text style={styles.email}>Email</Text>
-        <TextInput placeholder="" style={styles.textInputEmail}></TextInput>
+        <TextInput placeholder=""
+          onChangeText={mail => setMail(mail)}
+          defaultValue={mail}
+          autoCapitalize='none'
+         style={styles.textInputEmail}></TextInput>
         <Text style={styles.password}>Password</Text>
         <TextInput
           placeholder=""
+          autoCapitalize='none'
+          onChangeText={password => setPassword(password)}
+          defaultValue={password}
           secureTextEntry={true}
           style={styles.textInputPassword}
         ></TextInput>
         </View>
         <View style={styles.textColumnFiller}>
+          
+          { (!error && shouldShow) ? <Text style={styles.error}> {error_message} </Text>
+          : null }
+      
         {shouldShow ?
         ( <TouchableOpacity onPress={() => setShouldShow(!shouldShow)}>
           <Text style={styles.text5}>Forgotten your password?</Text>
@@ -86,14 +122,14 @@ function Login({ navigation }) {
             style={styles.easter_egg}
       ></Image></View>
         ) }
+
         </View>
       <View style={styles.rect4}>
         <Divider style={styles.divider}></Divider>
         <View style={styles.buttonRow}>
           <TouchableOpacity
             onPress={() => navigation.navigate("Signup")}
-            style={styles.button}
-          >
+            style={styles.button}>
             <Text style={styles.text2}>Sign up</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -261,7 +297,13 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginRight:40,
     textAlign: 'center',
-
+  },
+  error: {
+    color: "#e36861",
+    fontSize: 18,
+    lineHeight: 20,
+    marginTop: 40,
+    marginLeft: 83
   }
 });
 export default Login;
