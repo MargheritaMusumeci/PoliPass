@@ -7,14 +7,17 @@ from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
 
-# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-     "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+     # "&tlsAllowInvalidCertificates=true"
 
-NUMBER_OF_PEOPLE = 20
+# Constants
+NUMBER_OF_PEOPLE = 10000
 MAX_NUMBER_OF_DOSES = 3
 MAX_NUMBER_OF_TESTS = 5
+PROB_BEING_DOCTOR_OR_NURSE = 0.1
 
+# Global variables
 NAMES = []
 SURNAMES = []
 MUNICIPALITIES = []
@@ -33,6 +36,17 @@ Dictionary used to bind each person with its ObjectId inside MongoDB
 Is is updated after the creation of each person inside the function create_and_insert_people_doc
 """
 PEOPLE_TABLE = {}
+# TODO use DOCTORS_TABLE and NURSES_TABLE to retrieve their data when building vaccinations and tests
+"""
+Dictionary used to bind each doctor with its ObjectId inside MongoDB
+Is is updated after the creation of each doctor inside the function create_and_insert_people_doc 
+"""
+DOCTORS_TABLE = {}
+"""
+Dictionary used to bind each nurse with its ObjectId inside MongoDB
+Is is updated after the creation of each nurse inside the function create_and_insert_people_doc 
+"""
+NURSES_TABLE = {}
 
 
 class TestAttributes(IntEnum):
@@ -306,6 +320,7 @@ class PersonAttributes(IntEnum):
     VACCINATIONS = 10
     GREEN_PASS = 11
     PASSWORD = 12
+    ROLE = 13
 
     @classmethod
     def create_person(cls, person_details):
@@ -327,6 +342,12 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.PASSWORD.name: encode_password("password"),
                   PersonAttributes.GREEN_PASS.name: None
                   }
+        probability = random.random()
+        role = None
+        if PROB_BEING_DOCTOR_OR_NURSE >= probability:
+            role = random.choice(["doctor", "nurse"])
+        if role is not None:
+            person[PersonAttributes.ROLE.name] = role
         return person
 
 
@@ -624,6 +645,14 @@ def create_and_insert_people_doc(collection):
         identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
                                          {'ObjectId': 1})
         PEOPLE_TABLE.update({index: identifier['_id']})
+        try:
+            role = person_document['ROLE']
+            if role == "doctor":
+                DOCTORS_TABLE.update({index: identifier['_id']})
+            elif role == "nurse":
+                NURSES_TABLE.update({index: identifier['_id']})
+        except KeyError:
+            pass
 
 
 def insert_ordered_vaccination(collection, person_index):
