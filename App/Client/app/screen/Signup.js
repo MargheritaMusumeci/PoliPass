@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, { Component,  useState } from "react";
 import {
   StyleSheet,
   View,
   StatusBar,
+  ScrollView,
   Image,
   Text,
   TextInput,
@@ -31,8 +32,32 @@ const doSignup = async (navigation) => {
 }
 
 function Signup({ navigation }) {
+
+ //calcolo del codice fiscale
+
+  const [error, setError] = useState(true)
+
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [birthdayPlace, setBirthdayPlace] = useState('');
+  const [mail, setMail] = useState('');
+  const [phone, setPhone] = useState('');
+
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+
+  const [password, setPassword] = useState('');
+  const [repeatedPassword, setrepeatedPassword] = useState('');
+  
+  const [emergencyname, setEmergencyName] = useState('');
+  const [emergencysurname, setEmergencySurname] = useState('');
+  const [emergencyPhone, setEmergencyPhone] = useState('');
+
+  let error_message = 'Invalid fields...';
+
   return (
-    
     <View style={styles.rect}>
     <StatusBar hidden />
       <View style={styles.image1Column}>
@@ -41,24 +66,39 @@ function Signup({ navigation }) {
           resizeMode="contain"
           style={styles.logo}
         ></Image>
+        <ScrollView
+    ref={ref => {this.scrollView = ref}}
+    onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
         <Text style={styles.title}>Create your account</Text>
         <TextInput
           placeholder="Name"
           placeholderTextColor="#788793"
+          onChangeText={name => setName(name)}
+          defaultValue={name}
+          autoCapitalize='none'
           style={styles.inputTextPrimary}
         ></TextInput>
         <TextInput
           placeholder="Surname"
+          onChangeText={surname => setSurname(surname)}
+          defaultValue={surname}
+          autoCapitalize='none'
           placeholderTextColor="rgba(120,135,147,1)"
           style={styles.inputText}
         ></TextInput>
         <TextInput
           placeholder="Birthday "
+          onChangeText={birthday => setBirthday(birthday)}
+          defaultValue={birthday}
+          autoCapitalize='none'
           placeholderTextColor="#788793"
           style={styles.inputText}
         ></TextInput>
         <TextInput
-          placeholder="Email address"
+          placeholder="Birthday Place"
+          onChangeText={birthdayPlace => setBirthdayPlace(birthdayPlace)}
+          defaultValue={birthdayPlace}
+          autoCapitalize='none'
           placeholderTextColor="#788793"
           style={styles.inputText}
         ></TextInput>
@@ -68,37 +108,85 @@ function Signup({ navigation }) {
           style={styles.inputText}
         ></TextInput>
         <TextInput
+          placeholder="Email"
+          onChangeText={mail => setMail(mail)}
+          defaultValue={mail}
+          autoCapitalize='none'
+          placeholderTextColor="rgba(120,135,147,1)"
+          style={styles.inputText}
+        ></TextInput>
+        <TextInput
           placeholder="Street"
+          onChangeText={street => setStreet(street)}
+          defaultValue={street}
+          autoCapitalize='none'
           placeholderTextColor="rgba(120,135,147,1)"
           style={styles.inputText}
         ></TextInput>
         <TextInput
           placeholder="City"
-          placeholderTextColor="rgba(120,135,147,1)"
-          style={styles.inputText}
-        ></TextInput>
-        <TextInput
-          placeholder="Country"
+          onChangeText={city => setCity(city)}
+          defaultValue={city}
+          autoCapitalize='none'
           placeholderTextColor="#788793"
           style={styles.inputText}
         ></TextInput>
         <TextInput
           placeholder="ZIP "
+          onChangeText={zip => setZip(zip)}
+          defaultValue={zip}
+          autoCapitalize='none'
           placeholderTextColor="#788793"
           style={styles.inputText}
         ></TextInput>
         <TextInput
           placeholder="Password"
+          onChangeText={password => setPassword(password)}
+          defaultValue={password}
+          autoCapitalize='none'
           placeholderTextColor="#788793"
           secureTextEntry={true}
           style={styles.inputText}
         ></TextInput>
         <TextInput
           placeholder="Repeated password"
+          onChangeText={repeatedPassword => setrepeatedPassword(repeatedPassword)}
+          defaultValue={repeatedPassword}
+          autoCapitalize='none'
           secureTextEntry={true}
           placeholderTextColor="#788793"
           style={styles.inputText}
         ></TextInput>
+
+      <Text style={styles.title}>Emergency Contact</Text>
+
+      <TextInput
+          placeholder="Name "
+          onChangeText={emergencyname => setEmergencyName(emergencyname)}
+          defaultValue={emergencyname}
+          autoCapitalize='none'
+          placeholderTextColor="#788793"
+          style={styles.inputText}
+        ></TextInput>
+        <TextInput
+          placeholder="Surname"
+          onChangeText={emergencysurname  => setEmergencySurname(emergencysurname)}
+          defaultValue={emergencysurname}
+          autoCapitalize='none'
+          placeholderTextColor="#788793"
+          secureTextEntry={true}
+          style={styles.inputText}
+        ></TextInput>
+        <TextInput
+          placeholder="Phone number"
+          onChangeText={emergencyPhone  => setEmergencyPhone(emergencyPhone)}
+          defaultValue={emergencyPhone}
+          autoCapitalize='none'
+          secureTextEntry={true}
+          placeholderTextColor="#788793"
+          style={styles.inputText}
+        ></TextInput>
+        </ScrollView>
           </View>
           <View style={styles.image1ColumnFiller}></View>
          <View style={styles.textInput4Column}>

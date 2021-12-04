@@ -128,9 +128,9 @@ function Login({navigation}) {
         <Divider style={styles.divider}></Divider>
         <View style={styles.buttonRow}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Signup")}
+            onPress={() => navigation.navigate("Main")}
             style={styles.button}>
-            <Text style={styles.text2}>Sign up</Text>
+            <Text style={styles.text2}>Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => doLogin(navigation)}

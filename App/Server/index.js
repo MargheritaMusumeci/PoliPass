@@ -26,14 +26,7 @@ app.post("/login", async (req, res) => {
 
 });
 
-// receives a json, checks credential, returns ack
-app.post("/signup", (req, res) => {
-
-    console.log(req.body)
-    res.send("Hello World Signup");
-});
-
-// useful functions 
+// useful functions --> 
 
 // checks if exist a corrispondece between mail and password provided
 async function checkCredential(credential){

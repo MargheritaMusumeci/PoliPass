@@ -23,21 +23,15 @@ function Main({ navigation }) {
           Consult your green pass whenever and wherever you want!
         </Text>
         <TouchableOpacity
-          onPress={ () => navigation.navigate("Signup") }
+          onPress={ () => navigation.navigate("Login") }
           style={styles.signup}
         >
-          <Text style={styles.button_text}>Create account</Text>
+          <Text style={styles.button_text}>Login now </Text>
         </TouchableOpacity>
   
       </View>
       <View style={styles.textColumnFiller}></View>
-      <View style={styles.div}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.login}>Have an account already?</Text>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 }

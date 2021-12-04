@@ -23,6 +23,8 @@ const getInformation = async () => {
 }
 
 function Home({ navigation }) {
+
+  
   return (
     <View style={styles.rect}>
       <StatusBar hidden />
