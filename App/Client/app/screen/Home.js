@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -24,7 +24,73 @@ const getInformation = async () => {
 
 function Home({ navigation }) {
 
+  const reload = async (navigation) => {
+    navigation.navigate("Home");
+  }
+
+  const [error, setError] = useState(true)
+
+  // name and surname 
+  const [name, setName] = useState('');
+
+  // birthday
+  const [birthday, setBirthday] = useState('');
+
+  // vaccinate name
+  const [vaccineName, setVaccineName] = useState('');
+
+  // vaccinate producer
+  const [vaccineProducer, setVaccineProducer] = useState('');
+
+  // dose
+  const [dose, setDose] = useState('');
+
+  // dose
+  const [issuer, setIssuer] = useState('');
+
+  // issue date
+  const [date, setDate] = useState('');
+
+  // exipration date 
+  const [expire, setExpire] = useState('');
+
+  const [errorMessage, setErrorMessage] = useState('There are no green pass associate to your account...');
+
+  const getInformation = async () => {
+
+     // send input variables for continuing checks 
+     try{
+      let res = await fetch('http://localhost:3000/home', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
   
+      let information = await res.json(); 
+
+      if( Object.keys(information).length === 0){
+        if (error == true ) setError(!error);
+       }
+
+      setName(information.name);
+      setBirthday(information.birthday);
+      setVaccineName(information.vaccineName);
+      setVaccineProducer(information.vaccineProducer);
+      setIssuer(information.issuer);
+      setDose(information.doses);
+      setDate(information.date);
+      setExpire(information.expire);
+      
+    }catch{
+      setErrorMessage("Server not reachable...");
+      if (error == true ) setError(!error);
+    }
+  }
+
+  getInformation();
+
   return (
     <View style={styles.rect}>
       <StatusBar hidden />
@@ -39,6 +105,10 @@ function Home({ navigation }) {
             ></Image>
           </View>
         </View>
+
+        { (!error) ? <Text style={styles.error}> {errorMessage} </Text>
+          : (
+
         <View style={styles.scrollAreaStack}>
           <View style={styles.scrollArea}>
             <ScrollView
@@ -55,7 +125,7 @@ function Home({ navigation }) {
                   <Text style={styles.surnameName}>Surname Name</Text>
                 </View>
               </View>
-              <Text style={styles.rossiMario}>Rossi Mario</Text>
+              <Text style={styles.rossiMario}>{name}</Text>
               <View style={styles.rect18Stack}>
                 <View style={styles.rect18}>
                   <View style={styles.icon17Row}>
@@ -66,7 +136,7 @@ function Home({ navigation }) {
                     <Text style={styles.dateOfBirth}>Date of birth</Text>
                   </View>
                 </View>
-                <Text style={styles.dateOfBirth1}>1999-10-9</Text>
+                <Text style={styles.dateOfBirth1}>{birthday}</Text>
               </View>
               <View style={styles.rect19}>
                 <View style={styles.icon11Row}>
@@ -75,11 +145,11 @@ function Home({ navigation }) {
                     style={styles.icon11}
                   ></IoniconsIcon>
                   <Text style={styles.text2}>
-                    Unique certificate identifier
+                    Vaccine name
                   </Text>
                 </View>
               </View>
-              <Text style={styles.a98Shi19Y33}>A98SHI19Y33</Text>
+              <Text style={styles.a98Shi19Y33}>{vaccineName}</Text>
               <View style={styles.rect16}>
                 <View style={styles.icon15Row}>
                   <FontAwesomeIcon
@@ -87,21 +157,11 @@ function Home({ navigation }) {
                     style={styles.icon15}
                   ></FontAwesomeIcon>
                   <Text style={styles.vaccineProphylaxis1}>
-                    Vaccine/Prophylaxis
+                    Vaccine producer
                   </Text>
                 </View>
               </View>
-              <Text style={styles.moderna}>SARS-CoV-2 mRNA vaccine</Text>
-              <View style={styles.rect11}>
-                <View style={styles.icon12Row}>
-                  <MaterialCommunityIconsIcon
-                    name="medical-bag"
-                    style={styles.icon12}
-                  ></MaterialCommunityIconsIcon>
-                  <Text style={styles.text3}>Vaccine medicinal product</Text>
-                </View>
-              </View>
-              <Text style={styles.comirnaty}>Comirnaty</Text>
+              <Text style={styles.moderna}>{vaccineProducer}</Text>
               <View style={styles.rect15}>
                 <View style={styles.icon19Row}>
                   <MaterialCommunityIconsIcon
@@ -111,7 +171,7 @@ function Home({ navigation }) {
                   <Text style={styles.issuedBy2}>Issued by</Text>
                 </View>
               </View>
-              <Text style={styles.ministryOfHealth}>Ministry of health</Text>
+              <Text style={styles.ministryOfHealth}>{issuer}</Text>
               <View style={styles.rect14}>
                 <View style={styles.icon14Row}>
                   <MaterialCommunityIconsIcon
@@ -121,7 +181,7 @@ function Home({ navigation }) {
                   <Text style={styles.numberOfDoses}>Number of doses</Text>
                 </View>
               </View>
-              <Text style={styles.numberOfDoses1}>2/2</Text>
+              <Text style={styles.numberOfDoses1}>{dose}</Text>
               <View style={styles.rect12}>
                 <View style={styles.icon13Row}>
                   <FontAwesomeIcon
@@ -131,7 +191,17 @@ function Home({ navigation }) {
                   <Text style={styles.dateOfVaccine}>Date of vaccine</Text>
                 </View>
               </View>
-              <Text style={styles.dateOfVaccine1}>2021-06-17</Text>
+              <Text style={styles.dateOfVaccine1}>{date}</Text>
+              <View style={styles.rect12}>
+                <View style={styles.icon13Row}>
+                  <FontAwesomeIcon
+                    name="calendar"
+                    style={styles.icon13}
+                  ></FontAwesomeIcon>
+                  <Text style={styles.dateOfVaccine}>Date of expiration</Text>
+                </View>
+              </View>
+              <Text style={styles.dateOfVaccine1}>{expire}</Text>
               <View style={styles.rect13Stack}>
                 <View style={styles.rect13}>
                   <View style={styles.icon18Row}>
@@ -139,7 +209,7 @@ function Home({ navigation }) {
                       name="map-pin"
                       style={styles.icon18}
                     ></FontAwesomeIcon>
-                    <Text style={styles.surnameName2}>
+                    <Text style={styles.state}>
                       Member State of vaccination
                     </Text>
                   </View>
@@ -148,21 +218,13 @@ function Home({ navigation }) {
               </View>
             </ScrollView>
           </View>
-          <TouchableOpacity style={styles.button8}>
-            <View style={styles.rect5}>
-              <MaterialCommunityIconsIcon
-                name="download"
-                style={styles.icon5}
-              ></MaterialCommunityIconsIcon>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </View> )}
+      </View> 
       <View style={styles.rect2ColumnFiller}></View>
       <View style={styles.rect6}>
         <View style={styles.rect7}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => reload(navigation)}
             style={styles.button9}
           >
           <MaterialCommunityIconsIcon
@@ -252,7 +314,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   surnameName: {
-    color: "rgba(255,255,255,1)",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 22,
@@ -283,7 +345,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   dateOfBirth: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 18,
@@ -319,7 +381,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   text2: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 20,
@@ -349,7 +411,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   vaccineProphylaxis1: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 18,
@@ -408,7 +470,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   issuedBy2: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 18,
@@ -437,7 +499,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   numberOfDoses: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 18,
@@ -466,7 +528,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   dateOfVaccine: {
-    color: "#fefefe",
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 20,
@@ -482,7 +544,7 @@ const styles = StyleSheet.create({
     color: "#fefefe",
     fontSize: 18,
     lineHeight: 20,
-    marginTop: 2,
+    marginTop: 4,
     marginLeft: 43
   },
   rect13: {
@@ -497,8 +559,8 @@ const styles = StyleSheet.create({
     color: "#8899a6",
     fontSize: 25
   },
-  surnameName2: {
-    color: "#fefefe",
+  state: {
+    color: "#1da6fa",
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 29,
@@ -603,8 +665,16 @@ const styles = StyleSheet.create({
 
   },
   icon9: {
-    color: "rgba(255,255,255,1)",
+    color: "#ffffff",
     fontSize: 40
+  },
+  error: {
+    color: "#e36861",
+    fontSize: 18,
+    textAlign: "center",
+    lineHeight: 20,
+    marginTop: 40,
+    
   }
 });
 

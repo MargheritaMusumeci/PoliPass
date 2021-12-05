@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState} from "react";
 import {
   StyleSheet,
   View,
@@ -12,8 +12,63 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 function QRcode({ navigation }) {
+
+  const reload = async (navigation) => {
+    navigation.navigate("QRcode");
+  }
+
+  // false means no green pass present 
+  const [error, setError] = useState(true)
+
+  // true if green pass is a vaccine pass
+  // false means test pass
+  const [vaccin, setVaccin] = useState(true)
+
+  const [errorMessage, setErrorMessage] = useState('There are no green pass associate to your account...');
+
+  // name and surname 
+  const [name, setName] = useState('');
+
+  // birthday
+  const [birthday, setBirthday] = useState('');
+
+  // vaccinate name
+  const [vaccineName, setVaccineName] = useState('');
+
+
+  const getInformation = async () => {
+
+    // send input variables for continuing checks 
+    try{
+     let res = await fetch('http://localhost:3000/qr', {
+       method: 'GET',
+       headers: {
+         'Accept': 'application/json',
+         'Content-Type': 'application/json'
+       }
+     });
+ 
+     let information = await res.json(); 
+
+     if( await Object.keys(information).length === 0){
+      if (error == true ) setError(!error);
+     }
+
+     setName(information.name);
+     setBirthday(information.birthday);
+     setVaccineName(information.vaccineName);
+     
+   }catch{
+     setErrorMessage("Server not reachable...");
+     if (error == true ) setError(!error);
+   }
+ }
+
+ getInformation();
+
   return (
     <View style={styles.rect}>
       <StatusBar hidden />
@@ -27,18 +82,14 @@ function QRcode({ navigation }) {
             ></Image>
             <View style={styles.rect8}></View>
           </View>
+          
         </View>
+
+        { (!error) ? <Text style={styles.error}> {errorMessage} </Text>
+          : ( 
+        <View>
         <View style={styles.a21Row}>
-          <Text style={styles.a21}>A98SHI19Y33</Text>
-          <View style={styles.a21Filler}></View>
-          <TouchableOpacity style={styles.download}>
-            <View style={styles.rect5}>
-              <MaterialCommunityIconsIcon
-                name="download"
-                style={styles.icon5}
-              ></MaterialCommunityIconsIcon>
-            </View>
-          </TouchableOpacity>
+
         </View>
         <Image
           source={require("../assets/qr-code.png")}
@@ -46,43 +97,50 @@ function QRcode({ navigation }) {
           style={styles.qrcode}
         ></Image>
         <Text style={styles.greenPassCovid20}>Green Pass COVID-19</Text>
-        <View style={styles.dateOfBirth1Stack}>
-          <Text style={styles.dateOfBirth1}>1999-10-9</Text>
-          <View style={styles.rect10}>
-            <View style={styles.icon11Row}>
-              <FontAwesomeIcon
-                name="birthday-cake"
-                style={styles.icon11}
-              ></FontAwesomeIcon>
-              <Text style={styles.dateOfBirth2}>Date of birth</Text>
-            </View>
-          </View>
-        </View>
-        <Text style={styles.name}>Rossi Mario</Text>
-        <View style={styles.rect9}>
-          <View style={styles.icon10Row}>
-            <IoniconsIcon
-              name="md-finger-print"
-              style={styles.icon10}
-            ></IoniconsIcon>
-            <Text style={styles.text1}>Unique certificate identifier</Text>
-          </View>
-        </View>
-        <View style={styles.rect11}>
-          <View style={styles.icon12Row}>
-            <FontAwesomeIcon
-              name="user-o"
-              style={styles.icon12}
-            ></FontAwesomeIcon>
-            <Text style={styles.surnameName1}>Surname Name</Text>
-          </View>
-        </View>
+        <View style={styles.rect17}>
+                <View style={styles.icon10Row}>
+                  <FontAwesomeIcon
+                    name="user-o"
+                    style={styles.icon10}
+                  ></FontAwesomeIcon>
+                  <Text style={styles.surnameName}>Surname Name</Text>
+                </View>
+              </View>
+              <Text style={styles.rossiMario}>{name}</Text>
+              <View style={styles.rect18Stack}>
+                <View style={styles.rect18}>
+                  <View style={styles.icon17Row}>
+                    <FontAwesomeIcon
+                      name="birthday-cake"
+                      style={styles.icon17}
+                    ></FontAwesomeIcon>
+                    <Text style={styles.dateOfBirth}>Date of birth</Text>
+                  </View>
+                </View>
+                </View>
+                <Text style={styles.dateOfBirth1}>{birthday}</Text>
+              
+              <View style={styles.rect19}>
+                <View style={styles.icon11Row}>
+                  <IoniconsIcon
+                    name="md-finger-print"
+                    style={styles.icon11}
+                  ></IoniconsIcon>
+                  <Text style={styles.text2}>
+                    Vaccine name
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.a98Shi19Y33}>{vaccineName}</Text>
+              </View>
+          )}
+
       </View>
       <View style={styles.rect2ColumnFiller}></View>
       <View style={styles.rect6}>
         <View style={styles.rect7}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("QRcode")}
+            onPress={() => reload(navigation)}
             style={styles.buttonqr}
           >
           <MaterialCommunityIconsIcon
@@ -109,6 +167,111 @@ function QRcode({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  rect17: {
+    width: 343,
+    height: 25,
+    flexDirection: "row",
+    marginTop: 380,
+    marginLeft:50
+    
+  },
+  icon10: {
+    color: "#8899a6",
+    fontSize: 25
+  },
+  surnameName: {
+    color: "#1da6fa",
+    fontSize: 18,
+    lineHeight: 20,
+    marginLeft: 22,
+    marginTop: 3
+  },
+  icon10Row: {
+    height: 25,
+    flexDirection: "row",
+    flex: 1,
+    marginRight: 173,
+  
+  },
+  rossiMario: {
+    color: "rgba(255,255,255,1)",
+    fontSize: 18,
+    lineHeight: 20,
+    marginTop: 10,
+    marginLeft: 95
+
+
+  },
+  rect18: {
+    width: 343,
+    height: 25,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    flexDirection: "row",
+    marginLeft:50
+  },
+  icon17: {
+    color: "#8899a6",
+    fontSize: 25
+  },
+  dateOfBirth: {
+    color: "#1da6fa",
+    fontSize: 18,
+  
+    marginLeft: 18,
+    marginTop: 3
+  },
+  icon17Row: {
+    height: 25,
+    flexDirection: "row",
+    flex: 1,
+    marginRight: 197
+  },
+
+  dateOfBirth1: {
+    color: "rgba(255,255,255,1)",
+    fontSize: 18,
+    lineHeight: 20,
+    marginLeft: 95
+    
+  },
+  rect18Stack: {
+    width: 343,
+    height: 44,
+    marginTop: 15
+  },
+  rect19: {
+    width: 343,
+    height: 25,
+    flexDirection: "row",
+    marginTop: 16,
+    marginLeft:50
+  },
+  icon11: {
+    color: "#8899a6",
+    fontSize: 25
+  },
+  text2: {
+    color: "#1da6fa",
+    fontSize: 18,
+    lineHeight: 20,
+    marginLeft: 20,
+    marginTop: 3
+  },
+  icon11Row: {
+    height: 27,
+    flexDirection: "row",
+    flex: 1,
+    marginRight: 75
+  },
+  a98Shi19Y33: {
+    color: "rgba(255,255,255,1)",
+    fontSize: 18,
+    lineHeight: 20,
+    marginTop: 10,
+    marginLeft: 95
+  },
   rect: {
     flex: 1,
     backgroundColor: "#141f2b"
@@ -187,14 +350,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 65
   },
-  dateOfBirth1: {
-    top: 24,
-    left: 44,
-    color: "#fefefe",
-    position: "absolute",
-    fontSize: 18,
-    lineHeight: 20
-  },
+
   rect10: {
     width: 343,
     height: 25,
@@ -273,7 +429,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 20,
     marginLeft: 22,
-    marginTop: 3
+    marginTop: 5
   },
   icon12Row: {
     height: 25,
@@ -335,6 +491,14 @@ const styles = StyleSheet.create({
   icon9: {
     color: "rgba(255,255,255,1)",
     fontSize: 40
+  },
+  error: {
+    color: "#e36861",
+    fontSize: 18,
+    textAlign: "center",
+    lineHeight: 20,
+    marginTop: 20,
+    
   }
 });
 

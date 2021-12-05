@@ -13,10 +13,10 @@ import Divider from "./components/Divider";
 function Login({navigation}) {
 
   const [shouldShow, setShouldShow] = useState(true);
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('Invalid email or password...');
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
-  let error_message = 'Invalid email or password...';
 
   const doLogin = async (navigation) => {
 
@@ -26,19 +26,19 @@ function Login({navigation}) {
   
     // check input variables
     if (mail_input == '' ){
-      error_message = "Email is missing...";
+      setErrorMessage("Email is missing...");
       if (error == true ) setError(!error);
       return;
     }
 
     if ((mail_input.includes('@') == -1) || (mail_input.includes(".") == -1)){
-      error_message = "Invalid email...";
+      setErrorMessage("Invalid email...");
       if (error == true ) setError(!error);
       return;
     }
 
     if (password_input == ''){
-      error_message = "Password is missing...";
+      setErrorMessage("Password is missing...");
       if (error == true ) setError(!error);
       return;
     }
@@ -64,14 +64,14 @@ function Login({navigation}) {
         
       }
       else{
-        error_message = 'Server not reachable...';
+        setErrorMessage("Invalid mail or password...");
         if (error == true ) setError(!error);
         return;
       }
   
     }catch{
-      error_message = ("Generic error...");
-      console.error('Generic error...');
+      setErrorMessage("Server not reachable...");
+      if (error == true ) setError(!error);
     }
   }
 
@@ -106,7 +106,7 @@ function Login({navigation}) {
         </View>
         <View style={styles.textColumnFiller}>
           
-          { (!error && shouldShow) ? <Text style={styles.error}> {error_message} </Text>
+          { (!error && shouldShow) ? <Text style={styles.error}> {errorMessage} </Text>
           : null }
       
         {shouldShow ?
