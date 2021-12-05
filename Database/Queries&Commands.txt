@@ -18,28 +18,16 @@ QUERIES
 		}
 	})
 
-	OR
 
-	db.covid_certificates.aggregate({
-		$project: {
-			NAME: 1,
-			NumberOfTests: {$cond: {if: {$isArray: "$TESTS"}, then: {$sum: 1}, else: 0}}
-		}
-	})
 
 3) Who are the positive persons?
 
-    db.covid_certificates.aggregate([
-        {$project: {NAME: 1,result: {$arrayElemAt: ["$TESTS", -1]}}},
-        {$match: {"result.RESULT": "positive"}}
+ db.covid_certificates.aggregate([
+        {$project: {NAME: 1,lastTest: {$arrayElemAt: ["$TESTS", 0]}}},
+        {$match: {"lastTest.RESULT": "positive"}}
     ])
 
-4) How many positive tests for person?
 
-	db.covid_certificates.aggregate([
-	    {$match: {TESTS: {$exists: true}}},
-        {$project: {NAME: 1,NumberOfTests: {$size: {"$filter": {input: "$TESTS",as: "t",cond: {$eq: ["$$t.Result", "positive"]}}}}}}
-	])
 
 5) Top 5 person with at least a test sorted by the number of positive tests
 
@@ -47,7 +35,7 @@ QUERIES
 	  {$match: {TESTS: {$exists: true}}},
 	  {
         $project: {NAME: 1,NumberOfTests: {$size: {
-            "$filter": {input: "$TESTS",as: "t",cond: {$eq: ["$$t.Result", "positive"]}}}}}},
+            "$filter": {input: "$TESTS",as: "t",cond: {$eq: ["$$t.RESULT", "positive"]}}}}}},
         {"$sort": {"NumberOfTests": -1}},{"$limit": 5}
 	])
 
@@ -56,8 +44,8 @@ QUERIES
      db.covid_certificates.aggregate([
           {$match: {VACCINATIONS: {$exists: true}}},
           {$project: {vaccine: {$arrayElemAt: ["$VACCINATIONS", 0]} , test: {$arrayElemAt: ["$TESTS" , 0]}}},
-          {$project: {vaccine: "$vaccine" , resultTest: {$cond: {if: {$eq: ["$test.Result" , "positive"]}, then: 1, else: 0}}}},
-          {$group: {_id: {name: "$vaccine.NAME"} , totalVaccine: {$sum: 1} , totalPositive: {$sum: "$resultTest"}}},
+          {$project: {vaccine: "$vaccine" , resultTest: {$cond: {if: {$eq: ["$test.RESULT" , "positive"]}, then: 1, else: 0}}}},
+          {$group: {_id: {name: "$vaccine.VACCINE.NAME"} , totalVaccine: {$sum: 1} , totalPositive: {$sum: "$resultTest"}}},
           {$project: {name: "$name" , rate: {$divide: ["$totalPositive" , "$totalVaccine"]}}}
       ])
 
@@ -97,7 +85,7 @@ QUERIES
     db.covid_certificates.aggregate([
         {$project: {tests: "$TESTS"}},
         {$unwind: "$tests"},
-        {$project: {type: "$tests.NAME"}},
+        {$project: {type: "$tests.TYPE"}},
         {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
         {$sort: {count: -1}}
     ])
@@ -107,7 +95,7 @@ QUERIES
     db.covid_certificates.aggregate([
         {$project: {vaccine: "$VACCINATIONS"}},
         {$unwind: "$vaccine"},
-        {$project: {type: "$vaccine.NAME"}},
+        {$project: {type: "$vaccine.VACCINE.NAME"}},
         {$group: {_id: {type: "$type"}, count: {$sum: 1}}},
         {$sort: {count: -1}}
     ])
@@ -115,8 +103,8 @@ QUERIES
 11) Find all the person vaccinated with a given lot of vaccine
 
     db.covid_certificates.find({
-        "VACCINATIONS.LOT": "100" ,
-        "VACCINATIONS.NAME": "Moderna"
+        "VACCINATIONS.VACCINE.BATCH": 13521 ,
+        "VACCINATIONS.VACCINE.NAME": "COVID-19 Vaccine Moderna"
     })
 
 12) Find the last test of a person
@@ -159,23 +147,17 @@ QUERIES
         {$sort: {numberOfTest: -1}} , {$limit: 1}
     ])
 
-16) Find all the issuers in Milan
+16) Find all the issuers in Milan's province
 
-    db.Issuers.find({address.city: "Milan"})
+    db.issuers.find({"LOCATION_DETAILS.PROVINCE":"MI"})
 
-17) Density of vaccinations wrt the opening hours (or find the hour with more vaccines done)
 
 18) Number of non vaccinated person
 
-    db.covid_certificates.countDocuments({VACCINATIONS:{$size:0}})
-
-    OR (If the array doesn't exit and to use $count)
-
-    db.Person.aggregate([
-        {$match: {VAX: {$exists: false}}},
+    db.covid_certificates.aggregate([
+        {$match: {VACCINATIONS: {$exists: false}}},
         {$count: "NumberOfNonVaccinatedPersons"}
     ])
-
 19) The youngest with the green pass
 
     db.covid_certificates.aggregate([
@@ -185,38 +167,98 @@ QUERIES
 
 20) Person with green pass that will expire in the next month
 
-    db.covid_certificates.aggregate([
+     db.covid_certificates.aggregate([
         {$match:{GREEN_PASS: {$exists: true}}},
-        {"$match": GREEN_PASS.EXPIRATION_DATE:{$lte{}}}
+        {$match: {"GREEN_PASS.EXPIRATION_DATE":{$gte: new Date(new Date().getTime()+(30*60*60*1000)) }}}
     ])
 
 21) Average age of positive persons
 
-    db.covid_certificates.aggregate([
-        {$project: {BIRTHDATE: 1,result: {$arrayElemAt: ["$TESTS", -1]}}},
-        {$addFields:{age: {"$divide":[{$subtract: ["$$NOW" ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
+     db.covid_certificates.aggregate([
+        {$match: {$and: [{BIRTHDATE: {$exists: true}} , {TESTS: {$exists: true}}]}},
+        {$addFields: {result: {$arrayElemAt: ["$TESTS", 0]}}},
         {$match: {"result.RESULT": "positive"}},
-        {$group:{"_id":null,AverageAge: { $avg: "$age" }}}
-    ])
-
-    OR (the previous one doesn't work for me)
-
-    db.Person.aggregate([
-        {$match: {$and: [{BIRTHDATE: {$exists: true}} , {VAX: {$exists: true}}]}},
-        {$addFields: {result: {$arrayElemAt: ["$TEST", 0]}}},
-        {$match: {"result.Result": "Positive"}},
         {$addFields: {age: {"$divide":[{$subtract: [new Date() ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
         {$group: {_id: null , Average_age: {$avg: "$age"}}},
         {$project: {Average_age: "$Average_age" , _id: 0}}
     ])
 
+22) Find the five issuers that did most vaccines
+   db.covid_certificates.aggregate([
+        {$project: {vaccines: "$VACCINATIONS"}},
+        {$unwind: "$vaccines"},
+        {$project: {issuer: "$vaccines.ISSUER"}},
+        {$group: {_id: {issuer: "$issuer"}, count: {$sum: 1}}},
+        {$sort: {count: -1}},
+        {"$limit": 5},
+      {$lookup: {
+           from: "issuers",
 
+            localField: "_id.issuer",
+         foreignField: "_id",
+           as: "issuer"
+         }
+    }
+    ])
 COMMANDS
 
 1) Create person's documents
+db.covid_certificates.insertOne(
+{
+    "NAME": "Eudosia",
+    "SURNAME": "Di Paola",
+    "BIRTHDATE": {
+        "$date": "1954-02-07T00:00:00.000Z"
+    },
+    "FISCAL_CODE": "DPLDSE54B47D072V",
+    "BIRTH_PLACE": "Cortiglione",
+    "PHONE_NUMBER": "+393052718550",
+    "EMAIL": "eudosia.di paola@polipass.it",
+    "ADDRESS": "Via Cappellini 20133 Milano MI",
+    "EMERGENCY_CONTACT": {
+        "NAME": "Ellera",
+        "SURNAME": "Longo",
+        "PHONE_NUMBER": "3409155160"
+    },
+    "PASSWORD": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+    "ROLE": "nurse"
+})
 
 2) Insert a new test (update of the array)
-
+            ({'_id': ObjectId("61aa537c384ba2b586a9c044")},
+              {'$push': {'VACCINATIONS': {
+               '$each': [{
+                "VACCINE": {
+                    "NAME": "Vaxzevria",
+                    "PRODUCER": "AstraZeneca",
+                    "TYPE": "viral vector",
+                    "BATCH": 5920,
+                    "PRODUCTION_DATE": {
+                        "$date": "2021-07-28T00:00:00.000Z"
+                    }
+                },
+                "DATE": {
+                    "$date": "2021-08-02T19:58:00.000Z"
+                },
+                "DOSE": 1,
+                "ISSUER": {
+                "$oid": "61aa537d384ba2b586a9c053"
+                },
+                "DOCTOR": {
+                    "NAME": "Maia",
+                    "SURNAME": "Prati",
+                    "FISCAL_CODE": "PRTMAI53B49C564W"
+                },
+                "NURSE": {
+                    "NAME": "Eudosia",
+                    "SURNAME": "Di Paola",
+                    "FISCAL_CODE": "DPLDSE54B47D072V"
+                }
+               }],
+              '$sort': {'DATE': -1}
+               }}})
 3) Change the result of a test (if the result inserted is wrong)
-
+               db.covid_certificates.updateOne ({'_id': ObjectId("61aa537c384ba2b586a9c044")},
+              {'$set': {'TESTS.0.RESULT': "negative"}})
 4) Drop all
+db.drop_collection('covid_certificates')
