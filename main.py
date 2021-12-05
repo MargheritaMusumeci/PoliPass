@@ -6,18 +6,18 @@ import pymongo as pym
 from enum import IntEnum
 from codicefiscale import codicefiscale
 import qrcode
- from PIL import Image
+from PIL import Image
 import io
 
-CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
 # CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
      # "&tlsAllowInvalidCertificates=true"
-#CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
 # Constants
 NUMBER_OF_PEOPLE = 10
 MAX_NUMBER_OF_DOSES = 3
-MAX_NUMBER_OF_TESTS = 5
+MAX_NUMBER_OF_TESTS = 10
 PROB_BEING_DOCTOR_OR_NURSE = 0.5
 
 # Global variables
@@ -39,7 +39,6 @@ Dictionary used to bind each person with its ObjectId inside MongoDB
 Is is updated after the creation of each person inside the function create_and_insert_people_doc
 """
 PEOPLE_TABLE = {}
-# TODO use DOCTORS_TABLE and NURSES_TABLE to retrieve their data when building vaccinations and tests
 """
 Dictionary used to bind each doctor with its ObjectId inside MongoDB
 Is is updated after the creation of each doctor inside the function create_and_insert_people_doc 
@@ -64,12 +63,10 @@ class TestAttributes(IntEnum):
     NURSE = 5
 
     @classmethod
-    def create_test_document(cls, test_type, doctor, nurse):
+    def create_test_document(cls, test_type):
         """
         Method to create a test document.
         :param test_type the type of the test
-        :param doctor list containing all attributes for a doctor
-        :param nurse list containing all attributes for a nurse
         """
         positivity = random.random()
         if positivity >= 0.5:
@@ -86,12 +83,10 @@ class TestAttributes(IntEnum):
         return test
 
     @classmethod
-    def create_test_document_from_previous_one(cls, test_type, doctor, nurse, previous_test):
+    def create_test_document_from_previous_one(cls, test_type, previous_test):
         """
         Method to create a test document after one test has already been done.
         :param test_type the type of the test
-        :param doctor list containing all attributes for a doctor
-        :param nurse list containing all attributes for a nurse
         :param previous_test the last test done
         """
         previous_date = str(datetime.datetime.date(previous_test['DATE']))
@@ -123,7 +118,7 @@ class VaccinationAttributes(IntEnum):
     NURSE = 5
 
     @classmethod
-    def create_vaccination_document(cls, vaccine, doctor, nurse):
+    def create_vaccination_document(cls, vaccine):
         """
         Method to create a covid vaccination, given details about the issued vaccine.
         It ensures that the vaccine is issued after its production
@@ -302,7 +297,7 @@ class EmbeddedDoctorAttributes(IntEnum):
         surname = doctor_details[EmbeddedDoctorAttributes.SURNAME.value]
         doctor = {EmbeddedDoctorAttributes.NAME.name: name,
                   EmbeddedDoctorAttributes.SURNAME.name: surname
-        }
+                  }
         return doctor
 
     @classmethod
@@ -735,7 +730,7 @@ def insert_ordered_vaccination(collection, person_index):
     print(vaccinations_list)
     if len(vaccinations_list) == 0:
         new_vaccination_doc = VaccinationAttributes.create_vaccination_document \
-            (retrieve_vaccine(0, len(VACCINES) - 1), retrieve_person(), retrieve_person())
+            (retrieve_vaccine(0, len(VACCINES) - 1))
         collection.find_one_and_update({'_id': person_id},
                                        {'$push': {'VACCINATIONS': {
                                            '$each': [new_vaccination_doc],
@@ -765,17 +760,40 @@ def insert_green_pass(collection, vaccination, person_index):
                                     })
 
 
+def check_expired_gp(collection, person_index, green_pass):
+    """
+    Check the expiration date of a green pass and removes it if it its expired.
+    """
+    if datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
+        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                       {'$unset': {'GREEN_PASS': ""},
+                                        })
+
+
+def remove_all_expired_gp(collection):
+    """
+    Removes all expired green passes from the collection.
+    """
+    for person_index in PEOPLE_TABLE:
+        person_id = PEOPLE_TABLE[person_index]
+        green_pass = collection.find_one({'_id': person_id}, {"GREEN_PASS": 1})
+        try:
+            green_pass = green_pass['GREEN_PASS']
+        except KeyError:
+            green_pass = None
+        if green_pass is not None:
+            check_expired_gp(collection, person_index, green_pass)
+
+
 def insert_ordered_test(collection, person_index):
     """
     Method to insert a test for the chosen person_id. If the person has an active green pass and the test result is
     positive, the green pass gets deleted. If the test result is negative and the person has an active vaccine, it
     recreates the green pass from the vaccine details. Otherwise, if the test result is negative a new green pass
-    is created when the person has not gotten the vaccine or when their vaccine is eligible for a green pass.
+    is created when the person has not gotten the vaccine or when their vaccine is not eligible for a green pass.
     """
     person_id = PEOPLE_TABLE[person_index]
     info = collection.find_one({'_id': person_id}, {"VACCINATIONS": 1, "TESTS": 1, "GREEN_PASS": 1})
-
-
 
     try:
         green_pass = info['GREEN_PASS']
@@ -783,10 +801,9 @@ def insert_ordered_test(collection, person_index):
         green_pass = None
 
     # if the green pass is expired, remove it
-    if green_pass is not None and datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
-        collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
-                                       {'$unset': {'GREEN_PASS': ""},
-                                        })
+    if green_pass is not None:
+        check_expired_gp(collection, person_index, green_pass)
+
     try:
         tests_list = info['TESTS']
     except KeyError:
@@ -794,20 +811,18 @@ def insert_ordered_test(collection, person_index):
 
     # create a new test
     if len(tests_list) == 0:
-        test = TestAttributes.create_test_document(random.choice(TESTS), retrieve_person(), retrieve_person())
+        test = TestAttributes.create_test_document(random.choice(TESTS))
     else:
         last_test = collection.find_one({'_id': PEOPLE_TABLE[person_index]},
                                         {'TESTS': {
                                             '$slice': 1
                                         }})['TESTS'][0]
-        test = TestAttributes.create_test_document_from_previous_one(random.choice(TESTS), retrieve_person(),
-                                                                     retrieve_person(), last_test)
+        test = TestAttributes.create_test_document_from_previous_one(random.choice(TESTS), last_test)
     result = test['RESULT']
     try:
         vaccinations_list = info['VACCINATIONS']
     except KeyError:
         vaccinations_list = []
-
 
     # handle the case where the person got a vaccine
     if len(vaccinations_list) != 0:
@@ -816,7 +831,7 @@ def insert_ordered_test(collection, person_index):
                                                    '$slice': 1
                                                }})['VACCINATIONS'][0]
         if result == "positive":
-            if green_pass is not None and green_pass['ISSUE_DATE'] <= test['DATE'] <= green_pass['EXPIRATION_DATE']:
+            if green_pass is not None and green_pass['ISSUE_DATE'] <= test['DATE']:
                 collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                                {'$push': {'TESTS': {
                                                    '$each': [test],
@@ -836,16 +851,28 @@ def insert_ordered_test(collection, person_index):
                                                    '$sort': {'DATE': -1}
                                                }}})
         elif result == "negative":
-            # TODO handle the case where the last vaccination is not eligible for a green pass
-            collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
-                                           {'$push': {'TESTS': {
-                                               '$each': [test],
-                                               '$sort': {'DATE': -1}}},
-                                               '$set': {'GREEN_PASS':
-                                                   GreenPassAttributes.create_green_pass_from_vaccination(
-                                                       last_vaccination)
-                                               }
-                                           })
+            vaccine_green_pass = GreenPassAttributes.create_green_pass_from_vaccination(last_vaccination)
+            test_green_pass = GreenPassAttributes.create_green_pass_from_test(test)
+
+            if vaccine_green_pass['EXPIRATION_DATE'] > test_green_pass['EXPIRATION_DATE']:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}}},
+                                                   '$set': {'GREEN_PASS':
+                                                       GreenPassAttributes.create_green_pass_from_vaccination(
+                                                           last_vaccination)
+                                                   }
+                                               })
+            else:
+                collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
+                                               {'$push': {'TESTS': {
+                                                   '$each': [test],
+                                                   '$sort': {'DATE': -1}}},
+                                                   '$set': {'GREEN_PASS':
+                                                       GreenPassAttributes.create_green_pass_from_test(test)
+                                                   }
+                                               })
 
     # handle the case where the person did not get a vaccine
     else:
@@ -872,7 +899,6 @@ def insert_ordered_test(collection, person_index):
                                                         GreenPassAttributes.create_green_pass_from_test(test)
                                                         }
                                            })
-
 
 
 if __name__ == '__main__':
@@ -912,4 +938,8 @@ if __name__ == '__main__':
         tests = random.randint(0, MAX_NUMBER_OF_TESTS)
         for k in range(tests):
             insert_ordered_test(covid_certificates_collection, j)
+
+    # Remove expired green passes
+    remove_all_expired_gp(covid_certificates_collection)
+
     cluster.close()
