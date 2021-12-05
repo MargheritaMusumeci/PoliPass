@@ -14,6 +14,10 @@ import io
      # "&tlsAllowInvalidCertificates=true"
 CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
+CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
+     "&tlsAllowInvalidCertificates=true"
+
+
 # Constants
 NUMBER_OF_PEOPLE = 10
 MAX_NUMBER_OF_DOSES = 3
