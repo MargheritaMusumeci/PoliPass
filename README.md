@@ -34,3 +34,10 @@ To start the application, go to App/Client and type the following command on the
 ```sh
  npm start 
 ```
+
+For testing with the current database... 
+
+- fenella.cremona@polipass.it : Vaccine pass 
+- oristilla.repizzi@polipass.it : Test pass
+- raffaelo.cremone@polipass.it : No green pass 
+
