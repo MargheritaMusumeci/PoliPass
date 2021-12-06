@@ -13,16 +13,32 @@ import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-const getInformation = async () => {
-  try{
-  let res = await fetch('http://localhost:3000/home');
-  console.log(await res.text()) 
-  }catch{
-  console.error('error')
-  }
-}
-
 function Home({ navigation }) {
+
+  const logout = async (navigation) => {
+
+      // send input variables for continuing checks 
+      try{
+        let res = await fetch('http://localhost:3000/logout');
+    
+        let server_message = '';
+        server_message = await res.text(); 
+  
+        if (server_message == "Ack"){
+          navigation.navigate("Main");
+          
+        }
+        else{
+          setErrorMessage("Invalid mail or password...");
+          if (error == true ) setError(!error);
+          return;
+        }
+    
+      }catch{
+        setErrorMessage("Server not reachable...");
+        if (error == true ) setError(!error);
+      }
+  }
 
   const reload = async (navigation) => {
     navigation.navigate("Home");
@@ -293,7 +309,7 @@ function Home({ navigation }) {
           ></MaterialCommunityIconsIcon>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Main")}
+            onPress={() => logout(navigation)}
             style={styles.button11}
           >
           <FeatherIcon name="log-out" style={styles.icon9}></FeatherIcon>

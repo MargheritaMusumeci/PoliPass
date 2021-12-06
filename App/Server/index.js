@@ -1,17 +1,24 @@
-
 const { response } = require("express");
 const express = require("express");
 const cors = require('cors');
 const app = express();
 const port = 3000;
 
-let email_saved = 'a';
-let password_saved = 'b';
+let email_saved = '';
+let password_saved = '';
 let json = {}
 
 // end points --> 
 app.use(cors());
 app.use(express.json());
+
+// reset user 
+app.get("/logout", async (req, res) => { 
+
+    global.email_saved = '';
+    global.email_saved = '';
+    res.send("Ack");
+});
 
 // receives an id and returns a json with green-pass information
 app.get("/qr", async (req, res) => { 

@@ -16,6 +16,31 @@ import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 function QRcode({ navigation }) {
 
+  const logout = async (navigation) => {
+
+    // send input variables for continuing checks 
+    try{
+      let res = await fetch('http://localhost:3000/logout');
+  
+      let server_message = '';
+      server_message = await res.text(); 
+
+      if (server_message == "Ack"){
+        navigation.navigate("Main");
+        
+      }
+      else{
+        setErrorMessage("Invalid mail or password...");
+        if (error == true ) setError(!error);
+        return;
+      }
+  
+    }catch{
+      setErrorMessage("Server not reachable...");
+      if (error == true ) setError(!error);
+    }
+}
+
   const reload = async (navigation) => {
     navigation.navigate("QRcode");
   }
@@ -187,7 +212,7 @@ function QRcode({ navigation }) {
           <EntypoIcon name="home" style={styles.icon8}></EntypoIcon>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Main")}
+            onPress={() => logout(navigation)}
             style={styles.main}
           >
           <FeatherIcon name="log-out" style={styles.icon9}></FeatherIcon>

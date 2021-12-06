@@ -306,4 +306,5 @@ const styles = StyleSheet.create({
     marginLeft: 83
   }
 });
+
 export default Login;
