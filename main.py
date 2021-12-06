@@ -14,15 +14,15 @@ import io
      # "&tlsAllowInvalidCertificates=true"
 CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
-CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
-     "&tlsAllowInvalidCertificates=true"
+# CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
+     #"&tlsAllowInvalidCertificates=true"
 
 
 # Constants
-NUMBER_OF_PEOPLE = 10
+NUMBER_OF_PEOPLE = 1000
 MAX_NUMBER_OF_DOSES = 3
 MAX_NUMBER_OF_TESTS = 10
-PROB_BEING_DOCTOR_OR_NURSE = 0.5
+PROB_BEING_DOCTOR_OR_NURSE = 0.1
 
 # Global variables
 NAMES = []
@@ -365,20 +365,25 @@ class PersonAttributes(IntEnum):
                   PersonAttributes.EMERGENCY_CONTACT.name: emergency_contact,
                   PersonAttributes.PASSWORD.name: encode_password("password")
                   }
-        probability = random.random()
-        role = None
-        if PROB_BEING_DOCTOR_OR_NURSE >= probability:
-            role = random.choice(["doctor", "nurse"])
+        if len(DOCTORS_TABLE) == 0:
+            role = "doctor"
+        elif len(NURSES_TABLE) == 0:
+            role = "nurse"
+        else:
+            probability = random.random()
+            role = None
+            if PROB_BEING_DOCTOR_OR_NURSE >= probability:
+                role = random.choice(["doctor", "nurse"])
         if role is not None:
             person[PersonAttributes.ROLE.name] = role
-            if role == "doctor":
-                DOCTORS_TABLE.update(
-                    {person[PersonAttributes.FISCAL_CODE.name]:
-                        [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
-            if role == "nurse":
-                NURSES_TABLE.update(
-                    {person[PersonAttributes.FISCAL_CODE.name]:
-                        [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+        if role == "doctor":
+            DOCTORS_TABLE.update(
+                {person[PersonAttributes.FISCAL_CODE.name]:
+                    [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+        if role == "nurse":
+            NURSES_TABLE.update(
+                {person[PersonAttributes.FISCAL_CODE.name]:
+                    [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
         return person
 
 
