@@ -27,7 +27,7 @@ function QRcode({ navigation }) {
   // false means test pass
   const [vaccin, setVaccin] = useState(true)
 
-  const [errorMessage, setErrorMessage] = useState('There are no green pass associate to your account...');
+  const [errorMessage, setErrorMessage] = useState('There is no green pass associated with your account...');
 
   // name and surname 
   const [name, setName] = useState('');
@@ -118,7 +118,7 @@ function QRcode({ navigation }) {
                     name="user-o"
                     style={styles.icon10}
                   ></FontAwesomeIcon>
-                  <Text style={styles.surnameName}>Surname Name</Text>
+                  <Text style={styles.surnameName}>Name Surname</Text>
                 </View>
               </View>
               <Text style={styles.rossiMario}>{name}</Text>
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     lineHeight: 20,
-    marginTop: 20,
+    marginTop: 40,
     
   }
 });

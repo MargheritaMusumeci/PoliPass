@@ -61,7 +61,7 @@ function Home({ navigation }) {
   // exipration date 
   const [expire, setExpire] = useState('');
 
-  const [errorMessage, setErrorMessage] = useState('There are no green pass associate to your account...');
+  const [errorMessage, setErrorMessage] = useState('There is no green pass associated with your account...');
 
   const getInformation = async () => {
 
@@ -143,7 +143,7 @@ function Home({ navigation }) {
                     name="user-o"
                     style={styles.icon10}
                   ></FontAwesomeIcon>
-                  <Text style={styles.surnameName}>Surname Name</Text>
+                  <Text style={styles.surnameName}>Name Surname</Text>
                 </View>
               </View>
               <Text style={styles.rossiMario}>{name}</Text>
