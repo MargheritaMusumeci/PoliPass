@@ -10,16 +10,16 @@ from PIL import Image
 import io
 
 # CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
-# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-     # "&tlsAllowInvalidCertificates=true"
-CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    "&tlsAllowInvalidCertificates=true"
+# CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
 # CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
-     #"&tlsAllowInvalidCertificates=true"
+# "&tlsAllowInvalidCertificates=true"
 
 
 # Constants
-NUMBER_OF_PEOPLE = 1000
+NUMBER_OF_PEOPLE = 100
 MAX_NUMBER_OF_DOSES = 3
 MAX_NUMBER_OF_TESTS = 10
 PROB_BEING_DOCTOR_OR_NURSE = 0.1
@@ -130,7 +130,7 @@ class VaccinationAttributes(IntEnum):
         vaccine_issued = EmbeddedVaccineAttributes.create_embedded_vaccine(vaccine)
         production_date = vaccine_issued['PRODUCTION_DATE']
         days = random.randint(0, 30)
-        hours = random.randint(8, 24)
+        hours = random.randint(0, 24)
         minutes = random.randint(0, 60)
         injection_date = production_date + datetime.timedelta(days=days, hours=hours, minutes=minutes)
         vaccination = {
@@ -159,13 +159,19 @@ class VaccinationAttributes(IntEnum):
                             EmbeddedVaccineAttributes.TYPE.value + 1] = retrieve_vaccine(0, 1)
         if previous_dose == 1:
             days_to_wait = 30
-            injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
+            injection_date = vaccination[VaccinationAttributes.DATE.value] + \
+                                 datetime.timedelta(days=days_to_wait,
+                                                    hours=random.randint(0, 24),
+                                                    minutes=random.randint(0, 60))
             vaccine_doc = EmbeddedVaccineAttributes. \
                 create_embedded_vaccine_from_previous(vaccine_details, max_num_production_days=28)
         else:
             if previous_dose == 2:
                 days_to_wait = 150
-                injection_date = vaccination[VaccinationAttributes.DATE.value] + datetime.timedelta(days=days_to_wait)
+                injection_date = vaccination[VaccinationAttributes.DATE.value] + \
+                                 datetime.timedelta(days=days_to_wait,
+                                                    hours=random.randint(0, 24),
+                                                    minutes=random.randint(0, 60))
                 vaccine_doc = EmbeddedVaccineAttributes. \
                     create_embedded_vaccine_from_previous(vaccine_details, max_num_production_days=149)
             else:
@@ -379,11 +385,11 @@ class PersonAttributes(IntEnum):
         if role == "doctor":
             DOCTORS_TABLE.update(
                 {person[PersonAttributes.FISCAL_CODE.name]:
-                    [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+                     [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
         if role == "nurse":
             NURSES_TABLE.update(
                 {person[PersonAttributes.FISCAL_CODE.name]:
-                    [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+                     [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
         return person
 
 
@@ -626,7 +632,10 @@ def build_date(start_date, days_ahead, is_random=True):
     """
     if is_random:
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        result_date = start_date + datetime.timedelta(days=random.randint(0, days_ahead))
+        result_date = start_date + datetime.timedelta(days=random.randint(0, days_ahead),
+                                                      hours=random.randint(0, 24),
+                                                      minutes=random.randint(0, 60)
+                                                      )
     else:
         result_date = start_date + datetime.timedelta(days=days_ahead)
     return result_date
@@ -879,8 +888,8 @@ def insert_ordered_test(collection, person_index):
                                                    '$each': [test],
                                                    '$sort': {'DATE': -1}}},
                                                    '$set': {'GREEN_PASS':
-                                                       GreenPassAttributes.create_green_pass_from_test(test)
-                                                   }
+                                                                GreenPassAttributes.create_green_pass_from_test(test)
+                                                            }
                                                })
 
     # handle the case where the person did not get a vaccine
@@ -905,7 +914,7 @@ def insert_ordered_test(collection, person_index):
                                                '$each': [test],
                                                '$sort': {'DATE': -1}}},
                                                '$set': {'GREEN_PASS':
-                                                        GreenPassAttributes.create_green_pass_from_test(test)
+                                                            GreenPassAttributes.create_green_pass_from_test(test)
                                                         }
                                            })
 
