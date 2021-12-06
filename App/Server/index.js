@@ -70,7 +70,7 @@ async function getQR(client){
     if (result[0].GREEN_PASS == undefined) {
         json={}
     }
-    else if(result[0].VACCINATIONS[0] == undefined) {
+    else if(result[0].VACCINATIONS == undefined) {
         json = { 
             name : result[0].NAME + " " +  result[0].SURNAME,
             birthday : ((result[0].BIRTHDATE).toString().substring(0,15)),
@@ -95,7 +95,7 @@ async function getInformation(client){
     if (result[0].GREEN_PASS == undefined) {
         json={}
     }
-    else if (result[0].VACCINATIONS[0] == undefined){
+    else if (result[0].VACCINATIONS == undefined){
         // test green pass
 
         const issuer = await client.db("polipass").collection("issuers").find({_id : result[0].TESTS[0].ISSUER}).toArray();
