@@ -28,6 +28,10 @@ function Home({ navigation }) {
     navigation.navigate("Home");
   }
 
+  // true if green pass is a vaccine pass
+  // false means test pass
+  const [vaccin, setVaccin] = useState(true)
+
   const [error, setError] = useState(true)
 
   // name and surname 
@@ -38,6 +42,9 @@ function Home({ navigation }) {
 
   // vaccinate name
   const [vaccineName, setVaccineName] = useState('');
+
+  // test type
+  const [test, setTest] = useState('');
 
   // vaccinate producer
   const [vaccineProducer, setVaccineProducer] = useState('');
@@ -70,9 +77,23 @@ function Home({ navigation }) {
   
       let information = await res.json(); 
 
+      // no green pass
       if( Object.keys(information).length === 0){
         if (error == true ) setError(!error);
-       }
+        return;
+      }
+
+      // test pass
+      if(information.type != undefined){
+        setName(information.name);
+        setBirthday(information.birthday);
+        setTest(information.type);
+        setIssuer(information.issuer);
+        setDate(information.date);
+        setExpire(information.expire);
+        if (vaccin == true ) setVaccin(false);
+        return;
+      }
 
       setName(information.name);
       setBirthday(information.birthday);
@@ -138,6 +159,9 @@ function Home({ navigation }) {
                 </View>
                 <Text style={styles.dateOfBirth1}>{birthday}</Text>
               </View>
+
+              {vaccin ? 
+                <View>
               <View style={styles.rect19}>
                 <View style={styles.icon11Row}>
                   <IoniconsIcon
@@ -182,13 +206,40 @@ function Home({ navigation }) {
                 </View>
               </View>
               <Text style={styles.numberOfDoses1}>{dose}</Text>
+              </View>
+              : (
+              <View>
+                <View style={styles.rect19}>
+                  <View style={styles.icon11Row}>
+                    <IoniconsIcon
+                      name="md-finger-print"
+                      style={styles.icon11}
+                    ></IoniconsIcon>
+                    <Text style={styles.text2}>Test name
+                    </Text>
+                  </View>
+                </View>
+                <Text style={styles.a98Shi19Y33}>{test}</Text>
+              
+                <View style={styles.rect15}>
+                  <View style={styles.icon19Row}>
+                    <MaterialCommunityIconsIcon
+                      name="hospital-building"
+                      style={styles.icon19}
+                    ></MaterialCommunityIconsIcon>
+                    <Text style={styles.issuedBy2}>Issued by</Text>
+                  </View>
+                </View>
+                <Text style={styles.ministryOfHealth}>{issuer}</Text>
+                </View>)}
+
               <View style={styles.rect12}>
                 <View style={styles.icon13Row}>
                   <FontAwesomeIcon
                     name="calendar"
                     style={styles.icon13}
                   ></FontAwesomeIcon>
-                  <Text style={styles.dateOfVaccine}>Date of vaccine</Text>
+                  <Text style={styles.dateOfVaccine}>Date of test</Text>
                 </View>
               </View>
               <Text style={styles.dateOfVaccine1}>{date}</Text>
