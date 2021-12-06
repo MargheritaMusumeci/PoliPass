@@ -32,12 +32,15 @@ function QRcode({ navigation }) {
   // name and surname 
   const [name, setName] = useState('');
 
+  const [test, setTest] = useState('');
+
   // birthday
   const [birthday, setBirthday] = useState('');
 
   // vaccinate name
   const [vaccineName, setVaccineName] = useState('');
 
+  const[image, setImage] = useState('require("../assets/qr-code.png")');
 
   const getInformation = async () => {
 
@@ -53,13 +56,25 @@ function QRcode({ navigation }) {
  
      let information = await res.json(); 
 
-     if( await Object.keys(information).length === 0){
+     if( Object.keys(information).length === 0){
       if (error == true ) setError(!error);
+      return;
      }
+
+     // test pass
+     if(information.type != undefined){
+      setName(information.name);
+      setBirthday(information.birthday);
+      setTest(information.type); 
+      setImage('data:image/png;base64,' + information.qr);
+      if (vaccin == true ) setVaccin(false);
+      return;
+    }
 
      setName(information.name);
      setBirthday(information.birthday);
      setVaccineName(information.vaccineName);
+     setImage('data:image/png;base64,' + information.qr);
      
    }catch{
      setErrorMessage("Server not reachable...");
@@ -92,7 +107,7 @@ function QRcode({ navigation }) {
 
         </View>
         <Image
-          source={require("../assets/qr-code.png")}
+          source={{uri: image}}
           resizeMode="contain"
           style={styles.qrcode}
         ></Image>
@@ -120,6 +135,7 @@ function QRcode({ navigation }) {
                 </View>
                 <Text style={styles.dateOfBirth1}>{birthday}</Text>
               
+              {vaccin ? <View>
               <View style={styles.rect19}>
                 <View style={styles.icon11Row}>
                   <IoniconsIcon
@@ -132,6 +148,22 @@ function QRcode({ navigation }) {
                 </View>
               </View>
               <Text style={styles.a98Shi19Y33}>{vaccineName}</Text>
+              </View>
+              : 
+              <View>
+              <View style={styles.rect19}>
+                <View style={styles.icon11Row}>
+                  <IoniconsIcon
+                    name="md-finger-print"
+                    style={styles.icon11}
+                  ></IoniconsIcon>
+                  <Text style={styles.text2}>Test name
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.a98Shi19Y33}>{test}</Text>
+              </View>
+}
               </View>
           )}
 

@@ -30,7 +30,7 @@ app.get("/home", async (req, res) => {
 // receives a json, checks credential, returns ack
 app.post("/login", async (req, res) => {
 
-    credential = req.body
+    credential = req.body;
     result = await checkCredential(credential);
     if (result) res.send("Ack");
     else res.send("Nack"); 
@@ -57,9 +57,19 @@ return hash;
 // database query -->
 
 async function getQR(client){
+
     const result = await client.db("polipass").collection("covid_certificates").find({ EMAIL: global.email_saved, PASSWORD: global.password_saved }).toArray();
+    
     if (result[0].GREEN_PASS == undefined) {
         json={}
+    }
+    else if(result[0].VACCINATIONS[0] == undefined) {
+        json = { 
+            name : result[0].NAME + " " +  result[0].SURNAME,
+            birthday : ((result[0].BIRTHDATE).toString().substring(0,15)),
+            type : result[0].TESTS[0].TYPE,
+            qr : result[0].GREEN_PASS.QR_CODE,
+        }
     }
     else {
         json = { 
@@ -72,15 +82,31 @@ async function getQR(client){
     return JSON.stringify(json);
 }
 
-
 async function getInformation(client){
     const result = await client.db("polipass").collection("covid_certificates").find({ EMAIL: global.email_saved, PASSWORD: global.password_saved }).toArray();
-    const issuer = await client.db("polipass").collection("issuers").find({_id : result[0].VACCINATIONS[0].ISSUER}).toArray();
     
     if (result[0].GREEN_PASS == undefined) {
         json={}
     }
+    else if (result[0].VACCINATIONS[0] == undefined){
+        // test green pass
+
+        const issuer = await client.db("polipass").collection("issuers").find({_id : result[0].TESTS[0].ISSUER}).toArray();
+    
+        json = {  
+            name : result[0].NAME + " " +  result[0].SURNAME,
+            birthday : ((result[0].BIRTHDATE).toString().substring(0,15)),
+            type : result[0].TESTS[0].TYPE,
+            issuer : issuer[0].TYPE + " " +  issuer[0].NAME,
+            date : ((result[0].GREEN_PASS.ISSUE_DATE).toString().substring(0,15)),
+            expire : ((result[0].GREEN_PASS.EXPIRATION_DATE).toString().substring(0,15)),
+        }
+
+    }
     else{
+
+        const issuer = await client.db("polipass").collection("issuers").find({_id : result[0].VACCINATIONS[0].ISSUER}).toArray();
+    
         json = { 
             name : result[0].NAME + " " +  result[0].SURNAME,
             birthday : ((result[0].BIRTHDATE).toString().substring(0,15)),
@@ -135,5 +161,3 @@ databaseConnection().catch(console.error);
 // app.listen() method here takes in two parameters, the first one represents the port number and the other one is a 
     // callback function that returns a message to the console, upon successfully listening to the specified port
 app.listen(port,() => console.log('Server listening at port ' + port ));
-
-
