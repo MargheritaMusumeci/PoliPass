@@ -780,7 +780,7 @@ def insert_green_pass(collection, vaccination, person_index):
 
 def check_expired_gp(collection, person_index, green_pass):
     """
-    Check the expiration date of a green pass and removes it if it its expired.
+    Checks the expiration date of a green pass and removes it if it's expired.
     """
     if datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
         collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
