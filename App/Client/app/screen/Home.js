@@ -255,7 +255,7 @@ function Home({ navigation }) {
                     name="calendar"
                     style={styles.icon13}
                   ></FontAwesomeIcon>
-                  <Text style={styles.dateOfVaccine}>Date of test</Text>
+                  <Text style={styles.dateOfVaccine}>Date of release</Text>
                 </View>
               </View>
               <Text style={styles.dateOfVaccine1}>{date}</Text>
