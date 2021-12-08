@@ -25,10 +25,13 @@
 ## GUI 
 
 ### Server 
-To run the server, go to App/Server and type the following command to install the node mobules
+To run the server, go to App/Server and type the following commands to install the node mobules
 
 ```sh
  npm install
+```
+```sh
+ npm install mongodb
 ```
 Type the following command to get started
 
@@ -40,6 +43,9 @@ To start the application, go to App/Client and type the following command to ins
 
 ```sh
  npm install
+```
+```sh
+ npm install --global expo-cli
 ```
 Type the following command to get started
 
