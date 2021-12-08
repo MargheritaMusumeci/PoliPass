@@ -24,20 +24,26 @@
 
 ## GUI 
 
-To run the server, go to App/Server and type the following command on the terminal 
+### Server 
+To run the server, go to App/Server and type the following command to install the node mobules
+
+```sh
+ npm install
+```
+Type the following command to get started
 
 ```sh
  node index.js 
 ```
-To start the application, go to App/Client and type the following command on the terminal 
+### Client 
+To start the application, go to App/Client and type the following command to install the node mobules 
+
+```sh
+ npm install
+```
+Type the following command to get started
+
 
 ```sh
  npm start 
 ```
-
-For testing with the current database... 
-
-- fenella.cremona@polipass.it : Vaccine pass 
-- oristilla.repizzi@polipass.it : Test pass
-- raffaelo.cremone@polipass.it : No green pass 
-
