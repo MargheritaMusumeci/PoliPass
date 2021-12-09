@@ -737,11 +737,10 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "#e36861",
-    fontSize: 18,
+    fontSize: 22,
     textAlign: "center",
     lineHeight: 20,
-    marginTop: 40,
-    
+    marginTop: 340,
   }
 });
 
