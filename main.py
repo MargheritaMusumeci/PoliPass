@@ -53,44 +53,43 @@ Dictionary used to bind each nurse with its ObjectId inside MongoDB
 Is is updated after the creation of each nurse inside the function create_and_insert_people_doc 
 """
 NURSES_TABLE = {}
-issuersNames={
-    "Hospital":0,
-    "Pharmacy":1,
-    "Covid center":2,
-    "Doctor's office":3,
-    "Private clinic":4
+issuersNames = {
+    "Hospital": 0,
+    "Pharmacy": 1,
+    "Covid center": 2,
+    "Doctor's office": 3,
+    "Private clinic": 4
 }
-openingHoursHospital={"MONDAY":"00:00-24:00",
-                      "TUESDAY":"00:00-24:00",
-                      "WEDNESDAY":"00:00-24:00",
-                      "THURSDAY":"00:00-24:00",
-                      "FRIDAY":"00:00-24:00",
-                      "SATURDAY":"00:00-24:00",
-                      "SUNDAY":"00:00-24:00"}
-openingHoursPharmacy={"MONDAY":"08:00-20:00",
-                      "TUESDAY":"08:00-20:00",
-                      "WEDNESDAY":"08:00-20:00",
-                      "THURSDAY":"08:00-20:00",
-                      "FRIDAY":"08:00-20:00",
-                      "SATURDAY":"08:00-13:00",
-                      "SUNDAY":"08:00-12:30"}
-openingHoursCovid={"MONDAY":"06:00-24:00",
-                      "TUESDAY":"06:00-24:00",
-                      "WEDNESDAY":"06:00-24:00",
-                      "THURSDAY":"06:00-24:00",
-                      "FRIDAY":"06:00-24:00",
-                      "SATURDAY":"06:00-24:00",
-                      "SUNDAY":"06:00-24:00"}
-openingHoursDoctor={"MONDAY":"10:00-12:30",
-                      "TUESDAY":"17:00-19:00",
-                      "WEDNESDAY":"10:00-12:30",
-                      "THURSDAY":"17:00-19:00",
-                      "FRIDAY":"10:00-19:00",
-                      "SATURDAY":"10:00-12:30",
-                      "SUNDAY":"10:00-12:30"}
-listIssuersHours=[openingHoursHospital,openingHoursPharmacy,openingHoursCovid,openingHoursDoctor,openingHoursPharmacy]
-
-
+openingHoursHospital = {"MONDAY": "00:00-24:00",
+                        "TUESDAY": "00:00-24:00",
+                        "WEDNESDAY": "00:00-24:00",
+                        "THURSDAY": "00:00-24:00",
+                        "FRIDAY": "00:00-24:00",
+                        "SATURDAY": "00:00-24:00",
+                        "SUNDAY": "00:00-24:00"}
+openingHoursPharmacy = {"MONDAY": "08:00-20:00",
+                        "TUESDAY": "08:00-20:00",
+                        "WEDNESDAY": "08:00-20:00",
+                        "THURSDAY": "08:00-20:00",
+                        "FRIDAY": "08:00-20:00",
+                        "SATURDAY": "08:00-13:00",
+                        "SUNDAY": "08:00-12:30"}
+openingHoursCovid = {"MONDAY": "06:00-24:00",
+                     "TUESDAY": "06:00-24:00",
+                     "WEDNESDAY": "06:00-24:00",
+                     "THURSDAY": "06:00-24:00",
+                     "FRIDAY": "06:00-24:00",
+                     "SATURDAY": "06:00-24:00",
+                     "SUNDAY": "06:00-24:00"}
+openingHoursDoctor = {"MONDAY": "10:00-12:30",
+                      "TUESDAY": "17:00-19:00",
+                      "WEDNESDAY": "10:00-12:30",
+                      "THURSDAY": "17:00-19:00",
+                      "FRIDAY": "10:00-19:00",
+                      "SATURDAY": "10:00-12:30",
+                      "SUNDAY": "10:00-12:30"}
+listIssuersHours = [openingHoursHospital, openingHoursPharmacy, openingHoursCovid, openingHoursDoctor,
+                    openingHoursPharmacy]
 
 
 class TestAttributes(IntEnum):
