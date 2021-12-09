@@ -31,7 +31,7 @@ function Login({navigation}) {
       return;
     }
 
-    if ((mail_input.includes('@') == -1) || (mail_input.includes(".") == -1)){
+    if (!(mail_input.includes('@')) || !(mail_input.includes("."))){
       setErrorMessage("Invalid email...");
       if (error == true ) setError(!error);
       return;
