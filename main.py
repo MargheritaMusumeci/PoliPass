@@ -61,6 +61,46 @@ NURSES_ID_LIST = []
 List used to store all the doctors' ids
 """
 DOCTORS_ID_LIST = []
+"""
+Dictionary containing the mapping between type of issuers and index of its opening hours.
+"""
+issuersNames = {
+    "Hospital": 0,
+    "Pharmacy": 1,
+    "Covid center": 2,
+    "Doctor's office": 3,
+    "Private clinic": 4
+}
+openingHoursHospital = {"MONDAY": "00:00-24:00",
+                        "TUESDAY": "00:00-24:00",
+                        "WEDNESDAY": "00:00-24:00",
+                        "THURSDAY": "00:00-24:00",
+                        "FRIDAY": "00:00-24:00",
+                        "SATURDAY": "00:00-24:00",
+                        "SUNDAY": "00:00-24:00"}
+openingHoursPharmacy = {"MONDAY": "08:00-20:00",
+                        "TUESDAY": "08:00-20:00",
+                        "WEDNESDAY": "08:00-20:00",
+                        "THURSDAY": "08:00-20:00",
+                        "FRIDAY": "08:00-20:00",
+                        "SATURDAY": "08:00-13:00",
+                        "SUNDAY": "08:00-12:30"}
+openingHoursCovid = {"MONDAY": "06:00-24:00",
+                     "TUESDAY": "06:00-24:00",
+                     "WEDNESDAY": "06:00-24:00",
+                     "THURSDAY": "06:00-24:00",
+                     "FRIDAY": "06:00-24:00",
+                     "SATURDAY": "06:00-24:00",
+                     "SUNDAY": "06:00-24:00"}
+openingHoursDoctor = {"MONDAY": "10:00-12:30",
+                      "TUESDAY": "17:00-19:00",
+                      "WEDNESDAY": "10:00-12:30",
+                      "THURSDAY": "17:00-19:00",
+                      "FRIDAY": "10:00-19:00",
+                      "SATURDAY": "10:00-12:30",
+                      "SUNDAY": "10:00-12:30"}
+listIssuersHours = [openingHoursHospital, openingHoursPharmacy, openingHoursCovid, openingHoursDoctor,
+                    openingHoursPharmacy]
 
 
 class TestAttributes(IntEnum):
@@ -249,6 +289,7 @@ class IssuerAttributes(IntEnum):
     TELEPHONE_NUMBER = 8
     DOCTORS = 9
     NURSES = 10
+    OPENING_HOURS = 11
 
     @classmethod
     def create_issuer(cls, params, add_location_details=True):
@@ -275,6 +316,8 @@ class IssuerAttributes(IntEnum):
                             params[IssuerAttributes.LOCATION_DETAILS.value:
                                    IssuerAttributes.LOCATION_DETAILS.value + EmbeddedPositionDetails.ZIP.value + 1]),
                     IssuerAttributes.TELEPHONE_NUMBER.name: params[IssuerAttributes.TELEPHONE_NUMBER.value],
+                    IssuerAttributes.OPENING_HOURS.name: listIssuersHours[
+                        issuersNames[params[IssuerAttributes.TYPE.value]]],
                     IssuerAttributes.DOCTORS.name: [],
                     IssuerAttributes.NURSES.name: []
                 }
@@ -287,6 +330,8 @@ class IssuerAttributes(IntEnum):
                             params[IssuerAttributes.LOCATION_DETAILS.value:
                                    IssuerAttributes.LOCATION_DETAILS.value + EmbeddedPositionDetails.ZIP.value + 1]),
                     IssuerAttributes.TELEPHONE_NUMBER.name: params[IssuerAttributes.TELEPHONE_NUMBER.value],
+                    IssuerAttributes.OPENING_HOURS.name: listIssuersHours[
+                        issuersNames[params[IssuerAttributes.TYPE.value]]],
                     IssuerAttributes.DOCTORS.name: [],
                     IssuerAttributes.NURSES.name: []
                 }
