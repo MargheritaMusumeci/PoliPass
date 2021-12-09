@@ -1,47 +1,47 @@
-Hospital,San Raffaele,45.50615495998359,9.265518665472529,Street Olgettina 60,Segrate,MI,20132
-Hospital,Galamarini,45.72222493421725,8.900299056227746,Square A. Zanaboni 1,Tradate,VA,21049
-Hospital,San Salvatore,43.907624136524284,12.908059995080508,Square Carlo Cinelli 1,Pesaro,PU,61121
-Hospital,Annunziata,39.293826991988865,16.248474227077857,Street Fiume 1,Cosenza,CS,87100
-Hospital,Lazzaro Spallanzani,41.865755348894076,12.4563589388255,Street Portuense 292,Roma,RM,00149
-Hospital,Bobbio,44.7710071,9.3832201,Avenue Giuseppe Garibaldi 1/3,Bobbio,PC,29022
-Hospital,Del delta,44.7270209,11.9323336,Street Valle Oppio 2,Lagosanto,FE,44023
-Hospital,Civile,45.2852832,10.6075743,Street Guido Tonello 5,Volta Mantovana,MN,46049
-Hospita,Fiorenzuola D'Arda,44.8879897,9.8292045,Boulevard Roma 29,Fiorenzuola d'Arda,PC,29017
-Private clinic,Santagostino Loreto,45.48386708640959,9.213697155692714,Street Saverio Mercadante 16,Milano,MI,20124
-Private clinic,Villa Mafalda,41.932673381151105,12.510271741566433,Street Monte delle Gioie 5,Roma,RM,00199
-Private clinic,ICS Maugeri,45.719693402175075,8.911228867010195,Street Crotto Roncaccio 16,Tradate,VA,21049
-Private clinic,Niguarda,45.509675682579584,9.187408135461936,Square of Greater Hospital 3,Milano,MI,20162
-Private clinic,San Luca,45.0084888,8.1765735,Street cinque Alpini 6,Bergamo,BG,24100
-Private clinic,Poliambulatorio Agresti,44.2582971,11.0299395,Street degli Agresti 4,Bologna,BO,40123
-Private clinic,Poliambulatorio San Domenico,44.4832492,11.3558908,Street Fossolo 28/A,Bologna,BO,40138
-Private clinic,Poliambulatorio Santa Lucia,44.464393,11.3654436,Street Augusto Murri 164,Bologna,BO,40137
-Private clinic,Casa Della Salute,44.5536544,10.4798099,Street Giacomo Matteotti 7,Bomporto,MO,41030
-Private clinic,Dama Salus,40.9973395,16.8336933,Street Postumia 5,Trani,BT,76125
-Private clinic,Centro di medicina Ferrara,44.7251129,11.2743455,Street Giovanni Verga 17/A,Ferrara,FE,44124
-Private clinic,Villa Maria,44.0063995,12.2687264,Boulevard Giacomo Matteotti 24,Rimini,RN,47921
-Private clinic,Villa Igiea Sanità,40.9096816,16.6115761,Boulevard Alcide de Gasperi 334,Bari,BA,70125
-Pharmacy,Assisi,45.75494197327556,8.87388705095256,Street Papa Celestino IV 4/Bis,Castiglione Olona,VA,21043
-Pharmacy,Fior di Loto,45.705428894695494,8.913972844224272,Boulevard Guglielmo Marconi 58,Tradate,VA,21049
-Pharmacy,Sanitas,45.47383679016939,9.1833098009608,Avenue Garibaldi 49,Milano,MI,20121
-Pharmacy,Plebisciti,45.4651211,9.2189264,Avenue Plebisciti 7,Milano,MI,20129
-Pharmacy,Capranica,41.8399044,12.4122855,Square Capranica 96,Roma,RM,00186
-Pharmacy,Comunale,41.0265708,14.1252991,SS7 9,Ceppaloni,BN,83016
-Pharmacy,Del cuore,40.6720529,13.6285059,Square Gioacchino Rossini 23,Bacoli,NA,80070
-Pharmacy,Vernile,41.0062272,13.2035495,Boulevard Dante Alighieri 10,Villa Santa Lucia,FR,03030
-Pharmacy,Kennedy,40.8981178,13.5823068,Boulevard Kennedy 387,Napoli,NA,80125
-Pharmacy,Casciotti,43.1706424,12.7483189,Cross street Torresi 10,Potenza Picena,MC,62018
-Pharmacy,Moreschini,43.1272349,13.6658811,Street Raffaele Rossetti 2,Lido di Fermo,FM,63900
-Pharmacy,Cairoli,43.2979977,13.4096216,Avenue Fratelli Cairoli 18/20,Macerata,MC,62100
-Pharmacy,Decuzzi,40.2847058,15.7779642,Boulevard Umberto I 5,Calciano,MT,75010
-Pharmacy,Lloyd's,40.8344704,14.3622649,Street Leonardo di Capua,Napoli,NA,80141
-Pharmacy,Aiello,39.31288387863299,16.253781625419823,Boulevard Giacomo Mancini 158,Cosenza,CS,87100
-Pharmacy,Zongo,43.903808368171966,12.908846385286795,Street Vincenzo Rossi 17,Pesaro,PU,61122
-Covid center,ASST Settelaghi,45.80278112031525,8.784718751990036,Square Roma 1,Schiranna,VA,21100
-Covid center,La fabbrica del vapore,45.484148183398325,9.175392313803119,Street Giulio Cesare Procaccini 4,Milano,MI,20154
-Covid center,Malpensa fiere,45.63528027725216,8.852840451984244,Street XI Settembre 16,Busto Arsizio,VA,21052
-Covid center,Iper Rossini,43.90529937629807,12.868620591702111,Street Y. A. Gagarin,Pesaro,PU,61122
-Covid center,Pala Brillia,39.648512388678256,16.51342270761001,Street Brillia,Corigliano Calabro,CS,87064
-Covid center,Villa Tiberia,41.94570358744394,12.557744070342295,Street Emilio Praga 26,Roma,RM,00137
-Covid center,Palazzo delle Scintille,45.4774192,9.1590394,Square Sei Febbraio,Milano,MI,20145
-Covid center,Palazzetto dello sport,45.4773333,9.0277106,Street Leone Tolstoi 84,Limbiate,MB,20812
-Covid center,Palestra Comunale,44.5676544,10.4798014,Street Conta 1,San Pietro in Casale,BO,40018
+Hospital,San Raffaele,45.50615495998359,9.265518665472529,Street Olgettina 60,Segrate,MI,20132,+390226431
+Hospital,Galamarini,45.72222493421725,8.900299056227746,Square A. Zanaboni 1,Tradate,VA,21049,+390263631
+Hospital,San Salvatore,43.907624136524284,12.908059995080508,Square Carlo Cinelli 1,Pesaro,PU,61121,+3905448105
+Hospital,Annunziata,39.293826991988865,16.248474227077857,Street Fiume 1,Cosenza,CS,87100,+390741287
+Hospital,Lazzaro Spallanzani,41.865755348894076,12.4563589388255,Street Portuense 292,Roma,RM,00149,+3906551701
+Hospital,Bobbio,44.7710071,9.3832201,Avenue Giuseppe Garibaldi 1/3,Bobbio,PC,29022,+390893587
+Hospital,Del delta,44.7270209,11.9323336,Street Valle Oppio 2,Lagosanto,FE,44023,+390533723111
+Hospital,Civile,45.2852832,10.6075743,Street Guido Tonello 5,Volta Mantovana,MN,46049,+390376839200
+Hospital,Fiorenzuola D'Arda,44.8879897,9.8292045,Boulevard Roma 29,Fiorenzuola d'Arda,PC,29017,+390523301111
+Private clinic,Santagostino Loreto,45.48386708640959,9.213697155692714,Street Saverio Mercadante 16,Milano,MI,20124,+390289701701
+Private clinic,Villa Mafalda,41.932673381151105,12.510271741566433,Street Monte delle Gioie 5,Roma,RM,00199,+3906860941
+Private clinic,ICS Maugeri,45.719693402175075,8.911228867010195,Street Crotto Roncaccio 16,Tradate,VA,21049,+3903825921
+Private clinic,Niguarda,45.509675682579584,9.187408135461936,Square of Greater Hospital 3,Milano,MI,20162,+390264441
+Private clinic,San Luca,45.0084888,8.1765735,Street cinque Alpini 6,Bergamo,BG,24100,+39035321135
+Private clinic,Poliambulatorio Agresti,44.2582971,11.0299395,Street degli Agresti 4,Bologna,BO,40123,+39055750928
+Private clinic,Poliambulatorio San Domenico,44.4832492,11.3558908,Street Fossolo 28/A,Bologna,BO,40138,+390516360967
+Private clinic,Poliambulatorio Santa Lucia,44.464393,11.3654436,Street Augusto Murri 164,Bologna,BO,40137,+39051440822
+Private clinic,Casa Della Salute,44.5536544,10.4798099,Street Giacomo Matteotti 7,Bomporto,MO,41030,+390654785
+Private clinic,Dama Salus,40.9973395,16.8336933,Street Postumia 5,Trani,BT,76125,+390883482792
+Private clinic,Centro di medicina Ferrara,44.7251129,11.2743455,Street Giovanni Verga 17/A,Ferrara,FE,44124,+390532972311
+Private clinic,Villa Maria,44.0063995,12.2687264,Boulevard Giacomo Matteotti 24,Rimini,RN,47921,+390498711144
+Private clinic,Villa Igiea Sanità,40.9096816,16.6115761,Boulevard Alcide de Gasperi 334,Bari,BA,70125,+390805650530
+Pharmacy,Assisi,45.75494197327556,8.87388705095256,Street Papa Celestino IV 4/Bis,Castiglione Olona,VA,21043,+390331857120
+Pharmacy,Fior di Loto,45.705428894695494,8.913972844224272,Boulevard Guglielmo Marconi 58,Tradate,VA,21049,+390331849008
+Pharmacy,Sanitas,45.47383679016939,9.1833098009608,Avenue Garibaldi 49,Milano,MI,20121,+39028056843
+Pharmacy,Plebisciti,45.4651211,9.2189264,Avenue Plebisciti 7,Milano,MI,20129,+390270003852
+Pharmacy,Capranica,41.8399044,12.4122855,Square Capranica 96,Roma,RM,00186,+3901611707011
+Pharmacy,Comunale,41.0265708,14.1252991,SS7 9,Ceppaloni,BN,83016,+390824840070
+Pharmacy,Del cuore,40.6720529,13.6285059,Square Gioacchino Rossini 23,Bacoli,NA,80070,+393426489503
+Pharmacy,Vernile,41.0062272,13.2035495,Boulevard Dante Alighieri 10,Villa Santa Lucia,FR,03030,+390776463027
+Pharmacy,Kennedy,40.8981178,13.5823068,Boulevard Kennedy 387,Napoli,NA,80125,+39081417283
+Pharmacy,Casciotti,43.1706424,12.7483189,Cross street Torresi 10,Potenza Picena,MC,62018,+390733688116
+Pharmacy,Moreschini,43.1272349,13.6658811,Street Raffaele Rossetti 2,Lido di Fermo,FM,63900,+390734641677
+Pharmacy,Cairoli,43.2979977,13.4096216,Avenue Fratelli Cairoli 18/20,Macerata,MC,62100,+390733232760
+Pharmacy,Decuzzi,40.2847058,15.7779642,Boulevard Umberto I 5,Calciano,MT,75010,+390835672290
+Pharmacy,Lloyd's,40.8344704,14.3622649,Street Leonardo di Capua,Napoli,NA,80141,+390559123085
+Pharmacy,Aiello,39.31288387863299,16.253781625419823,Boulevard Giacomo Mancini 158,Cosenza,CS,87100,+39089225142
+Pharmacy,Zongo,43.903808368171966,12.908846385286795,Street Vincenzo Rossi 17,Pesaro,PU,61122,+390721416134
+Covid center,ASST Settelaghi,45.80278112031525,8.784718751990036,Square Roma 1,Schiranna,VA,21100,+390332278111
+Covid center,La fabbrica del vapore,45.484148183398325,9.175392313803119,Street Giulio Cesare Procaccini 4,Milano,MI,20154,+39020202
+Covid center,Malpensa fiere,45.63528027725216,8.852840451984244,Street XI Settembre 16,Busto Arsizio,VA,21052,+390332295429
+Covid center,Iper Rossini,43.90529937629807,12.868620591702111,Street Y. A. Gagarin,Pesaro,PU,61122,+390721405599
+Covid center,Pala Brillia,39.648512388678256,16.51342270761001,Street Brillia,Corigliano Calabro,CS,87064,+390875247
+Covid center,Villa Tiberia,41.94570358744394,12.557744070342295,Street Emilio Praga 26,Roma,RM,00137,+390682098040
+Covid center,Palazzo delle Scintille,45.4774192,9.1590394,Square Sei Febbraio,Milano,MI,20145,+390533478
+Covid center,Palazzetto dello sport,45.4773333,9.0277106,Street Leone Tolstoi 84,Limbiate,MB,20812,+39024587
+Covid center,Palestra Comunale,44.5676544,10.4798014,Street Conta 1,San Pietro in Casale,BO,40018,+390510217829
