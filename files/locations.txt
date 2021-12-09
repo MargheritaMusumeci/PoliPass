@@ -6,7 +6,7 @@ Hospital,Lazzaro Spallanzani,41.865755348894076,12.4563589388255,Street Portuens
 Hospital,Bobbio,44.7710071,9.3832201,Avenue Giuseppe Garibaldi 1/3,Bobbio,PC,29022
 Hospital,Del delta,44.7270209,11.9323336,Street Valle Oppio 2,Lagosanto,FE,44023
 Hospital,Civile,45.2852832,10.6075743,Street Guido Tonello 5,Volta Mantovana,MN,46049
-Hospita,Fiorenzuola D'Arda,44.8879897,9.8292045,Boulevard Roma 29,Fiorenzuola d'Arda,PC,29017
+Hospital,Fiorenzuola D'Arda,44.8879897,9.8292045,Boulevard Roma 29,Fiorenzuola d'Arda,PC,29017
 Private clinic,Santagostino Loreto,45.48386708640959,9.213697155692714,Street Saverio Mercadante 16,Milano,MI,20124
 Private clinic,Villa Mafalda,41.932673381151105,12.510271741566433,Street Monte delle Gioie 5,Roma,RM,00199
 Private clinic,ICS Maugeri,45.719693402175075,8.911228867010195,Street Crotto Roncaccio 16,Tradate,VA,21049

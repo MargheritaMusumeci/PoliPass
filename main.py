@@ -9,9 +9,9 @@ import qrcode
 from PIL import Image
 import io
 
-# CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
-CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-                    "&tlsAllowInvalidCertificates=true"
+CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
+# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+#                     "&tlsAllowInvalidCertificates=true"
 # CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
 # CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
@@ -53,6 +53,44 @@ Dictionary used to bind each nurse with its ObjectId inside MongoDB
 Is is updated after the creation of each nurse inside the function create_and_insert_people_doc 
 """
 NURSES_TABLE = {}
+issuersNames={
+    "Hospital":0,
+    "Pharmacy":1,
+    "Covid center":2,
+    "Doctor's office":3,
+    "Private clinic":4
+}
+openingHoursHospital={"MONDAY":"00:00-24:00",
+                      "TUESDAY":"00:00-24:00",
+                      "WEDNESDAY":"00:00-24:00",
+                      "THURSDAY":"00:00-24:00",
+                      "FRIDAY":"00:00-24:00",
+                      "SATURDAY":"00:00-24:00",
+                      "SUNDAY":"00:00-24:00"}
+openingHoursPharmacy={"MONDAY":"08:00-20:00",
+                      "TUESDAY":"08:00-20:00",
+                      "WEDNESDAY":"08:00-20:00",
+                      "THURSDAY":"08:00-20:00",
+                      "FRIDAY":"08:00-20:00",
+                      "SATURDAY":"08:00-13:00",
+                      "SUNDAY":"08:00-12:30"}
+openingHoursCovid={"MONDAY":"06:00-24:00",
+                      "TUESDAY":"06:00-24:00",
+                      "WEDNESDAY":"06:00-24:00",
+                      "THURSDAY":"06:00-24:00",
+                      "FRIDAY":"06:00-24:00",
+                      "SATURDAY":"06:00-24:00",
+                      "SUNDAY":"06:00-24:00"}
+openingHoursDoctor={"MONDAY":"10:00-12:30",
+                      "TUESDAY":"17:00-19:00",
+                      "WEDNESDAY":"10:00-12:30",
+                      "THURSDAY":"17:00-19:00",
+                      "FRIDAY":"10:00-19:00",
+                      "SATURDAY":"10:00-12:30",
+                      "SUNDAY":"10:00-12:30"}
+listIssuersHours=[openingHoursHospital,openingHoursPharmacy,openingHoursCovid,openingHoursDoctor,openingHoursPharmacy]
+
+
 
 
 class TestAttributes(IntEnum):
@@ -238,6 +276,7 @@ class IssuerAttributes(IntEnum):
     TYPE = 0
     NAME = 1
     LOCATION_DETAILS = 2
+    OPENING_HOURS = 3
 
     @classmethod
     def create_embedded_issuer(cls, params, add_location_details):
@@ -253,12 +292,15 @@ class IssuerAttributes(IntEnum):
                 IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
             }
         else:
+
             issuer = {
                 IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
                 IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+                IssuerAttributes.OPENING_HOURS.name: listIssuersHours[issuersNames[params[IssuerAttributes.TYPE.value]]],
                 IssuerAttributes.LOCATION_DETAILS.name:
                     EmbeddedPositionDetails.create_embedded_location_details(
                         params[IssuerAttributes.LOCATION_DETAILS.value:])
+
             }
         return issuer
 
@@ -696,6 +738,7 @@ def create_and_insert_all_issuer_doc(collection):
     """
     for i in range(len(ISSUERS)):
         issuer_document = IssuerAttributes.create_embedded_issuer(retrieve_issuer(i), add_location_details=True)
+        print(issuer_document)
         print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
               + retrieve_issuer(i)[IssuerAttributes.NAME.value])
         insert_document(collection, issuer_document)
