@@ -19,10 +19,10 @@ CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mo
 
 
 # Constants
-NUMBER_OF_PEOPLE = 300
+NUMBER_OF_PEOPLE = 200
 MAX_NUMBER_OF_DOSES = 3
-MAX_NUMBER_OF_TESTS = 1
-PROB_BEING_DOCTOR_OR_NURSE = 0.1
+MAX_NUMBER_OF_TESTS = 3
+PROB_BEING_DOCTOR_OR_NURSE = 0.2
 
 # Global variables
 NAMES = []
@@ -128,12 +128,14 @@ class TestAttributes(IntEnum):
             result = "positive"
         else:
             result = "negative"
-        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
+        issuer_index = random.randint(0, len(ISSUERS_TABLE) - 1)
+        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[issuer_index],
                 TestAttributes.DATE.name: build_date("2021-06-01", days_ahead=365),
                 TestAttributes.TYPE.name: test_type,
                 TestAttributes.RESULT.name: result,
-                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
-                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse())
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(
+                    retrieve_doctor_by_index(issuer_index)),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse_by_index(issuer_index))
                 }
         return test
 
@@ -150,13 +152,15 @@ class TestAttributes(IntEnum):
             result = "positive"
         else:
             result = "negative"
-        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
+        issuer_index = random.randint(0, len(ISSUERS_TABLE) - 1)
+        test = {TestAttributes.ISSUER.name: ISSUERS_TABLE[issuer_index],
                 # TODO set the date between previous date and current date
                 TestAttributes.DATE.name: build_date(previous_date, days_ahead=30),
                 TestAttributes.TYPE.name: test_type,
                 TestAttributes.RESULT.name: result,
-                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
-                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse())
+                TestAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(
+                    retrieve_doctor_by_index(issuer_index)),
+                TestAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse_by_index(issuer_index))
                 }
         return test
 
@@ -184,13 +188,16 @@ class VaccinationAttributes(IntEnum):
         hours = random.randint(0, 24)
         minutes = random.randint(0, 60)
         injection_date = production_date + datetime.timedelta(days=days, hours=hours, minutes=minutes)
+        issuer_index = random.randint(0, len(ISSUERS_TABLE) - 1)
         vaccination = {
             VaccinationAttributes.VACCINE.name: vaccine_issued,
             VaccinationAttributes.DATE.name: injection_date,
             VaccinationAttributes.DOSE.name: 1,
-            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
-            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
-            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse()),
+            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[issuer_index],
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.
+                create_doctor(retrieve_doctor_by_index(issuer_index)),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.
+                create_doctor(retrieve_nurse_by_index(issuer_index)),
         }
         return vaccination
 
@@ -228,14 +235,15 @@ class VaccinationAttributes(IntEnum):
             else:
                 print("The person has already done all required vaccine doses")
                 return None
+        issuer_index = random.randint(0, len(ISSUERS_TABLE) - 1)
         vaccination_document_to_add = {
             VaccinationAttributes.VACCINE.name: vaccine_doc,
             VaccinationAttributes.DATE.name: injection_date,
             VaccinationAttributes.DOSE.name: previous_dose + 1,
             # TODO decide whether or not taking the same ISSUER. Now it is randomly chosen.
-            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[random.randint(0, len(ISSUERS_TABLE) - 1)],
-            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor()),
-            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse()),
+            VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[issuer_index],
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor_by_index(issuer_index)),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse_by_index(issuer_index)),
         }
         return vaccination_document_to_add
 
@@ -540,7 +548,7 @@ class GreenPassAttributes(IntEnum):
             else:
                 days_ahead = 365
         expiration_date = date + datetime.timedelta(days=days_ahead)
-        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(str(expiration_date)),
+        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(expiration_date),
                       GreenPassAttributes.ISSUE_DATE.name: date,
                       GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
                       }
@@ -550,7 +558,7 @@ class GreenPassAttributes(IntEnum):
     def create_green_pass_from_test(cls, test):
         date = test[TestAttributes.DATE.name]
         expiration_date = date + datetime.timedelta(days=2)
-        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(str(expiration_date)),
+        green_pass = {GreenPassAttributes.QR_CODE.name: build_green_pass_qrcode(expiration_date),
                       GreenPassAttributes.ISSUE_DATE.name: date,
                       GreenPassAttributes.EXPIRATION_DATE.name: expiration_date
                       }
@@ -701,6 +709,50 @@ def retrieve_nurse():
         print("Error, no nurse available")
 
 
+def retrieve_nurse_by_index(issuer_index):
+    """
+    Method to retrieve the nurse given the index of the issuer he belongs to. This method assumes that
+    there is a correspondence between the index of the issuer and the index of the nurse. Since the assignment of the
+    nurses to the issuers is done in a cyclic way, it looks for a nurse from a pool of suitable ones (retrieved in the
+    while loop).
+    """
+    nurses_list = list(NURSES_TABLE.keys())
+    suitable_nurses = []
+    idx = issuer_index
+    while idx < len(nurses_list):
+        suitable_nurses.append(nurses_list[idx])
+        idx += len(ISSUERS_TABLE)
+    try:
+        fiscal_code = random.choice(suitable_nurses)
+    except IndexError:
+        print("Index error detected probably there is not a nurse for the issuer selected"
+              "\nRemember that you need at least 94 people in the database")
+        return None
+    return fiscal_code
+
+
+def retrieve_doctor_by_index(issuer_index):
+    """
+    Method to retrieve the doctor given the index of the issuer he belongs to. This method assumes that
+    there is a correspondence between the index of the issuer and the index of the nurse. Since the assignment of the
+    doctors to the issuers is done in a cyclic way (with the issuer length as period),
+    it looks for a doctor from a pool of suitable ones (retrieved in the while loop).
+    """
+    doctors_list = list(DOCTORS_TABLE.keys())
+    suitable_doctors = []
+    idx = issuer_index
+    while idx < len(doctors_list):
+        suitable_doctors.append(doctors_list[idx])
+        idx += len(ISSUERS_TABLE)
+    try:
+        fiscal_code = random.choice(suitable_doctors)
+    except IndexError:
+        print("Index error detected probably there is not a doctor for the issuer selected"
+              "\nRemember that you need at most 94 people in the database")
+        return None
+    return fiscal_code
+
+
 def retrieve_doctor():
     fiscal_code = random.choice(list(DOCTORS_TABLE.keys()))
     try:
@@ -729,7 +781,7 @@ def build_detailed_person():
     number = "+393"
     for i in range(0, 9):
         number += str(random.randint(0, 9))
-    email = (name + '.' + surname + "@polipass.it").lower()
+    email = (name + '.' + surname + "@polipass.it").lower().strip()
     return [name, surname, birthdate, fiscal_code, birth_place, number, email, address]
 
 
@@ -755,7 +807,8 @@ def build_green_pass_qrcode(expiration_date):
     """
     Method that saves an image representing a green pass qr code and returns it as a binary file.
     """
-    green_pass_img = qrcode.make(expiration_date)
+    expiration_date_string = expiration_date.strftime("%d/%m/%Y, %H:%M:%S")
+    green_pass_img = qrcode.make("This certification expires on " + expiration_date_string)
     green_pass_img.save("green_pass.png")
     green_pass_img = Image.open("green_pass.png")
     green_pass_qr_bytes = io.BytesIO()
@@ -806,12 +859,13 @@ def create_and_insert_all_issuer_doc(collection):
     """
     for i in range(len(ISSUERS)):
         issuer_document = IssuerAttributes.create_issuer(retrieve_issuer(i))
-        print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
-              + retrieve_issuer(i)[IssuerAttributes.NAME.value])
+        # print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
+        #      + retrieve_issuer(i)[IssuerAttributes.NAME.value])
         insert_document(collection, issuer_document)
         identifier = collection.find_one({'NAME': retrieve_issuer(i)[IssuerAttributes.NAME.value]},
                                          {'ObjectId': 1})['_id']
         ISSUERS_TABLE.update({i: identifier})
+    print(ISSUERS_TABLE)
 
 
 def create_and_insert_people_doc(collection):
@@ -821,9 +875,9 @@ def create_and_insert_people_doc(collection):
     """
     for index in range(NUMBER_OF_PEOPLE):
         person_details = build_detailed_person()
-        if index < 46:
+        if index < len(ISSUERS_TABLE):
             person_document = PersonAttributes.create_person_manipulated(person_details, is_doctor=True)
-        elif 46 <= index < 92:
+        elif len(ISSUERS_TABLE) <= index < 2*len(ISSUERS_TABLE):
             person_document = PersonAttributes.create_person_manipulated(person_details, is_nurse=True)
         else:
             person_document = PersonAttributes.create_person(person_details)
@@ -832,7 +886,8 @@ def create_and_insert_people_doc(collection):
               ' ' + person_details[PersonAttributes.SURNAME.value])
         insert_document(collection, person_document)
         identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
-                                         {'ObjectId': 1})
+                                         {'ObjectId': 1, 'FISCAL_CODE': 1})
+        print("Just inserted the person: " + str(identifier))
         if person_document.keys().__contains__(PersonAttributes.ROLE.name):
             if person_document[PersonAttributes.ROLE.name] == "nurse":
                 NURSES_ID_LIST.append(identifier['_id'])
@@ -841,8 +896,6 @@ def create_and_insert_people_doc(collection):
                 DOCTORS_ID_LIST.append(identifier['_id'])
                 print("Doctor added with ID: " + str(identifier['_id']))
         PEOPLE_TABLE.update({index: identifier['_id']})
-    print(DOCTORS_ID_LIST)
-    print(NURSES_ID_LIST)
 
 
 def insert_ordered_vaccination(collection, person_index):
@@ -969,7 +1022,7 @@ def insert_ordered_test(collection, person_index):
                                                    '$each': [test],
                                                    '$sort': {'DATE': -1}}},
                                                    '$unset': {'GREEN_PASS': ""}
-                                               })
+                                                })
             elif green_pass is not None:
                 collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                                {'$push': {'TESTS': {
@@ -1034,34 +1087,41 @@ def insert_ordered_test(collection, person_index):
 
 
 def push_caregiver_to_issuer(collection):
+    """
+    Method that binds each nurse/doctor to a certain issuer. The order is fixed: it means that
+    the first doctor and the first nurse are linked to the first issuer and so on.
+    """
     i = 0
-    print("Issuers length %d" % len(ISSUERS_TABLE))
-    while len(DOCTORS_ID_LIST) > 0:
+    doctor_idx = i
+    len_doc_list = len(DOCTORS_ID_LIST)
+    len_nurses_list = len(NURSES_ID_LIST)
+    while len_doc_list > 0:
         issuer_id = ISSUERS_TABLE[i]
-        doctor_idx = random.randint(0, len(DOCTORS_ID_LIST) - 1)
+        id = DOCTORS_ID_LIST[doctor_idx]
         collection.find_one_and_update({'_id': issuer_id},
                                        {
-                                           '$push': {
-                                               'DOCTORS': DOCTORS_ID_LIST[doctor_idx]
-                                           }})
+                                           '$push': {'DOCTORS': id
+                                                     }})
         print("Added doctor and nurse to: " + str(issuer_id))
         i += 1
+        doctor_idx += 1
         if i == len(ISSUERS_TABLE):
             i = 0
-        del DOCTORS_ID_LIST[doctor_idx:doctor_idx + 1]
+        len_doc_list -= 1
     i = 0
-    while len(NURSES_ID_LIST) > 0:
+    nurse_idx = i
+    while len_nurses_list > 0:
         issuer_id = ISSUERS_TABLE[i]
-        nurse_idx = random.randint(0, len(NURSES_ID_LIST) - 1)
+        id = NURSES_ID_LIST[nurse_idx]
         collection.find_one_and_update({'_id': issuer_id},
                                        {
-                                           '$push': {
-                                               'NURSES': NURSES_ID_LIST[nurse_idx]
-                                           }})
+                                           '$push': {'NURSES': id
+                                                    }})
         i += 1
+        nurse_idx += 1
         if i == len(ISSUERS_TABLE):
             i = 0
-        del NURSES_ID_LIST[nurse_idx:nurse_idx + 1]
+        len_nurses_list -= 1
 
 
 if __name__ == '__main__':
@@ -1083,8 +1143,9 @@ if __name__ == '__main__':
     read_mobile_prefixes()
 
     # Insertion of people and issuers
-    create_and_insert_people_doc(covid_certificates_collection)
     create_and_insert_all_issuer_doc(issuers_collection)
+    create_and_insert_people_doc(covid_certificates_collection)
+    push_caregiver_to_issuer(issuers_collection)
 
     for key in DOCTORS_TABLE.keys():
         print("Doctor: " + str(key))
@@ -1102,7 +1163,6 @@ if __name__ == '__main__':
         for k in range(tests):
             insert_ordered_test(covid_certificates_collection, j)
 
-    push_caregiver_to_issuer(issuers_collection)
     # Remove expired green passes
     remove_all_expired_gp(covid_certificates_collection)
 
