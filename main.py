@@ -9,9 +9,9 @@ import qrcode
 from PIL import Image
 import io
 
-CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
-# CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
-#                     "&tlsAllowInvalidCertificates=true"
+# CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
+CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mongodb.net/authSource=admin?ssl=true" \
+                    "&tlsAllowInvalidCertificates=true"
 # CONNECTION_STRING = "mongodb+srv://andrea:Zx9KaBfRDniXeDD@cluster0.7h575.mongodb.net/test"
 
 # CONNECTION_STRING = "mongodb+srv://matteo:SystemAndMethods@polipass.cjrli.mongodb.net/authSource=admin?ssl=true" \
@@ -19,9 +19,9 @@ CONNECTION_STRING = "mongodb+srv://zucco:zucco@cluster0.fn8v8.mongodb.net/test"
 
 
 # Constants
-NUMBER_OF_PEOPLE = 100
+NUMBER_OF_PEOPLE = 300
 MAX_NUMBER_OF_DOSES = 3
-MAX_NUMBER_OF_TESTS = 10
+MAX_NUMBER_OF_TESTS = 1
 PROB_BEING_DOCTOR_OR_NURSE = 0.1
 
 # Global variables
@@ -53,44 +53,57 @@ Dictionary used to bind each nurse with its ObjectId inside MongoDB
 Is is updated after the creation of each nurse inside the function create_and_insert_people_doc 
 """
 NURSES_TABLE = {}
-issuersNames={
-    "Hospital":0,
-    "Pharmacy":1,
-    "Covid center":2,
-    "Doctor's office":3,
-    "Private clinic":4
+"""
+List used to store all the nurses' ids
+"""
+NURSES_ID_LIST = []
+"""
+List used to store all the doctors' ids
+"""
+DOCTORS_ID_LIST = []
+"""
+Dictionary containing the mapping between type of issuer and index of its opening hours.
+"""
+issuer_names = {
+    "Hospital": 0,
+    "Pharmacy": 1,
+    "Covid center": 2,
+    "Doctor's office": 3,
+    "Private clinic": 4
 }
-openingHoursHospital={"MONDAY":"00:00-24:00",
-                      "TUESDAY":"00:00-24:00",
-                      "WEDNESDAY":"00:00-24:00",
-                      "THURSDAY":"00:00-24:00",
-                      "FRIDAY":"00:00-24:00",
-                      "SATURDAY":"00:00-24:00",
-                      "SUNDAY":"00:00-24:00"}
-openingHoursPharmacy={"MONDAY":"08:00-20:00",
-                      "TUESDAY":"08:00-20:00",
-                      "WEDNESDAY":"08:00-20:00",
-                      "THURSDAY":"08:00-20:00",
-                      "FRIDAY":"08:00-20:00",
-                      "SATURDAY":"08:00-13:00",
-                      "SUNDAY":"08:00-12:30"}
-openingHoursCovid={"MONDAY":"06:00-24:00",
-                      "TUESDAY":"06:00-24:00",
-                      "WEDNESDAY":"06:00-24:00",
-                      "THURSDAY":"06:00-24:00",
-                      "FRIDAY":"06:00-24:00",
-                      "SATURDAY":"06:00-24:00",
-                      "SUNDAY":"06:00-24:00"}
-openingHoursDoctor={"MONDAY":"10:00-12:30",
-                      "TUESDAY":"17:00-19:00",
-                      "WEDNESDAY":"10:00-12:30",
-                      "THURSDAY":"17:00-19:00",
-                      "FRIDAY":"10:00-19:00",
-                      "SATURDAY":"10:00-12:30",
-                      "SUNDAY":"10:00-12:30"}
-listIssuersHours=[openingHoursHospital,openingHoursPharmacy,openingHoursCovid,openingHoursDoctor,openingHoursPharmacy]
-
-
+"""
+Dictionaries that map each day to the respective opening hours. 
+"""
+opening_hours_hospital = {"MONDAY": "00:00-24:00",
+                          "TUESDAY": "00:00-24:00",
+                          "WEDNESDAY": "00:00-24:00",
+                          "THURSDAY": "00:00-24:00",
+                          "FRIDAY": "00:00-24:00",
+                          "SATURDAY": "00:00-24:00",
+                          "SUNDAY": "00:00-24:00"}
+opening_hours_pharmacy = {"MONDAY": "08:00-20:00",
+                          "TUESDAY": "08:00-20:00",
+                          "WEDNESDAY": "08:00-20:00",
+                          "THURSDAY": "08:00-20:00",
+                          "FRIDAY": "08:00-20:00",
+                          "SATURDAY": "08:00-13:00",
+                          "SUNDAY": "08:00-12:30"}
+opening_hours_covid = {"MONDAY": "06:00-24:00",
+                       "TUESDAY": "06:00-24:00",
+                       "WEDNESDAY": "06:00-24:00",
+                       "THURSDAY": "06:00-24:00",
+                       "FRIDAY": "06:00-24:00",
+                       "SATURDAY": "06:00-24:00",
+                       "SUNDAY": "06:00-24:00"}
+opening_hours_doctor = {"MONDAY": "10:00-12:30",
+                        "TUESDAY": "17:00-19:00",
+                        "WEDNESDAY": "10:00-12:30",
+                        "THURSDAY": "17:00-19:00",
+                        "FRIDAY": "10:00-19:00",
+                        "SATURDAY": "10:00-12:30",
+                        "SUNDAY": "10:00-12:30"}
+list_issuers_hours = [opening_hours_hospital, opening_hours_pharmacy, opening_hours_covid, opening_hours_doctor,
+                      opening_hours_pharmacy]
 
 
 class TestAttributes(IntEnum):
@@ -198,9 +211,9 @@ class VaccinationAttributes(IntEnum):
         if previous_dose == 1:
             days_to_wait = 30
             injection_date = vaccination[VaccinationAttributes.DATE.value] + \
-                                 datetime.timedelta(days=days_to_wait,
-                                                    hours=random.randint(0, 24),
-                                                    minutes=random.randint(0, 60))
+                             datetime.timedelta(days=days_to_wait,
+                                                hours=random.randint(0, 24),
+                                                minutes=random.randint(0, 60))
             vaccine_doc = EmbeddedVaccineAttributes. \
                 create_embedded_vaccine_from_previous(vaccine_details, max_num_production_days=28)
         else:
@@ -276,10 +289,13 @@ class IssuerAttributes(IntEnum):
     TYPE = 0
     NAME = 1
     LOCATION_DETAILS = 2
-    OPENING_HOURS = 3
+    TELEPHONE_NUMBER = 8
+    DOCTORS = 9
+    NURSES = 10
+    OPENING_HOURS = 11
 
     @classmethod
-    def create_embedded_issuer(cls, params, add_location_details):
+    def create_issuer(cls, params, add_location_details=True):
         """
         Method to create an issuer given a list of attributes.
         :param params list with all fields mapped according to IssuerAttributes enum
@@ -292,16 +308,36 @@ class IssuerAttributes(IntEnum):
                 IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
             }
         else:
-
-            issuer = {
-                IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
-                IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
-                IssuerAttributes.OPENING_HOURS.name: listIssuersHours[issuersNames[params[IssuerAttributes.TYPE.value]]],
-                IssuerAttributes.LOCATION_DETAILS.name:
-                    EmbeddedPositionDetails.create_embedded_location_details(
-                        params[IssuerAttributes.LOCATION_DETAILS.value:])
-
-            }
+            if params[IssuerAttributes.TYPE.value] == "Hospital" or \
+                    params[IssuerAttributes.TYPE.value] == "Private clinic":
+                issuer = {
+                    IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+                    IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+                    "WARD": "Infectious diseases",
+                    IssuerAttributes.LOCATION_DETAILS.name:
+                        EmbeddedPositionDetails.create_embedded_location_details(
+                            params[IssuerAttributes.LOCATION_DETAILS.value:
+                                   IssuerAttributes.LOCATION_DETAILS.value + EmbeddedPositionDetails.ZIP.value + 1]),
+                    IssuerAttributes.TELEPHONE_NUMBER.name: params[IssuerAttributes.TELEPHONE_NUMBER.value],
+                    IssuerAttributes.OPENING_HOURS.name: list_issuers_hours[
+                        issuer_names[params[IssuerAttributes.TYPE.value]]],
+                    IssuerAttributes.DOCTORS.name: [],
+                    IssuerAttributes.NURSES.name: []
+                }
+            else:
+                issuer = {
+                    IssuerAttributes.TYPE.name: params[IssuerAttributes.TYPE.value],
+                    IssuerAttributes.NAME.name: params[IssuerAttributes.NAME.value],
+                    IssuerAttributes.LOCATION_DETAILS.name:
+                        EmbeddedPositionDetails.create_embedded_location_details(
+                            params[IssuerAttributes.LOCATION_DETAILS.value:
+                                   IssuerAttributes.LOCATION_DETAILS.value + EmbeddedPositionDetails.ZIP.value + 1]),
+                    IssuerAttributes.TELEPHONE_NUMBER.name: params[IssuerAttributes.TELEPHONE_NUMBER.value],
+                    IssuerAttributes.OPENING_HOURS.name: list_issuers_hours[
+                        issuer_names[params[IssuerAttributes.TYPE.value]]],
+                    IssuerAttributes.DOCTORS.name: [],
+                    IssuerAttributes.NURSES.name: []
+                }
         return issuer
 
 
@@ -432,6 +468,38 @@ class PersonAttributes(IntEnum):
             NURSES_TABLE.update(
                 {person[PersonAttributes.FISCAL_CODE.name]:
                      [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+        return person
+
+    @classmethod
+    def create_person_manipulated(cls, person_details, is_doctor=False, is_nurse=False):
+        """
+        Method that creates a dictionary representing an embedded person
+        """
+        emergency_contact = EmergencyContactAttributes.create_embedded_emergency_contact(retrieve_person())
+        person = {PersonAttributes.NAME.name: person_details[PersonAttributes.NAME.value],
+                  PersonAttributes.SURNAME.name: person_details[PersonAttributes.SURNAME.value],
+                  PersonAttributes.BIRTHDATE.name: person_details[PersonAttributes.BIRTHDATE.value],
+                  PersonAttributes.FISCAL_CODE.name: person_details[PersonAttributes.FISCAL_CODE.value],
+                  PersonAttributes.BIRTH_PLACE.name: person_details[PersonAttributes.BIRTH_PLACE.value],
+                  PersonAttributes.PHONE_NUMBER.name: person_details[PersonAttributes.PHONE_NUMBER.value],
+                  PersonAttributes.EMAIL.name: person_details[PersonAttributes.EMAIL.value],
+                  PersonAttributes.ADDRESS.name: person_details[PersonAttributes.ADDRESS.value],
+                  PersonAttributes.EMERGENCY_CONTACT.name: emergency_contact,
+                  PersonAttributes.PASSWORD.name: encode_password("password")
+                  }
+        if is_doctor:
+            role = "doctor"
+            DOCTORS_TABLE.update(
+                {person[PersonAttributes.FISCAL_CODE.name]:
+                     [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+            person[PersonAttributes.ROLE.name] = role
+        else:
+            if is_nurse:
+                role = "nurse"
+                NURSES_TABLE.update(
+                    {person[PersonAttributes.FISCAL_CODE.name]:
+                         [person[PersonAttributes.NAME.name], person[PersonAttributes.SURNAME.name]]})
+                person[PersonAttributes.ROLE.name] = role
         return person
 
 
@@ -737,8 +805,7 @@ def create_and_insert_all_issuer_doc(collection):
     retrieving ObjectIds.
     """
     for i in range(len(ISSUERS)):
-        issuer_document = IssuerAttributes.create_embedded_issuer(retrieve_issuer(i), add_location_details=True)
-        print(issuer_document)
+        issuer_document = IssuerAttributes.create_issuer(retrieve_issuer(i))
         print("Inserting the issuer: " + retrieve_issuer(i)[IssuerAttributes.TYPE.value] + '\t'
               + retrieve_issuer(i)[IssuerAttributes.NAME.value])
         insert_document(collection, issuer_document)
@@ -754,23 +821,28 @@ def create_and_insert_people_doc(collection):
     """
     for index in range(NUMBER_OF_PEOPLE):
         person_details = build_detailed_person()
-        person_document = PersonAttributes.create_person(person_details)
+        if index < 46:
+            person_document = PersonAttributes.create_person_manipulated(person_details, is_doctor=True)
+        elif 46 <= index < 92:
+            person_document = PersonAttributes.create_person_manipulated(person_details, is_nurse=True)
+        else:
+            person_document = PersonAttributes.create_person(person_details)
+
         print("Inserting the person: " + person_details[PersonAttributes.NAME.value] +
               ' ' + person_details[PersonAttributes.SURNAME.value])
         insert_document(collection, person_document)
         identifier = collection.find_one({'FISCAL_CODE': person_document['FISCAL_CODE']},
                                          {'ObjectId': 1})
+        if person_document.keys().__contains__(PersonAttributes.ROLE.name):
+            if person_document[PersonAttributes.ROLE.name] == "nurse":
+                NURSES_ID_LIST.append(identifier['_id'])
+                print("Nurse added with ID: " + str(identifier['_id']))
+            if person_document[PersonAttributes.ROLE.name] == "doctor":
+                DOCTORS_ID_LIST.append(identifier['_id'])
+                print("Doctor added with ID: " + str(identifier['_id']))
         PEOPLE_TABLE.update({index: identifier['_id']})
-        """
-        try:
-            role = person_document['ROLE']
-            if role == "doctor":
-                DOCTORS_TABLE.update({index: identifier['_id']})
-            elif role == "nurse":
-                NURSES_TABLE.update({index: identifier['_id']})
-        except KeyError:
-            pass
-        """
+    print(DOCTORS_ID_LIST)
+    print(NURSES_ID_LIST)
 
 
 def insert_ordered_vaccination(collection, person_index):
@@ -790,8 +862,7 @@ def insert_ordered_vaccination(collection, person_index):
 
     print(vaccinations_list)
     if len(vaccinations_list) == 0:
-        new_vaccination_doc = VaccinationAttributes.create_vaccination_document \
-            (retrieve_vaccine(0, len(VACCINES) - 1))
+        new_vaccination_doc = VaccinationAttributes.create_vaccination_document(retrieve_vaccine(0, len(VACCINES) - 1))
         collection.find_one_and_update({'_id': person_id},
                                        {'$push': {'VACCINATIONS': {
                                            '$each': [new_vaccination_doc],
@@ -823,7 +894,7 @@ def insert_green_pass(collection, vaccination, person_index):
 
 def check_expired_gp(collection, person_index, green_pass):
     """
-    Checks the expiration date of a green pass and removes it if it's expired.
+    Check the expiration date of a green pass and removes it if it its expired.
     """
     if datetime.datetime.today() >= green_pass['EXPIRATION_DATE']:
         collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
@@ -962,6 +1033,37 @@ def insert_ordered_test(collection, person_index):
                                            })
 
 
+def push_caregiver_to_issuer(collection):
+    i = 0
+    print("Issuers length %d" % len(ISSUERS_TABLE))
+    while len(DOCTORS_ID_LIST) > 0:
+        issuer_id = ISSUERS_TABLE[i]
+        doctor_idx = random.randint(0, len(DOCTORS_ID_LIST) - 1)
+        collection.find_one_and_update({'_id': issuer_id},
+                                       {
+                                           '$push': {
+                                               'DOCTORS': DOCTORS_ID_LIST[doctor_idx]
+                                           }})
+        print("Added doctor and nurse to: " + str(issuer_id))
+        i += 1
+        if i == len(ISSUERS_TABLE):
+            i = 0
+        del DOCTORS_ID_LIST[doctor_idx:doctor_idx + 1]
+    i = 0
+    while len(NURSES_ID_LIST) > 0:
+        issuer_id = ISSUERS_TABLE[i]
+        nurse_idx = random.randint(0, len(NURSES_ID_LIST) - 1)
+        collection.find_one_and_update({'_id': issuer_id},
+                                       {
+                                           '$push': {
+                                               'NURSES': NURSES_ID_LIST[nurse_idx]
+                                           }})
+        i += 1
+        if i == len(ISSUERS_TABLE):
+            i = 0
+        del NURSES_ID_LIST[nurse_idx:nurse_idx + 1]
+
+
 if __name__ == '__main__':
     cluster = pym.MongoClient(CONNECTION_STRING)
     db = cluster['polipass']
@@ -1000,6 +1102,7 @@ if __name__ == '__main__':
         for k in range(tests):
             insert_ordered_test(covid_certificates_collection, j)
 
+    push_caregiver_to_issuer(issuers_collection)
     # Remove expired green passes
     remove_all_expired_gp(covid_certificates_collection)
 
