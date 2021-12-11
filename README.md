@@ -8,7 +8,7 @@
 - GUI
 
 
-## Group Components :family_man_man_girl_boy:
+## Group Components :family_man_boy_boy::family_man_girl:
 
 | Cognome | Nome | e-mail | Matricola | Codice Persona
 | ------ | ------ |----- |----- |----- |
