@@ -61,17 +61,14 @@ QUERIES
 
 8) Percentage of vaccinated person over a certain age (for example older than 20yo)
 
-    (BIRTHDATE saved as new Date("1999-03-18"))
-
 db.covid_certificates.aggregate([
-    {$match: {$and: [{BIRTHDATE: {$exists: true}} , {VACCINATIONS: {$exists: true}}]}},
-    {$project: {age: {$divide:[{$subtract: ["$$NOW" ,"$BIRTHDATE"]}, 1000 * 24 * 60 * 60 * 365]}}},
-    {$match:{age:{$gte: 50}}},
-    {$project: {age: "$age" , VacPersonOverAge: { $cond: [ {$ifNull: ['$VACCINATIONS', false]},0, 1 ]}}},
-    {$group: {_id: null ,totNumOfVaccinatedPerson: {$sum: 1} , numOfVaccinatedPersonOverAge: {$sum: "$VacPersonOverAge"}}},
+    {$project: {age: {$divide: [{$subtract: ["$$NOW" , "$BIRTHDATE"]} , 1000 * 24 * 60 * 60 * 365]} , VACCINATIONS: "$VACCINATIONS"}},
+    {$match: {age: {$gte: 50}}},
+    {$project: {age: "$age" , VacPersonOverAge: {$cond: [{$not: ["$VACCINATIONS"]}, 0, 1]}}},
+    {$group: {_id: null , totNumOfVaccinatedPerson: {$sum: 1} , numOfVaccinatedPersonOverAge: {$sum: "$VacPersonOverAge"}}},
     {$project: {numOfVaccinatedPersonOverAge: "$numOfVaccinatedPersonOverAge" , totalNumberOfVaccinatedPerson: "$totNumOfVaccinatedPerson" ,
     rate: {$divide: ["$numOfVaccinatedPersonOverAge" , "$totNumOfVaccinatedPerson"]}}}
-])
+  ])
 
 9) The most popular test
 
