@@ -60,3 +60,27 @@ To start the application, go to App/Client and type the following command
 ```sh
  npm start 
 ```
+
+### Application Login 
+To access the application the email and password are needed.
+
+Here is the list of credentials to sign in.
+
+<div style="text-align: center;">
+
+|      Email         |    Password     |
+| ------------------ | --------------- |
+| lino.cannavaro@polipass.it | password |
+| pacina.musumeci@polipass.it | password |
+| ordalia.montezemolo@polipass.it | password |
+| nunzio.rendina@polipass.it | password |
+| felicia.mazzucchelli@polipass.it | password |
+
+</div>
+
+By default the password is set to password for everyone.
+
+You can also create further accesses by yourself. You just need to look in the
+database, find name and surname of a person in a covid certificate and then
+sign in with the email built as **name.surname@polipass.it** and **password**.
+

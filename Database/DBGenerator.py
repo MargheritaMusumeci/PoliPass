@@ -19,10 +19,10 @@ CONNECTION_STRING = "mongodb+srv://Piero_Rendina:R3nd1n%402021@cluster0.hns6k.mo
 
 
 # Constants
-NUMBER_OF_PEOPLE = 200
+NUMBER_OF_PEOPLE = 5000
 MAX_NUMBER_OF_DOSES = 3
-MAX_NUMBER_OF_TESTS = 3
-PROB_BEING_DOCTOR_OR_NURSE = 0.2
+MAX_NUMBER_OF_TESTS = 20
+PROB_BEING_DOCTOR_OR_NURSE = 0.1
 
 # Global variables
 NAMES = []
@@ -242,8 +242,10 @@ class VaccinationAttributes(IntEnum):
             VaccinationAttributes.DOSE.name: previous_dose + 1,
             # TODO decide whether or not taking the same ISSUER. Now it is randomly chosen.
             VaccinationAttributes.ISSUER.name: ISSUERS_TABLE[issuer_index],
-            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(retrieve_doctor_by_index(issuer_index)),
-            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(retrieve_nurse_by_index(issuer_index)),
+            VaccinationAttributes.DOCTOR.name: EmbeddedDoctorAttributes.create_doctor(
+                retrieve_doctor_by_index(issuer_index)),
+            VaccinationAttributes.NURSE.name: EmbeddedDoctorAttributes.create_doctor(
+                retrieve_nurse_by_index(issuer_index)),
         }
         return vaccination_document_to_add
 
@@ -781,7 +783,15 @@ def build_detailed_person():
     number = "+393"
     for i in range(0, 9):
         number += str(random.randint(0, 9))
-    email = (name + '.' + surname + "@polipass.it").lower().strip()
+    surnames = surname.split()
+    names = name.split()
+    name_copy = ""
+    surname_copy = ""
+    for s in surnames:
+        surname_copy = surname_copy + s
+    for n in names:
+        name_copy = name_copy + n
+    email = (name_copy + '.' + surname_copy + "@polipass.it").lower()
     return [name, surname, birthdate, fiscal_code, birth_place, number, email, address]
 
 
@@ -877,7 +887,7 @@ def create_and_insert_people_doc(collection):
         person_details = build_detailed_person()
         if index < len(ISSUERS_TABLE):
             person_document = PersonAttributes.create_person_manipulated(person_details, is_doctor=True)
-        elif len(ISSUERS_TABLE) <= index < 2*len(ISSUERS_TABLE):
+        elif len(ISSUERS_TABLE) <= index < 2 * len(ISSUERS_TABLE):
             person_document = PersonAttributes.create_person_manipulated(person_details, is_nurse=True)
         else:
             person_document = PersonAttributes.create_person(person_details)
@@ -1022,7 +1032,7 @@ def insert_ordered_test(collection, person_index):
                                                    '$each': [test],
                                                    '$sort': {'DATE': -1}}},
                                                    '$unset': {'GREEN_PASS': ""}
-                                                })
+                                               })
             elif green_pass is not None:
                 collection.find_one_and_update({'_id': PEOPLE_TABLE[person_index]},
                                                {'$push': {'TESTS': {
@@ -1116,7 +1126,7 @@ def push_caregiver_to_issuer(collection):
         collection.find_one_and_update({'_id': issuer_id},
                                        {
                                            '$push': {'NURSES': id
-                                                    }})
+                                                     }})
         i += 1
         nurse_idx += 1
         if i == len(ISSUERS_TABLE):
