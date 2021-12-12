@@ -1,0 +1,3100 @@
+[{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7283"
+  },
+  "TYPE": "Hospital",
+  "NAME": "San Raffaele",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.50615495998359",
+    "LONGITUDE": "9.265518665472529",
+    "ADDRESS": "Street Olgettina 60",
+    "CITY": "Segrate",
+    "PROVINCE": "MI",
+    "ZIP": "20132"
+  },
+  "TELEPHONE_NUMBER": "+390226431",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b2"
+    },
+    {
+      "$oid": "61b5b80364ae79ba6ede7338"
+    },
+    {
+      "$oid": "61b5b89264ae79ba6ede764f"
+    },
+    {
+      "$oid": "61b5b92464ae79ba6ede7997"
+    },
+    {
+      "$oid": "61b5b9cc64ae79ba6ede7d4d"
+    },
+    {
+      "$oid": "61b5ba7f64ae79ba6ede814b"
+    },
+    {
+      "$oid": "61b5bb0f64ae79ba6ede846b"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e1"
+    },
+    {
+      "$oid": "61b5b7fe64ae79ba6ede7316"
+    },
+    {
+      "$oid": "61b5b8ac64ae79ba6ede76df"
+    },
+    {
+      "$oid": "61b5b93764ae79ba6ede7a03"
+    },
+    {
+      "$oid": "61b5b9fd64ae79ba6ede7e69"
+    },
+    {
+      "$oid": "61b5babe64ae79ba6ede829b"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7284"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Galamarini",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.72222493421725",
+    "LONGITUDE": "8.900299056227746",
+    "ADDRESS": "Square A. Zanaboni 1",
+    "CITY": "Tradate",
+    "PROVINCE": "VA",
+    "ZIP": "21049"
+  },
+  "TELEPHONE_NUMBER": "+390263631",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b3"
+    },
+    {
+      "$oid": "61b5b80c64ae79ba6ede7367"
+    },
+    {
+      "$oid": "61b5b89664ae79ba6ede7663"
+    },
+    {
+      "$oid": "61b5b92764ae79ba6ede79a6"
+    },
+    {
+      "$oid": "61b5b9cc64ae79ba6ede7d4e"
+    },
+    {
+      "$oid": "61b5ba8064ae79ba6ede8150"
+    },
+    {
+      "$oid": "61b5bb1064ae79ba6ede846f"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e2"
+    },
+    {
+      "$oid": "61b5b7ff64ae79ba6ede7322"
+    },
+    {
+      "$oid": "61b5b8af64ae79ba6ede76f1"
+    },
+    {
+      "$oid": "61b5b94364ae79ba6ede7a48"
+    },
+    {
+      "$oid": "61b5b9ff64ae79ba6ede7e77"
+    },
+    {
+      "$oid": "61b5babe64ae79ba6ede829c"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7285"
+  },
+  "TYPE": "Hospital",
+  "NAME": "San Salvatore",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.907624136524284",
+    "LONGITUDE": "12.908059995080508",
+    "ADDRESS": "Square Carlo Cinelli 1",
+    "CITY": "Pesaro",
+    "PROVINCE": "PU",
+    "ZIP": "61121"
+  },
+  "TELEPHONE_NUMBER": "+3905448105",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b4"
+    },
+    {
+      "$oid": "61b5b80e64ae79ba6ede7375"
+    },
+    {
+      "$oid": "61b5b8a064ae79ba6ede7698"
+    },
+    {
+      "$oid": "61b5b92c64ae79ba6ede79be"
+    },
+    {
+      "$oid": "61b5b9cd64ae79ba6ede7d53"
+    },
+    {
+      "$oid": "61b5ba8364ae79ba6ede8161"
+    },
+    {
+      "$oid": "61b5bb1a64ae79ba6ede84ad"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e3"
+    },
+    {
+      "$oid": "61b5b80164ae79ba6ede732e"
+    },
+    {
+      "$oid": "61b5b8b664ae79ba6ede771c"
+    },
+    {
+      "$oid": "61b5b94464ae79ba6ede7a51"
+    },
+    {
+      "$oid": "61b5ba0064ae79ba6ede7e7c"
+    },
+    {
+      "$oid": "61b5bac164ae79ba6ede82a9"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7286"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Annunziata",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "39.293826991988865",
+    "LONGITUDE": "16.248474227077857",
+    "ADDRESS": "Street Fiume 1",
+    "CITY": "Cosenza",
+    "PROVINCE": "CS",
+    "ZIP": "87100"
+  },
+  "TELEPHONE_NUMBER": "+390741287",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b5"
+    },
+    {
+      "$oid": "61b5b81364ae79ba6ede7390"
+    },
+    {
+      "$oid": "61b5b8a064ae79ba6ede769e"
+    },
+    {
+      "$oid": "61b5b93b64ae79ba6ede7a19"
+    },
+    {
+      "$oid": "61b5b9ce64ae79ba6ede7d5a"
+    },
+    {
+      "$oid": "61b5ba8664ae79ba6ede8175"
+    },
+    {
+      "$oid": "61b5bb1d64ae79ba6ede84b9"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e4"
+    },
+    {
+      "$oid": "61b5b80364ae79ba6ede7339"
+    },
+    {
+      "$oid": "61b5b8b864ae79ba6ede7727"
+    },
+    {
+      "$oid": "61b5b94f64ae79ba6ede7a8b"
+    },
+    {
+      "$oid": "61b5ba0364ae79ba6ede7e90"
+    },
+    {
+      "$oid": "61b5bacf64ae79ba6ede82fe"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7287"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Lazzaro Spallanzani",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.865755348894076",
+    "LONGITUDE": "12.4563589388255",
+    "ADDRESS": "Street Portuense 292",
+    "CITY": "Roma",
+    "PROVINCE": "RM",
+    "ZIP": "00149"
+  },
+  "TELEPHONE_NUMBER": "+3906551701",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b6"
+    },
+    {
+      "$oid": "61b5b81464ae79ba6ede7395"
+    },
+    {
+      "$oid": "61b5b8a464ae79ba6ede76b3"
+    },
+    {
+      "$oid": "61b5b93d64ae79ba6ede7a21"
+    },
+    {
+      "$oid": "61b5b9cf64ae79ba6ede7d5d"
+    },
+    {
+      "$oid": "61b5ba8964ae79ba6ede8187"
+    },
+    {
+      "$oid": "61b5bb1e64ae79ba6ede84c3"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e5"
+    },
+    {
+      "$oid": "61b5b80464ae79ba6ede733c"
+    },
+    {
+      "$oid": "61b5b8ba64ae79ba6ede7734"
+    },
+    {
+      "$oid": "61b5b95364ae79ba6ede7aa7"
+    },
+    {
+      "$oid": "61b5ba0964ae79ba6ede7eb4"
+    },
+    {
+      "$oid": "61b5bad464ae79ba6ede831c"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e564ae79ba6ede7288"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Bobbio",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.7710071",
+    "LONGITUDE": "9.3832201",
+    "ADDRESS": "Avenue Giuseppe Garibaldi 1/3",
+    "CITY": "Bobbio",
+    "PROVINCE": "PC",
+    "ZIP": "29022"
+  },
+  "TELEPHONE_NUMBER": "+390893587",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ed64ae79ba6ede72b7"
+    },
+    {
+      "$oid": "61b5b81b64ae79ba6ede73bd"
+    },
+    {
+      "$oid": "61b5b8ab64ae79ba6ede76dc"
+    },
+    {
+      "$oid": "61b5b94464ae79ba6ede7a4d"
+    },
+    {
+      "$oid": "61b5b9cf64ae79ba6ede7d60"
+    },
+    {
+      "$oid": "61b5ba8a64ae79ba6ede8189"
+    },
+    {
+      "$oid": "61b5bb2564ae79ba6ede84e8"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f664ae79ba6ede72e6"
+    },
+    {
+      "$oid": "61b5b80864ae79ba6ede734f"
+    },
+    {
+      "$oid": "61b5b8be64ae79ba6ede7747"
+    },
+    {
+      "$oid": "61b5b95664ae79ba6ede7ab6"
+    },
+    {
+      "$oid": "61b5ba0d64ae79ba6ede7ec9"
+    },
+    {
+      "$oid": "61b5bad564ae79ba6ede8323"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e664ae79ba6ede7289"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Del delta",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.7270209",
+    "LONGITUDE": "11.9323336",
+    "ADDRESS": "Street Valle Oppio 2",
+    "CITY": "Lagosanto",
+    "PROVINCE": "FE",
+    "ZIP": "44023"
+  },
+  "TELEPHONE_NUMBER": "+390533723111",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72b8"
+    },
+    {
+      "$oid": "61b5b81d64ae79ba6ede73cc"
+    },
+    {
+      "$oid": "61b5b8ae64ae79ba6ede76e9"
+    },
+    {
+      "$oid": "61b5b94464ae79ba6ede7a4f"
+    },
+    {
+      "$oid": "61b5b9d064ae79ba6ede7d67"
+    },
+    {
+      "$oid": "61b5ba8b64ae79ba6ede818e"
+    },
+    {
+      "$oid": "61b5bb2d64ae79ba6ede8519"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f664ae79ba6ede72e7"
+    },
+    {
+      "$oid": "61b5b80a64ae79ba6ede735c"
+    },
+    {
+      "$oid": "61b5b8be64ae79ba6ede7748"
+    },
+    {
+      "$oid": "61b5b96164ae79ba6ede7af3"
+    },
+    {
+      "$oid": "61b5ba0e64ae79ba6ede7ecc"
+    },
+    {
+      "$oid": "61b5bad964ae79ba6ede833d"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e664ae79ba6ede728a"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Civile",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.2852832",
+    "LONGITUDE": "10.6075743",
+    "ADDRESS": "Street Guido Tonello 5",
+    "CITY": "Volta Mantovana",
+    "PROVINCE": "MN",
+    "ZIP": "46049"
+  },
+  "TELEPHONE_NUMBER": "+390376839200",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72b9"
+    },
+    {
+      "$oid": "61b5b82464ae79ba6ede73f5"
+    },
+    {
+      "$oid": "61b5b8ba64ae79ba6ede772f"
+    },
+    {
+      "$oid": "61b5b94564ae79ba6ede7a53"
+    },
+    {
+      "$oid": "61b5b9d364ae79ba6ede7d7a"
+    },
+    {
+      "$oid": "61b5ba8c64ae79ba6ede8193"
+    },
+    {
+      "$oid": "61b5bb2f64ae79ba6ede8521"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f664ae79ba6ede72e8"
+    },
+    {
+      "$oid": "61b5b81164ae79ba6ede7387"
+    },
+    {
+      "$oid": "61b5b8bf64ae79ba6ede774e"
+    },
+    {
+      "$oid": "61b5b96264ae79ba6ede7af5"
+    },
+    {
+      "$oid": "61b5ba0e64ae79ba6ede7ece"
+    },
+    {
+      "$oid": "61b5bada64ae79ba6ede8343"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e664ae79ba6ede728b"
+  },
+  "TYPE": "Hospital",
+  "NAME": "Fiorenzuola D'Arda",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.8879897",
+    "LONGITUDE": "9.8292045",
+    "ADDRESS": "Boulevard Roma 29",
+    "CITY": "Fiorenzuola d'Arda",
+    "PROVINCE": "PC",
+    "ZIP": "29017"
+  },
+  "TELEPHONE_NUMBER": "+390523301111",
+  "OPENING_HOURS": {
+    "MONDAY": "00:00-24:00",
+    "TUESDAY": "00:00-24:00",
+    "WEDNESDAY": "00:00-24:00",
+    "THURSDAY": "00:00-24:00",
+    "FRIDAY": "00:00-24:00",
+    "SATURDAY": "00:00-24:00",
+    "SUNDAY": "00:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72ba"
+    },
+    {
+      "$oid": "61b5b82b64ae79ba6ede741d"
+    },
+    {
+      "$oid": "61b5b8bb64ae79ba6ede7737"
+    },
+    {
+      "$oid": "61b5b94664ae79ba6ede7a59"
+    },
+    {
+      "$oid": "61b5b9d564ae79ba6ede7d82"
+    },
+    {
+      "$oid": "61b5ba8c64ae79ba6ede8194"
+    },
+    {
+      "$oid": "61b5bb3064ae79ba6ede8527"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f664ae79ba6ede72e9"
+    },
+    {
+      "$oid": "61b5b81164ae79ba6ede7388"
+    },
+    {
+      "$oid": "61b5b8c164ae79ba6ede775d"
+    },
+    {
+      "$oid": "61b5b96564ae79ba6ede7b04"
+    },
+    {
+      "$oid": "61b5ba0e64ae79ba6ede7ecf"
+    },
+    {
+      "$oid": "61b5badb64ae79ba6ede8344"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e664ae79ba6ede728c"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Santagostino Loreto",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.48386708640959",
+    "LONGITUDE": "9.213697155692714",
+    "ADDRESS": "Street Saverio Mercadante 16",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20124"
+  },
+  "TELEPHONE_NUMBER": "+390289701701",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72bb"
+    },
+    {
+      "$oid": "61b5b83164ae79ba6ede7438"
+    },
+    {
+      "$oid": "61b5b8bb64ae79ba6ede7739"
+    },
+    {
+      "$oid": "61b5b94864ae79ba6ede7a64"
+    },
+    {
+      "$oid": "61b5b9db64ae79ba6ede7da4"
+    },
+    {
+      "$oid": "61b5ba8e64ae79ba6ede81a2"
+    },
+    {
+      "$oid": "61b5bb3864ae79ba6ede8558"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f664ae79ba6ede72ea"
+    },
+    {
+      "$oid": "61b5b81564ae79ba6ede739b"
+    },
+    {
+      "$oid": "61b5b8c264ae79ba6ede7763"
+    },
+    {
+      "$oid": "61b5b96b64ae79ba6ede7b18"
+    },
+    {
+      "$oid": "61b5ba1164ae79ba6ede7edd"
+    },
+    {
+      "$oid": "61b5badd64ae79ba6ede8351"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e664ae79ba6ede728d"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Villa Mafalda",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.932673381151105",
+    "LONGITUDE": "12.510271741566433",
+    "ADDRESS": "Street Monte delle Gioie 5",
+    "CITY": "Roma",
+    "PROVINCE": "RM",
+    "ZIP": "00199"
+  },
+  "TELEPHONE_NUMBER": "+3906860941",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72bc"
+    },
+    {
+      "$oid": "61b5b83564ae79ba6ede7441"
+    },
+    {
+      "$oid": "61b5b8bf64ae79ba6ede7750"
+    },
+    {
+      "$oid": "61b5b94964ae79ba6ede7a6b"
+    },
+    {
+      "$oid": "61b5b9dd64ae79ba6ede7dad"
+    },
+    {
+      "$oid": "61b5ba9164ae79ba6ede81af"
+    },
+    {
+      "$oid": "61b5bb3b64ae79ba6ede8567"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72eb"
+    },
+    {
+      "$oid": "61b5b81764ae79ba6ede73a6"
+    },
+    {
+      "$oid": "61b5b8c464ae79ba6ede776d"
+    },
+    {
+      "$oid": "61b5b96e64ae79ba6ede7b2b"
+    },
+    {
+      "$oid": "61b5ba1264ae79ba6ede7ee3"
+    },
+    {
+      "$oid": "61b5badd64ae79ba6ede8352"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede728e"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "ICS Maugeri",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.719693402175075",
+    "LONGITUDE": "8.911228867010195",
+    "ADDRESS": "Street Crotto Roncaccio 16",
+    "CITY": "Tradate",
+    "PROVINCE": "VA",
+    "ZIP": "21049"
+  },
+  "TELEPHONE_NUMBER": "+3903825921",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72bd"
+    },
+    {
+      "$oid": "61b5b83764ae79ba6ede744d"
+    },
+    {
+      "$oid": "61b5b8c064ae79ba6ede7753"
+    },
+    {
+      "$oid": "61b5b95164ae79ba6ede7a94"
+    },
+    {
+      "$oid": "61b5b9df64ae79ba6ede7dbc"
+    },
+    {
+      "$oid": "61b5ba9164ae79ba6ede81b1"
+    },
+    {
+      "$oid": "61b5bb3b64ae79ba6ede8568"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72ec"
+    },
+    {
+      "$oid": "61b5b82064ae79ba6ede73dc"
+    },
+    {
+      "$oid": "61b5b8c964ae79ba6ede7788"
+    },
+    {
+      "$oid": "61b5b97164ae79ba6ede7b3a"
+    },
+    {
+      "$oid": "61b5ba1364ae79ba6ede7eea"
+    },
+    {
+      "$oid": "61b5bae464ae79ba6ede8376"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede728f"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Niguarda",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.509675682579584",
+    "LONGITUDE": "9.187408135461936",
+    "ADDRESS": "Square of Greater Hospital 3",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20162"
+  },
+  "TELEPHONE_NUMBER": "+390264441",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ee64ae79ba6ede72be"
+    },
+    {
+      "$oid": "61b5b83864ae79ba6ede7451"
+    },
+    {
+      "$oid": "61b5b8c564ae79ba6ede776f"
+    },
+    {
+      "$oid": "61b5b95264ae79ba6ede7a9a"
+    },
+    {
+      "$oid": "61b5b9e564ae79ba6ede7de2"
+    },
+    {
+      "$oid": "61b5ba9564ae79ba6ede81c3"
+    },
+    {
+      "$oid": "61b5bb3e64ae79ba6ede8575"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72ed"
+    },
+    {
+      "$oid": "61b5b82d64ae79ba6ede7427"
+    },
+    {
+      "$oid": "61b5b8cb64ae79ba6ede778f"
+    },
+    {
+      "$oid": "61b5b97164ae79ba6ede7b3c"
+    },
+    {
+      "$oid": "61b5ba1864ae79ba6ede7f0a"
+    },
+    {
+      "$oid": "61b5bae664ae79ba6ede8383"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede7290"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "San Luca",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.0084888",
+    "LONGITUDE": "8.1765735",
+    "ADDRESS": "Street cinque Alpini 6",
+    "CITY": "Bergamo",
+    "PROVINCE": "BG",
+    "ZIP": "24100"
+  },
+  "TELEPHONE_NUMBER": "+39035321135",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72bf"
+    },
+    {
+      "$oid": "61b5b83b64ae79ba6ede7467"
+    },
+    {
+      "$oid": "61b5b8cc64ae79ba6ede7797"
+    },
+    {
+      "$oid": "61b5b95464ae79ba6ede7aab"
+    },
+    {
+      "$oid": "61b5b9e764ae79ba6ede7dec"
+    },
+    {
+      "$oid": "61b5ba9764ae79ba6ede81c9"
+    },
+    {
+      "$oid": "61b5bb3e64ae79ba6ede8576"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72ee"
+    },
+    {
+      "$oid": "61b5b83564ae79ba6ede7440"
+    },
+    {
+      "$oid": "61b5b8cc64ae79ba6ede7798"
+    },
+    {
+      "$oid": "61b5b97464ae79ba6ede7b4b"
+    },
+    {
+      "$oid": "61b5ba1b64ae79ba6ede7f17"
+    },
+    {
+      "$oid": "61b5bae664ae79ba6ede8389"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede7291"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Poliambulatorio Agresti",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.2582971",
+    "LONGITUDE": "11.0299395",
+    "ADDRESS": "Street degli Agresti 4",
+    "CITY": "Bologna",
+    "PROVINCE": "BO",
+    "ZIP": "40123"
+  },
+  "TELEPHONE_NUMBER": "+39055750928",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c0"
+    },
+    {
+      "$oid": "61b5b83c64ae79ba6ede746f"
+    },
+    {
+      "$oid": "61b5b8cd64ae79ba6ede779b"
+    },
+    {
+      "$oid": "61b5b95964ae79ba6ede7ac5"
+    },
+    {
+      "$oid": "61b5b9ec64ae79ba6ede7e05"
+    },
+    {
+      "$oid": "61b5ba9b64ae79ba6ede81d6"
+    },
+    {
+      "$oid": "61b5bb3f64ae79ba6ede857c"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72ef"
+    },
+    {
+      "$oid": "61b5b83b64ae79ba6ede7465"
+    },
+    {
+      "$oid": "61b5b8ce64ae79ba6ede77a2"
+    },
+    {
+      "$oid": "61b5b97b64ae79ba6ede7b72"
+    },
+    {
+      "$oid": "61b5ba1b64ae79ba6ede7f18"
+    },
+    {
+      "$oid": "61b5bae964ae79ba6ede839b"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede7292"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Poliambulatorio San Domenico",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.4832492",
+    "LONGITUDE": "11.3558908",
+    "ADDRESS": "Street Fossolo 28/A",
+    "CITY": "Bologna",
+    "PROVINCE": "BO",
+    "ZIP": "40138"
+  },
+  "TELEPHONE_NUMBER": "+390516360967",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c1"
+    },
+    {
+      "$oid": "61b5b84064ae79ba6ede7486"
+    },
+    {
+      "$oid": "61b5b8cd64ae79ba6ede779c"
+    },
+    {
+      "$oid": "61b5b95964ae79ba6ede7aca"
+    },
+    {
+      "$oid": "61b5b9f164ae79ba6ede7e25"
+    },
+    {
+      "$oid": "61b5ba9e64ae79ba6ede81e6"
+    },
+    {
+      "$oid": "61b5bb4064ae79ba6ede857f"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f764ae79ba6ede72f0"
+    },
+    {
+      "$oid": "61b5b83d64ae79ba6ede7474"
+    },
+    {
+      "$oid": "61b5b8ce64ae79ba6ede77a7"
+    },
+    {
+      "$oid": "61b5b98a64ae79ba6ede7bce"
+    },
+    {
+      "$oid": "61b5ba1d64ae79ba6ede7f24"
+    },
+    {
+      "$oid": "61b5baea64ae79ba6ede839e"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e764ae79ba6ede7293"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Poliambulatorio Santa Lucia",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.464393",
+    "LONGITUDE": "11.3654436",
+    "ADDRESS": "Street Augusto Murri 164",
+    "CITY": "Bologna",
+    "PROVINCE": "BO",
+    "ZIP": "40137"
+  },
+  "TELEPHONE_NUMBER": "+39051440822",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c2"
+    },
+    {
+      "$oid": "61b5b84464ae79ba6ede7498"
+    },
+    {
+      "$oid": "61b5b8cd64ae79ba6ede77a0"
+    },
+    {
+      "$oid": "61b5b96a64ae79ba6ede7b10"
+    },
+    {
+      "$oid": "61b5b9f564ae79ba6ede7e3c"
+    },
+    {
+      "$oid": "61b5baa064ae79ba6ede81f2"
+    },
+    {
+      "$oid": "61b5bb4c64ae79ba6ede85c9"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f864ae79ba6ede72f1"
+    },
+    {
+      "$oid": "61b5b84264ae79ba6ede748f"
+    },
+    {
+      "$oid": "61b5b8d364ae79ba6ede77c5"
+    },
+    {
+      "$oid": "61b5b99664ae79ba6ede7c14"
+    },
+    {
+      "$oid": "61b5ba1e64ae79ba6ede7f25"
+    },
+    {
+      "$oid": "61b5baed64ae79ba6ede83af"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7294"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Casa Della Salute",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.5536544",
+    "LONGITUDE": "10.4798099",
+    "ADDRESS": "Street Giacomo Matteotti 7",
+    "CITY": "Bomporto",
+    "PROVINCE": "MO",
+    "ZIP": "41030"
+  },
+  "TELEPHONE_NUMBER": "+390654785",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c3"
+    },
+    {
+      "$oid": "61b5b84764ae79ba6ede74aa"
+    },
+    {
+      "$oid": "61b5b8ce64ae79ba6ede77a4"
+    },
+    {
+      "$oid": "61b5b96a64ae79ba6ede7b12"
+    },
+    {
+      "$oid": "61b5b9f664ae79ba6ede7e42"
+    },
+    {
+      "$oid": "61b5baa764ae79ba6ede821a"
+    },
+    {
+      "$oid": "61b5bb5464ae79ba6ede85e9"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f864ae79ba6ede72f2"
+    },
+    {
+      "$oid": "61b5b84264ae79ba6ede7493"
+    },
+    {
+      "$oid": "61b5b8db64ae79ba6ede77ef"
+    },
+    {
+      "$oid": "61b5b99864ae79ba6ede7c21"
+    },
+    {
+      "$oid": "61b5ba2264ae79ba6ede7f31"
+    },
+    {
+      "$oid": "61b5baf064ae79ba6ede83bf"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7295"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Dama Salus",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.9973395",
+    "LONGITUDE": "16.8336933",
+    "ADDRESS": "Street Postumia 5",
+    "CITY": "Trani",
+    "PROVINCE": "BT",
+    "ZIP": "76125"
+  },
+  "TELEPHONE_NUMBER": "+390883482792",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c4"
+    },
+    {
+      "$oid": "61b5b84d64ae79ba6ede74c6"
+    },
+    {
+      "$oid": "61b5b8cf64ae79ba6ede77a9"
+    },
+    {
+      "$oid": "61b5b97264ae79ba6ede7b3f"
+    },
+    {
+      "$oid": "61b5b9f864ae79ba6ede7e4d"
+    },
+    {
+      "$oid": "61b5bab564ae79ba6ede8268"
+    },
+    {
+      "$oid": "61b5bb5964ae79ba6ede860a"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f864ae79ba6ede72f3"
+    },
+    {
+      "$oid": "61b5b84764ae79ba6ede74a9"
+    },
+    {
+      "$oid": "61b5b8dc64ae79ba6ede77f8"
+    },
+    {
+      "$oid": "61b5b99964ae79ba6ede7c27"
+    },
+    {
+      "$oid": "61b5ba2c64ae79ba6ede7f69"
+    },
+    {
+      "$oid": "61b5baf264ae79ba6ede83c6"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7296"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Centro di medicina Ferrara",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.7251129",
+    "LONGITUDE": "11.2743455",
+    "ADDRESS": "Street Giovanni Verga 17/A",
+    "CITY": "Ferrara",
+    "PROVINCE": "FE",
+    "ZIP": "44124"
+  },
+  "TELEPHONE_NUMBER": "+390532972311",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7ef64ae79ba6ede72c5"
+    },
+    {
+      "$oid": "61b5b85164ae79ba6ede74e2"
+    },
+    {
+      "$oid": "61b5b8d164ae79ba6ede77b4"
+    },
+    {
+      "$oid": "61b5b97764ae79ba6ede7b58"
+    },
+    {
+      "$oid": "61b5b9fd64ae79ba6ede7e67"
+    },
+    {
+      "$oid": "61b5bab764ae79ba6ede8274"
+    },
+    {
+      "$oid": "61b5bb6164ae79ba6ede862f"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f864ae79ba6ede72f4"
+    },
+    {
+      "$oid": "61b5b85064ae79ba6ede74dc"
+    },
+    {
+      "$oid": "61b5b8e064ae79ba6ede780e"
+    },
+    {
+      "$oid": "61b5b9a064ae79ba6ede7c4e"
+    },
+    {
+      "$oid": "61b5ba3064ae79ba6ede7f82"
+    },
+    {
+      "$oid": "61b5baf364ae79ba6ede83cb"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7297"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Villa Maria",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.0063995",
+    "LONGITUDE": "12.2687264",
+    "ADDRESS": "Boulevard Giacomo Matteotti 24",
+    "CITY": "Rimini",
+    "PROVINCE": "RN",
+    "ZIP": "47921"
+  },
+  "TELEPHONE_NUMBER": "+390498711144",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72c6"
+    },
+    {
+      "$oid": "61b5b85664ae79ba6ede74fa"
+    },
+    {
+      "$oid": "61b5b8d264ae79ba6ede77bb"
+    },
+    {
+      "$oid": "61b5b97c64ae79ba6ede7b76"
+    },
+    {
+      "$oid": "61b5ba0764ae79ba6ede7ea7"
+    },
+    {
+      "$oid": "61b5babc64ae79ba6ede828e"
+    },
+    {
+      "$oid": "61b5bb6164ae79ba6ede8631"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f864ae79ba6ede72f5"
+    },
+    {
+      "$oid": "61b5b85564ae79ba6ede74f6"
+    },
+    {
+      "$oid": "61b5b8e864ae79ba6ede783e"
+    },
+    {
+      "$oid": "61b5b9a364ae79ba6ede7c5d"
+    },
+    {
+      "$oid": "61b5ba3464ae79ba6ede7f98"
+    },
+    {
+      "$oid": "61b5baf364ae79ba6ede83cf"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7298"
+  },
+  "TYPE": "Private clinic",
+  "NAME": "Villa Igiea Sanità",
+  "WARD": "Infectious diseases",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.9096816",
+    "LONGITUDE": "16.6115761",
+    "ADDRESS": "Boulevard Alcide de Gasperi 334",
+    "CITY": "Bari",
+    "PROVINCE": "BA",
+    "ZIP": "70125"
+  },
+  "TELEPHONE_NUMBER": "+390805650530",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72c7"
+    },
+    {
+      "$oid": "61b5b85e64ae79ba6ede751f"
+    },
+    {
+      "$oid": "61b5b8d564ae79ba6ede77cf"
+    },
+    {
+      "$oid": "61b5b97e64ae79ba6ede7b85"
+    },
+    {
+      "$oid": "61b5ba0e64ae79ba6ede7ecb"
+    },
+    {
+      "$oid": "61b5babd64ae79ba6ede8293"
+    },
+    {
+      "$oid": "61b5bb6264ae79ba6ede8635"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72f6"
+    },
+    {
+      "$oid": "61b5b85564ae79ba6ede74f7"
+    },
+    {
+      "$oid": "61b5b8ee64ae79ba6ede7855"
+    },
+    {
+      "$oid": "61b5b9a564ae79ba6ede7c6e"
+    },
+    {
+      "$oid": "61b5ba3464ae79ba6ede7f9a"
+    },
+    {
+      "$oid": "61b5baf864ae79ba6ede83ea"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e864ae79ba6ede7299"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Assisi",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.75494197327556",
+    "LONGITUDE": "8.87388705095256",
+    "ADDRESS": "Street Papa Celestino IV 4/Bis",
+    "CITY": "Castiglione Olona",
+    "PROVINCE": "VA",
+    "ZIP": "21043"
+  },
+  "TELEPHONE_NUMBER": "+390331857120",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72c8"
+    },
+    {
+      "$oid": "61b5b85f64ae79ba6ede752a"
+    },
+    {
+      "$oid": "61b5b8d664ae79ba6ede77d5"
+    },
+    {
+      "$oid": "61b5b98064ae79ba6ede7b8f"
+    },
+    {
+      "$oid": "61b5ba1064ae79ba6ede7ed7"
+    },
+    {
+      "$oid": "61b5bac064ae79ba6ede82a5"
+    },
+    {
+      "$oid": "61b5bb6264ae79ba6ede8637"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72f7"
+    },
+    {
+      "$oid": "61b5b85a64ae79ba6ede750e"
+    },
+    {
+      "$oid": "61b5b8f164ae79ba6ede7864"
+    },
+    {
+      "$oid": "61b5b9ae64ae79ba6ede7ca1"
+    },
+    {
+      "$oid": "61b5ba4164ae79ba6ede7fe0"
+    },
+    {
+      "$oid": "61b5baf964ae79ba6ede83ed"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729a"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Fior di Loto",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.705428894695494",
+    "LONGITUDE": "8.913972844224272",
+    "ADDRESS": "Boulevard Guglielmo Marconi 58",
+    "CITY": "Tradate",
+    "PROVINCE": "VA",
+    "ZIP": "21049"
+  },
+  "TELEPHONE_NUMBER": "+390331849008",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72c9"
+    },
+    {
+      "$oid": "61b5b85f64ae79ba6ede752b"
+    },
+    {
+      "$oid": "61b5b8d764ae79ba6ede77dc"
+    },
+    {
+      "$oid": "61b5b98164ae79ba6ede7b96"
+    },
+    {
+      "$oid": "61b5ba1364ae79ba6ede7eeb"
+    },
+    {
+      "$oid": "61b5bac364ae79ba6ede82b5"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72f8"
+    },
+    {
+      "$oid": "61b5b85c64ae79ba6ede751a"
+    },
+    {
+      "$oid": "61b5b8f364ae79ba6ede7874"
+    },
+    {
+      "$oid": "61b5b9af64ae79ba6ede7ca4"
+    },
+    {
+      "$oid": "61b5ba4964ae79ba6ede8013"
+    },
+    {
+      "$oid": "61b5bafd64ae79ba6ede8406"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729b"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Sanitas",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.47383679016939",
+    "LONGITUDE": "9.1833098009608",
+    "ADDRESS": "Avenue Garibaldi 49",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20121"
+  },
+  "TELEPHONE_NUMBER": "+39028056843",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72ca"
+    },
+    {
+      "$oid": "61b5b86264ae79ba6ede753d"
+    },
+    {
+      "$oid": "61b5b8d864ae79ba6ede77e1"
+    },
+    {
+      "$oid": "61b5b98364ae79ba6ede7ba3"
+    },
+    {
+      "$oid": "61b5ba1964ae79ba6ede7f0e"
+    },
+    {
+      "$oid": "61b5bacb64ae79ba6ede82e7"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72f9"
+    },
+    {
+      "$oid": "61b5b86164ae79ba6ede7539"
+    },
+    {
+      "$oid": "61b5b8f464ae79ba6ede7878"
+    },
+    {
+      "$oid": "61b5b9b264ae79ba6ede7cba"
+    },
+    {
+      "$oid": "61b5ba4b64ae79ba6ede801c"
+    },
+    {
+      "$oid": "61b5bb0364ae79ba6ede8426"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729c"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Plebisciti",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.4651211",
+    "LONGITUDE": "9.2189264",
+    "ADDRESS": "Avenue Plebisciti 7",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20129"
+  },
+  "TELEPHONE_NUMBER": "+390270003852",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72cb"
+    },
+    {
+      "$oid": "61b5b86364ae79ba6ede7542"
+    },
+    {
+      "$oid": "61b5b8d964ae79ba6ede77e4"
+    },
+    {
+      "$oid": "61b5b98564ae79ba6ede7bb2"
+    },
+    {
+      "$oid": "61b5ba1a64ae79ba6ede7f14"
+    },
+    {
+      "$oid": "61b5bad664ae79ba6ede8328"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72fa"
+    },
+    {
+      "$oid": "61b5b86564ae79ba6ede754d"
+    },
+    {
+      "$oid": "61b5b8f564ae79ba6ede787f"
+    },
+    {
+      "$oid": "61b5b9b364ae79ba6ede7cc2"
+    },
+    {
+      "$oid": "61b5ba5264ae79ba6ede8046"
+    },
+    {
+      "$oid": "61b5bb0564ae79ba6ede8432"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729d"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Capranica",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.8399044",
+    "LONGITUDE": "12.4122855",
+    "ADDRESS": "Square Capranica 96",
+    "CITY": "Roma",
+    "PROVINCE": "RM",
+    "ZIP": "00186"
+  },
+  "TELEPHONE_NUMBER": "+3901611707011",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f064ae79ba6ede72cc"
+    },
+    {
+      "$oid": "61b5b86864ae79ba6ede755c"
+    },
+    {
+      "$oid": "61b5b8db64ae79ba6ede77f0"
+    },
+    {
+      "$oid": "61b5b98764ae79ba6ede7bbd"
+    },
+    {
+      "$oid": "61b5ba2064ae79ba6ede7f28"
+    },
+    {
+      "$oid": "61b5badb64ae79ba6ede8348"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7f964ae79ba6ede72fb"
+    },
+    {
+      "$oid": "61b5b86f64ae79ba6ede7585"
+    },
+    {
+      "$oid": "61b5b8fc64ae79ba6ede78a4"
+    },
+    {
+      "$oid": "61b5b9b464ae79ba6ede7cc5"
+    },
+    {
+      "$oid": "61b5ba5264ae79ba6ede8048"
+    },
+    {
+      "$oid": "61b5bb0864ae79ba6ede8446"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729e"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Comunale",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.0265708",
+    "LONGITUDE": "14.1252991",
+    "ADDRESS": "SS7 9",
+    "CITY": "Ceppaloni",
+    "PROVINCE": "BN",
+    "ZIP": "83016"
+  },
+  "TELEPHONE_NUMBER": "+390824840070",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f164ae79ba6ede72cd"
+    },
+    {
+      "$oid": "61b5b86964ae79ba6ede7561"
+    },
+    {
+      "$oid": "61b5b8dd64ae79ba6ede77fe"
+    },
+    {
+      "$oid": "61b5b98864ae79ba6ede7bc1"
+    },
+    {
+      "$oid": "61b5ba2564ae79ba6ede7f40"
+    },
+    {
+      "$oid": "61b5bade64ae79ba6ede8354"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede72fc"
+    },
+    {
+      "$oid": "61b5b87064ae79ba6ede758c"
+    },
+    {
+      "$oid": "61b5b8fd64ae79ba6ede78a8"
+    },
+    {
+      "$oid": "61b5b9bd64ae79ba6ede7cf5"
+    },
+    {
+      "$oid": "61b5ba5664ae79ba6ede8062"
+    },
+    {
+      "$oid": "61b5bb0964ae79ba6ede8449"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7e964ae79ba6ede729f"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Del cuore",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.6720529",
+    "LONGITUDE": "13.6285059",
+    "ADDRESS": "Square Gioacchino Rossini 23",
+    "CITY": "Bacoli",
+    "PROVINCE": "NA",
+    "ZIP": "80070"
+  },
+  "TELEPHONE_NUMBER": "+393426489503",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f164ae79ba6ede72ce"
+    },
+    {
+      "$oid": "61b5b86a64ae79ba6ede7565"
+    },
+    {
+      "$oid": "61b5b8de64ae79ba6ede7800"
+    },
+    {
+      "$oid": "61b5b98a64ae79ba6ede7bcb"
+    },
+    {
+      "$oid": "61b5ba2664ae79ba6ede7f49"
+    },
+    {
+      "$oid": "61b5bae164ae79ba6ede8364"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede72fd"
+    },
+    {
+      "$oid": "61b5b87464ae79ba6ede75a1"
+    },
+    {
+      "$oid": "61b5b90064ae79ba6ede78bf"
+    },
+    {
+      "$oid": "61b5b9bd64ae79ba6ede7cfa"
+    },
+    {
+      "$oid": "61b5ba6364ae79ba6ede80aa"
+    },
+    {
+      "$oid": "61b5bb0b64ae79ba6ede8454"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a0"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Vernile",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.0062272",
+    "LONGITUDE": "13.2035495",
+    "ADDRESS": "Boulevard Dante Alighieri 10",
+    "CITY": "Villa Santa Lucia",
+    "PROVINCE": "FR",
+    "ZIP": "03030"
+  },
+  "TELEPHONE_NUMBER": "+390776463027",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f164ae79ba6ede72cf"
+    },
+    {
+      "$oid": "61b5b86a64ae79ba6ede7566"
+    },
+    {
+      "$oid": "61b5b8e164ae79ba6ede7815"
+    },
+    {
+      "$oid": "61b5b98a64ae79ba6ede7bcc"
+    },
+    {
+      "$oid": "61b5ba3364ae79ba6ede7f92"
+    },
+    {
+      "$oid": "61b5bae664ae79ba6ede8384"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede72fe"
+    },
+    {
+      "$oid": "61b5b87864ae79ba6ede75ba"
+    },
+    {
+      "$oid": "61b5b90364ae79ba6ede78d4"
+    },
+    {
+      "$oid": "61b5b9c164ae79ba6ede7d0f"
+    },
+    {
+      "$oid": "61b5ba7964ae79ba6ede8129"
+    },
+    {
+      "$oid": "61b5bb0c64ae79ba6ede845d"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a1"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Kennedy",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.8981178",
+    "LONGITUDE": "13.5823068",
+    "ADDRESS": "Boulevard Kennedy 387",
+    "CITY": "Napoli",
+    "PROVINCE": "NA",
+    "ZIP": "80125"
+  },
+  "TELEPHONE_NUMBER": "+39081417283",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f164ae79ba6ede72d0"
+    },
+    {
+      "$oid": "61b5b86b64ae79ba6ede756c"
+    },
+    {
+      "$oid": "61b5b8e164ae79ba6ede7818"
+    },
+    {
+      "$oid": "61b5b98b64ae79ba6ede7bd3"
+    },
+    {
+      "$oid": "61b5ba3b64ae79ba6ede7fbe"
+    },
+    {
+      "$oid": "61b5bae664ae79ba6ede8388"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede72ff"
+    },
+    {
+      "$oid": "61b5b87d64ae79ba6ede75d5"
+    },
+    {
+      "$oid": "61b5b90764ae79ba6ede78e5"
+    },
+    {
+      "$oid": "61b5b9c264ae79ba6ede7d16"
+    },
+    {
+      "$oid": "61b5ba7964ae79ba6ede812a"
+    },
+    {
+      "$oid": "61b5bb1c64ae79ba6ede84b6"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a2"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Casciotti",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.1706424",
+    "LONGITUDE": "12.7483189",
+    "ADDRESS": "Cross street Torresi 10",
+    "CITY": "Potenza Picena",
+    "PROVINCE": "MC",
+    "ZIP": "62018"
+  },
+  "TELEPHONE_NUMBER": "+390733688116",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f164ae79ba6ede72d1"
+    },
+    {
+      "$oid": "61b5b86f64ae79ba6ede7586"
+    },
+    {
+      "$oid": "61b5b8e464ae79ba6ede7829"
+    },
+    {
+      "$oid": "61b5b98c64ae79ba6ede7bd7"
+    },
+    {
+      "$oid": "61b5ba3d64ae79ba6ede7fcd"
+    },
+    {
+      "$oid": "61b5bae764ae79ba6ede838e"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede7300"
+    },
+    {
+      "$oid": "61b5b88464ae79ba6ede75fd"
+    },
+    {
+      "$oid": "61b5b90c64ae79ba6ede7900"
+    },
+    {
+      "$oid": "61b5b9c664ae79ba6ede7d2f"
+    },
+    {
+      "$oid": "61b5ba7f64ae79ba6ede8148"
+    },
+    {
+      "$oid": "61b5bb2a64ae79ba6ede8506"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a3"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Moreschini",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.1272349",
+    "LONGITUDE": "13.6658811",
+    "ADDRESS": "Street Raffaele Rossetti 2",
+    "CITY": "Lido di Fermo",
+    "PROVINCE": "FM",
+    "ZIP": "63900"
+  },
+  "TELEPHONE_NUMBER": "+390734641677",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f264ae79ba6ede72d2"
+    },
+    {
+      "$oid": "61b5b86f64ae79ba6ede7587"
+    },
+    {
+      "$oid": "61b5b8e564ae79ba6ede782e"
+    },
+    {
+      "$oid": "61b5b98d64ae79ba6ede7bde"
+    },
+    {
+      "$oid": "61b5ba3f64ae79ba6ede7fd6"
+    },
+    {
+      "$oid": "61b5bae964ae79ba6ede839a"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fa64ae79ba6ede7301"
+    },
+    {
+      "$oid": "61b5b88b64ae79ba6ede7620"
+    },
+    {
+      "$oid": "61b5b90e64ae79ba6ede790c"
+    },
+    {
+      "$oid": "61b5b9cd64ae79ba6ede7d55"
+    },
+    {
+      "$oid": "61b5ba8264ae79ba6ede815e"
+    },
+    {
+      "$oid": "61b5bb2d64ae79ba6ede8516"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a4"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Cairoli",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.2979977",
+    "LONGITUDE": "13.4096216",
+    "ADDRESS": "Avenue Fratelli Cairoli 18/20",
+    "CITY": "Macerata",
+    "PROVINCE": "MC",
+    "ZIP": "62100"
+  },
+  "TELEPHONE_NUMBER": "+390733232760",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f264ae79ba6ede72d3"
+    },
+    {
+      "$oid": "61b5b87164ae79ba6ede7594"
+    },
+    {
+      "$oid": "61b5b8e564ae79ba6ede782f"
+    },
+    {
+      "$oid": "61b5b98e64ae79ba6ede7be2"
+    },
+    {
+      "$oid": "61b5ba4664ae79ba6ede7fff"
+    },
+    {
+      "$oid": "61b5baec64ae79ba6ede83a7"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7302"
+    },
+    {
+      "$oid": "61b5b88f64ae79ba6ede7638"
+    },
+    {
+      "$oid": "61b5b91164ae79ba6ede7921"
+    },
+    {
+      "$oid": "61b5b9ce64ae79ba6ede7d5b"
+    },
+    {
+      "$oid": "61b5ba8364ae79ba6ede8163"
+    },
+    {
+      "$oid": "61b5bb3164ae79ba6ede852e"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ea64ae79ba6ede72a5"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Decuzzi",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.2847058",
+    "LONGITUDE": "15.7779642",
+    "ADDRESS": "Boulevard Umberto I 5",
+    "CITY": "Calciano",
+    "PROVINCE": "MT",
+    "ZIP": "75010"
+  },
+  "TELEPHONE_NUMBER": "+390835672290",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f264ae79ba6ede72d4"
+    },
+    {
+      "$oid": "61b5b87864ae79ba6ede75b8"
+    },
+    {
+      "$oid": "61b5b8e864ae79ba6ede783b"
+    },
+    {
+      "$oid": "61b5b98e64ae79ba6ede7be3"
+    },
+    {
+      "$oid": "61b5ba4964ae79ba6ede8014"
+    },
+    {
+      "$oid": "61b5baee64ae79ba6ede83b3"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7303"
+    },
+    {
+      "$oid": "61b5b89064ae79ba6ede763e"
+    },
+    {
+      "$oid": "61b5b91864ae79ba6ede7949"
+    },
+    {
+      "$oid": "61b5b9d064ae79ba6ede7d65"
+    },
+    {
+      "$oid": "61b5ba8564ae79ba6ede816c"
+    },
+    {
+      "$oid": "61b5bb3164ae79ba6ede852f"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72a6"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Lloyd's",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "40.8344704",
+    "LONGITUDE": "14.3622649",
+    "ADDRESS": "Street Leonardo di Capua",
+    "CITY": "Napoli",
+    "PROVINCE": "NA",
+    "ZIP": "80141"
+  },
+  "TELEPHONE_NUMBER": "+390559123085",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f264ae79ba6ede72d5"
+    },
+    {
+      "$oid": "61b5b87a64ae79ba6ede75c4"
+    },
+    {
+      "$oid": "61b5b8e964ae79ba6ede7842"
+    },
+    {
+      "$oid": "61b5b99264ae79ba6ede7bfc"
+    },
+    {
+      "$oid": "61b5ba4c64ae79ba6ede8025"
+    },
+    {
+      "$oid": "61b5baf064ae79ba6ede83bb"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7304"
+    },
+    {
+      "$oid": "61b5b89564ae79ba6ede765a"
+    },
+    {
+      "$oid": "61b5b91964ae79ba6ede7952"
+    },
+    {
+      "$oid": "61b5b9d264ae79ba6ede7d72"
+    },
+    {
+      "$oid": "61b5ba8564ae79ba6ede816d"
+    },
+    {
+      "$oid": "61b5bb3864ae79ba6ede8559"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72a7"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Aiello",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "39.31288387863299",
+    "LONGITUDE": "16.253781625419823",
+    "ADDRESS": "Boulevard Giacomo Mancini 158",
+    "CITY": "Cosenza",
+    "PROVINCE": "CS",
+    "ZIP": "87100"
+  },
+  "TELEPHONE_NUMBER": "+39089225142",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f364ae79ba6ede72d6"
+    },
+    {
+      "$oid": "61b5b87c64ae79ba6ede75d2"
+    },
+    {
+      "$oid": "61b5b8fb64ae79ba6ede789c"
+    },
+    {
+      "$oid": "61b5b99564ae79ba6ede7c13"
+    },
+    {
+      "$oid": "61b5ba4e64ae79ba6ede802b"
+    },
+    {
+      "$oid": "61b5baf464ae79ba6ede83d4"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7305"
+    },
+    {
+      "$oid": "61b5b89664ae79ba6ede765f"
+    },
+    {
+      "$oid": "61b5b91c64ae79ba6ede7961"
+    },
+    {
+      "$oid": "61b5b9d464ae79ba6ede7d7d"
+    },
+    {
+      "$oid": "61b5ba8664ae79ba6ede8174"
+    },
+    {
+      "$oid": "61b5bb3b64ae79ba6ede8569"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72a8"
+  },
+  "TYPE": "Pharmacy",
+  "NAME": "Zongo",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.903808368171966",
+    "LONGITUDE": "12.908846385286795",
+    "ADDRESS": "Street Vincenzo Rossi 17",
+    "CITY": "Pesaro",
+    "PROVINCE": "PU",
+    "ZIP": "61122"
+  },
+  "TELEPHONE_NUMBER": "+390721416134",
+  "OPENING_HOURS": {
+    "MONDAY": "08:00-20:00",
+    "TUESDAY": "08:00-20:00",
+    "WEDNESDAY": "08:00-20:00",
+    "THURSDAY": "08:00-20:00",
+    "FRIDAY": "08:00-20:00",
+    "SATURDAY": "08:00-13:00",
+    "SUNDAY": "08:00-12:30"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f364ae79ba6ede72d7"
+    },
+    {
+      "$oid": "61b5b88464ae79ba6ede7601"
+    },
+    {
+      "$oid": "61b5b90564ae79ba6ede78db"
+    },
+    {
+      "$oid": "61b5b99d64ae79ba6ede7c3a"
+    },
+    {
+      "$oid": "61b5ba4f64ae79ba6ede8032"
+    },
+    {
+      "$oid": "61b5baf564ae79ba6ede83da"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7306"
+    },
+    {
+      "$oid": "61b5b89964ae79ba6ede766f"
+    },
+    {
+      "$oid": "61b5b91d64ae79ba6ede7967"
+    },
+    {
+      "$oid": "61b5b9d464ae79ba6ede7d81"
+    },
+    {
+      "$oid": "61b5ba9264ae79ba6ede81b5"
+    },
+    {
+      "$oid": "61b5bb4264ae79ba6ede858b"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72a9"
+  },
+  "TYPE": "Covid center",
+  "NAME": "ASST Settelaghi",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.80278112031525",
+    "LONGITUDE": "8.784718751990036",
+    "ADDRESS": "Square Roma 1",
+    "CITY": "Schiranna",
+    "PROVINCE": "VA",
+    "ZIP": "21100"
+  },
+  "TELEPHONE_NUMBER": "+390332278111",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f364ae79ba6ede72d8"
+    },
+    {
+      "$oid": "61b5b88664ae79ba6ede7608"
+    },
+    {
+      "$oid": "61b5b90864ae79ba6ede78e9"
+    },
+    {
+      "$oid": "61b5b9a064ae79ba6ede7c50"
+    },
+    {
+      "$oid": "61b5ba5c64ae79ba6ede807f"
+    },
+    {
+      "$oid": "61b5baf764ae79ba6ede83e4"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7307"
+    },
+    {
+      "$oid": "61b5b89a64ae79ba6ede767a"
+    },
+    {
+      "$oid": "61b5b92264ae79ba6ede7987"
+    },
+    {
+      "$oid": "61b5b9d664ae79ba6ede7d89"
+    },
+    {
+      "$oid": "61b5ba9a64ae79ba6ede81d2"
+    },
+    {
+      "$oid": "61b5bb4364ae79ba6ede8594"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72aa"
+  },
+  "TYPE": "Covid center",
+  "NAME": "La fabbrica del vapore",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.484148183398325",
+    "LONGITUDE": "9.175392313803119",
+    "ADDRESS": "Street Giulio Cesare Procaccini 4",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20154"
+  },
+  "TELEPHONE_NUMBER": "+39020202",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f364ae79ba6ede72d9"
+    },
+    {
+      "$oid": "61b5b88a64ae79ba6ede761a"
+    },
+    {
+      "$oid": "61b5b90a64ae79ba6ede78f4"
+    },
+    {
+      "$oid": "61b5b9ab64ae79ba6ede7c8f"
+    },
+    {
+      "$oid": "61b5ba5e64ae79ba6ede808d"
+    },
+    {
+      "$oid": "61b5baf964ae79ba6ede83ee"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fb64ae79ba6ede7308"
+    },
+    {
+      "$oid": "61b5b89e64ae79ba6ede768d"
+    },
+    {
+      "$oid": "61b5b92264ae79ba6ede7988"
+    },
+    {
+      "$oid": "61b5b9dd64ae79ba6ede7daf"
+    },
+    {
+      "$oid": "61b5ba9c64ae79ba6ede81d9"
+    },
+    {
+      "$oid": "61b5bb4664ae79ba6ede85a3"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7eb64ae79ba6ede72ab"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Malpensa fiere",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.63528027725216",
+    "LONGITUDE": "8.852840451984244",
+    "ADDRESS": "Street XI Settembre 16",
+    "CITY": "Busto Arsizio",
+    "PROVINCE": "VA",
+    "ZIP": "21052"
+  },
+  "TELEPHONE_NUMBER": "+390332295429",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f364ae79ba6ede72da"
+    },
+    {
+      "$oid": "61b5b88a64ae79ba6ede761d"
+    },
+    {
+      "$oid": "61b5b91c64ae79ba6ede7963"
+    },
+    {
+      "$oid": "61b5b9ab64ae79ba6ede7c90"
+    },
+    {
+      "$oid": "61b5ba6264ae79ba6ede80a3"
+    },
+    {
+      "$oid": "61b5bafd64ae79ba6ede8405"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede7309"
+    },
+    {
+      "$oid": "61b5b8a164ae79ba6ede76a2"
+    },
+    {
+      "$oid": "61b5b92764ae79ba6ede79a2"
+    },
+    {
+      "$oid": "61b5b9df64ae79ba6ede7dbb"
+    },
+    {
+      "$oid": "61b5ba9d64ae79ba6ede81e2"
+    },
+    {
+      "$oid": "61b5bb4964ae79ba6ede85b6"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72ac"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Iper Rossini",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "43.90529937629807",
+    "LONGITUDE": "12.868620591702111",
+    "ADDRESS": "Street Y. A. Gagarin",
+    "CITY": "Pesaro",
+    "PROVINCE": "PU",
+    "ZIP": "61122"
+  },
+  "TELEPHONE_NUMBER": "+390721405599",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f464ae79ba6ede72db"
+    },
+    {
+      "$oid": "61b5b88b64ae79ba6ede7623"
+    },
+    {
+      "$oid": "61b5b91f64ae79ba6ede7971"
+    },
+    {
+      "$oid": "61b5b9b164ae79ba6ede7cb5"
+    },
+    {
+      "$oid": "61b5ba6864ae79ba6ede80c7"
+    },
+    {
+      "$oid": "61b5bafe64ae79ba6ede840c"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede730a"
+    },
+    {
+      "$oid": "61b5b8a264ae79ba6ede76ab"
+    },
+    {
+      "$oid": "61b5b93164ae79ba6ede79dc"
+    },
+    {
+      "$oid": "61b5b9e164ae79ba6ede7dca"
+    },
+    {
+      "$oid": "61b5baa264ae79ba6ede81fc"
+    },
+    {
+      "$oid": "61b5bb4964ae79ba6ede85b8"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72ad"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Pala Brillia",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "39.648512388678256",
+    "LONGITUDE": "16.51342270761001",
+    "ADDRESS": "Street Brillia",
+    "CITY": "Corigliano Calabro",
+    "PROVINCE": "CS",
+    "ZIP": "87064"
+  },
+  "TELEPHONE_NUMBER": "+390875247",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f464ae79ba6ede72dc"
+    },
+    {
+      "$oid": "61b5b88c64ae79ba6ede7629"
+    },
+    {
+      "$oid": "61b5b92164ae79ba6ede797c"
+    },
+    {
+      "$oid": "61b5b9b764ae79ba6ede7cd5"
+    },
+    {
+      "$oid": "61b5ba6d64ae79ba6ede80e2"
+    },
+    {
+      "$oid": "61b5baff64ae79ba6ede840d"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede730b"
+    },
+    {
+      "$oid": "61b5b8a364ae79ba6ede76ad"
+    },
+    {
+      "$oid": "61b5b93164ae79ba6ede79e2"
+    },
+    {
+      "$oid": "61b5b9e264ae79ba6ede7dd1"
+    },
+    {
+      "$oid": "61b5baa464ae79ba6ede8209"
+    },
+    {
+      "$oid": "61b5bb4964ae79ba6ede85b9"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72ae"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Villa Tiberia",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "41.94570358744394",
+    "LONGITUDE": "12.557744070342295",
+    "ADDRESS": "Street Emilio Praga 26",
+    "CITY": "Roma",
+    "PROVINCE": "RM",
+    "ZIP": "00137"
+  },
+  "TELEPHONE_NUMBER": "+390682098040",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f464ae79ba6ede72dd"
+    },
+    {
+      "$oid": "61b5b88d64ae79ba6ede762b"
+    },
+    {
+      "$oid": "61b5b92164ae79ba6ede797f"
+    },
+    {
+      "$oid": "61b5b9b964ae79ba6ede7cdf"
+    },
+    {
+      "$oid": "61b5ba6f64ae79ba6ede80ed"
+    },
+    {
+      "$oid": "61b5bb0264ae79ba6ede8422"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede730c"
+    },
+    {
+      "$oid": "61b5b8a464ae79ba6ede76b1"
+    },
+    {
+      "$oid": "61b5b93264ae79ba6ede79e8"
+    },
+    {
+      "$oid": "61b5b9ef64ae79ba6ede7e1a"
+    },
+    {
+      "$oid": "61b5baa564ae79ba6ede820b"
+    },
+    {
+      "$oid": "61b5bb4964ae79ba6ede85bb"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72af"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Palazzo delle Scintille",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.4774192",
+    "LONGITUDE": "9.1590394",
+    "ADDRESS": "Square Sei Febbraio",
+    "CITY": "Milano",
+    "PROVINCE": "MI",
+    "ZIP": "20145"
+  },
+  "TELEPHONE_NUMBER": "+390533478",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f464ae79ba6ede72de"
+    },
+    {
+      "$oid": "61b5b88d64ae79ba6ede762c"
+    },
+    {
+      "$oid": "61b5b92264ae79ba6ede7986"
+    },
+    {
+      "$oid": "61b5b9bc64ae79ba6ede7cf4"
+    },
+    {
+      "$oid": "61b5ba7564ae79ba6ede8112"
+    },
+    {
+      "$oid": "61b5bb0464ae79ba6ede842a"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede730d"
+    },
+    {
+      "$oid": "61b5b8a664ae79ba6ede76bd"
+    },
+    {
+      "$oid": "61b5b93364ae79ba6ede79ef"
+    },
+    {
+      "$oid": "61b5b9f264ae79ba6ede7e29"
+    },
+    {
+      "$oid": "61b5baac64ae79ba6ede8233"
+    },
+    {
+      "$oid": "61b5bb5264ae79ba6ede85e2"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72b0"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Palazzetto dello sport",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "45.4773333",
+    "LONGITUDE": "9.0277106",
+    "ADDRESS": "Street Leone Tolstoi 84",
+    "CITY": "Limbiate",
+    "PROVINCE": "MB",
+    "ZIP": "20812"
+  },
+  "TELEPHONE_NUMBER": "+39024587",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f464ae79ba6ede72df"
+    },
+    {
+      "$oid": "61b5b88e64ae79ba6ede7631"
+    },
+    {
+      "$oid": "61b5b92364ae79ba6ede798c"
+    },
+    {
+      "$oid": "61b5b9c164ae79ba6ede7d0e"
+    },
+    {
+      "$oid": "61b5ba7e64ae79ba6ede8146"
+    },
+    {
+      "$oid": "61b5bb0764ae79ba6ede843e"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fc64ae79ba6ede730e"
+    },
+    {
+      "$oid": "61b5b8a764ae79ba6ede76c4"
+    },
+    {
+      "$oid": "61b5b93464ae79ba6ede79f2"
+    },
+    {
+      "$oid": "61b5b9f664ae79ba6ede7e46"
+    },
+    {
+      "$oid": "61b5baad64ae79ba6ede8238"
+    },
+    {
+      "$oid": "61b5bb5664ae79ba6ede85f7"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "61b5b7ec64ae79ba6ede72b1"
+  },
+  "TYPE": "Covid center",
+  "NAME": "Palestra Comunale",
+  "LOCATION_DETAILS": {
+    "LATITUDE": "44.5676544",
+    "LONGITUDE": "10.4798014",
+    "ADDRESS": "Street Conta 1",
+    "CITY": "San Pietro in Casale",
+    "PROVINCE": "BO",
+    "ZIP": "40018"
+  },
+  "TELEPHONE_NUMBER": "+390510217829",
+  "OPENING_HOURS": {
+    "MONDAY": "06:00-24:00",
+    "TUESDAY": "06:00-24:00",
+    "WEDNESDAY": "06:00-24:00",
+    "THURSDAY": "06:00-24:00",
+    "FRIDAY": "06:00-24:00",
+    "SATURDAY": "06:00-24:00",
+    "SUNDAY": "06:00-24:00"
+  },
+  "DOCTORS": [
+    {
+      "$oid": "61b5b7f564ae79ba6ede72e0"
+    },
+    {
+      "$oid": "61b5b89164ae79ba6ede764a"
+    },
+    {
+      "$oid": "61b5b92364ae79ba6ede7990"
+    },
+    {
+      "$oid": "61b5b9c964ae79ba6ede7d3d"
+    },
+    {
+      "$oid": "61b5ba7f64ae79ba6ede814a"
+    },
+    {
+      "$oid": "61b5bb0964ae79ba6ede844b"
+    }
+  ],
+  "NURSES": [
+    {
+      "$oid": "61b5b7fd64ae79ba6ede730f"
+    },
+    {
+      "$oid": "61b5b8a864ae79ba6ede76c6"
+    },
+    {
+      "$oid": "61b5b93664ae79ba6ede79fe"
+    },
+    {
+      "$oid": "61b5b9f864ae79ba6ede7e4e"
+    },
+    {
+      "$oid": "61b5bab064ae79ba6ede824a"
+    },
+    {
+      "$oid": "61b5bb5e64ae79ba6ede8620"
+    }
+  ]
+}]
