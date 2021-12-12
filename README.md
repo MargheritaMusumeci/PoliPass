@@ -48,7 +48,7 @@ Depending on the OS, it is required to change 'localhost' with the IP address of
 To generate the database you should set the scope of the execution to the PoliPass's directory.
 You can choose the following parameters to build the dataset however you like:
 
-- Number of people (at least 100 otherwise the generator won't work
+- Number of people (at least 100 otherwise the generator won't work)
 - Max number of vaccine's doses for each person
 - Max number of tests for each person
 - Probability of being a doctor/nurse
